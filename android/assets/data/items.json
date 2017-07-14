@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Wheel",
+    "type": "wheel",
+    "file": "vehicle/wheel.png",
+    "filetype": "texture"
+  },
+  {
+    "name": "Standard tiles",
+    "type": "square_wall",
+    "file": "vehicle/tiles.pack",
+    "filetype": "atlas",
+    "region": "middle"
+  },
+  {
+    "name": "Eraser",
+    "type": "eraser",
+    "file": "eraser.png",
+    "filetype": "texture",
+    "infinite": true
+  }
+]

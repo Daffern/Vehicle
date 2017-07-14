@@ -1,0 +1,202 @@
+
+pack.png
+size: 1024,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ground/ground2
+  rotate: false
+  xy: 2, 247
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+ground/surface
+  rotate: false
+  xy: 260, 426
+  size: 393, 77
+  orig: 393, 77
+  offset: 0, 0
+  index: -1
+ground/surface2
+  rotate: false
+  xy: 2, 100
+  size: 256, 145
+  orig: 256, 145
+  offset: 0, 0
+  index: -1
+interface/selected
+  rotate: false
+  xy: 2, 2
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+interface/uibox
+  rotate: false
+  xy: 260, 110
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+placeholder
+  rotate: false
+  xy: 757, 439
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+player/robotv2
+  rotate: false
+  xy: 655, 442
+  size: 100, 61
+  orig: 100, 61
+  offset: 0, 0
+  index: -1
+player/yellow
+  rotate: false
+  xy: 742, 376
+  size: 50, 61
+  orig: 50, 61
+  offset: 0, 0
+  index: 0
+player/yellow
+  rotate: false
+  xy: 794, 376
+  size: 50, 61
+  orig: 50, 61
+  offset: 0, 0
+  index: 1
+tools/eraser
+  rotate: false
+  xy: 346, 340
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: -1
+vehicle/1/bot
+  rotate: false
+  xy: 2, 34
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/botCenter
+  rotate: false
+  xy: 260, 274
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/botLeft
+  rotate: false
+  xy: 346, 360
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/botRight
+  rotate: false
+  xy: 68, 34
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/center
+  rotate: false
+  xy: 260, 208
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/centerLeft
+  rotate: false
+  xy: 412, 360
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/centerRight
+  rotate: false
+  xy: 134, 34
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/horizontal
+  rotate: false
+  xy: 478, 360
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/left
+  rotate: false
+  xy: 544, 360
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/right
+  rotate: false
+  xy: 823, 439
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/top
+  rotate: false
+  xy: 889, 439
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/topCenter
+  rotate: false
+  xy: 955, 439
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/topLeft
+  rotate: false
+  xy: 200, 34
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/topRight
+  rotate: false
+  xy: 610, 360
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/1/vertical
+  rotate: false
+  xy: 676, 376
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/axle
+  rotate: false
+  xy: 260, 340
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+vehicle/engine
+  rotate: false
+  xy: 260, 142
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/wheel
+  rotate: false
+  xy: 846, 412
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1

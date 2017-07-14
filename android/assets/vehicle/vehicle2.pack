@@ -1,0 +1,110 @@
+vehicle2.png
+size: 256,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+topLeft
+    rotate: false
+    xy: 0, 0
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+topCenter
+    rotate: false
+    xy: 64, 0
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+topRight
+    rotate: false
+    xy: 128, 0
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+centerRight
+    rotate: false
+    xy: 128, 64
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+bottomRight
+    rotate: false
+    xy: 128, 128
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+bottomCenter
+    rotate: false
+    xy: 64, 128
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+bottomLeft
+    rotate: false
+    xy: 0, 128
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+centerLeft
+    rotate: false
+    xy: 0, 64
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+center
+    rotate: false
+    xy: 64, 64
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+bottom
+    rotate: false
+    xy: 0, 192
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+top
+    rotate: false
+    xy: 64, 192
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+left
+    rotate: false
+    xy: 128, 192
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+right
+    rotate: false
+    xy: 192, 192
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+horizontal
+    rotate: false
+    xy: 192, 0
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1
+vertical
+    rotate: false
+    xy: 192, 64
+    size: 64, 64
+    orig: 64, 64
+    offset: 0, 0
+    index: -1

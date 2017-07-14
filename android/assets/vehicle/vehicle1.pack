@@ -1,0 +1,68 @@
+vehicle1.png
+size: 96,96
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+topLeft
+    rotate: false
+    xy: 0, 0
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+topCenter
+    rotate: false
+    xy: 32, 0
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+topRight
+    rotate: false
+    xy: 64, 0
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+centerRight
+    rotate: false
+    xy: 64, 32
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+bottomRight
+    rotate: false
+    xy: 64, 64
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+bottomCenter
+    rotate: false
+    xy: 32, 64
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+bottomLeft
+    rotate: false
+    xy: 0, 64
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+centerLeft
+    rotate: false
+    xy: 0, 32
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1
+center
+    rotate: false
+    xy: 32, 32
+    size: 32, 32
+    orig: 32, 32
+    offset: 0, 0
+    index: -1

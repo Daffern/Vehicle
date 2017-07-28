@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.esotericsoftware.kryonet.Connection;
@@ -14,7 +13,6 @@ import no.daffern.vehicle.client.C;
 import no.daffern.vehicle.client.ResourceManager;
 import no.daffern.vehicle.client.handlers.CameraHandler;
 import no.daffern.vehicle.client.handlers.ItemHandler;
-import no.daffern.vehicle.client.player.ClientPlayer;
 import no.daffern.vehicle.common.SystemInterface;
 import no.daffern.vehicle.graphics.NinePatchRepeated;
 import no.daffern.vehicle.graphics.TextField;
@@ -220,10 +218,10 @@ public class ClientInventory implements SystemInterface {
 
             textField = new TextField(""+count);
 
-            C.itemHandler.loadRegion(itemId, new ItemHandler.AtlasRegionListener() {
+            C.itemHandler.loadGameItem(itemId, new ItemHandler.GameItemListener() {
                 @Override
-                public void onRegionLoaded(TextureAtlas.AtlasRegion atlasRegion) {
-                    textureRegion = atlasRegion;
+                public void onGameItemLoaded(TextureAtlas textureAtlas, GameItemPacket gameItem) {
+                    textureRegion = textureAtlas.findRegion(gameItem.iconName);
                 }
             });
 

@@ -1,18 +1,7 @@
 package no.daffern.vehicle.client.vehicle;
 
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
-import com.badlogic.gdx.tiledmappacker.TiledMapPacker;
-import no.daffern.vehicle.client.C;
-import no.daffern.vehicle.client.handlers.ItemHandler;
-import no.daffern.vehicle.utils.Tools;
-
-
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by Daffern on 08.06.2017.
@@ -30,7 +19,7 @@ public class ClientWall {
 		this.itemId = itemId;
 	}
 
-
+/*
 	public void updateWallTexture(final int noTile) {
 
 		C.itemHandler.loadTileset(itemId, new ItemHandler.TilesetListener() {
@@ -147,7 +136,7 @@ public class ClientWall {
 					originX, originY,
 					tileWidth, tileHeight,
 					1, 1, angle);
-	}
+	}*/
 
 	public int getItemId() {
 		return itemId;

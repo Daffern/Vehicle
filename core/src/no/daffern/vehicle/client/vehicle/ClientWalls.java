@@ -1,25 +1,20 @@
 package no.daffern.vehicle.client.vehicle;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.OrderedMap;
-import no.daffern.vehicle.client.C;
-import no.daffern.vehicle.client.ResourceManager;
 import no.daffern.vehicle.common.Common;
-import no.daffern.vehicle.container.DynamicMultiArray;
 import no.daffern.vehicle.container.IntVector2;
+import no.daffern.vehicle.graphics.QuadTileDrawer;
 import no.daffern.vehicle.network.packets.PartOutputPacket;
 import no.daffern.vehicle.network.packets.PartPacket;
 import no.daffern.vehicle.network.packets.VehicleLayoutPacket;
 import no.daffern.vehicle.network.packets.WallPacket;
 import no.daffern.vehicle.utils.Tools;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * Created by Daffern on 08.06.2017.
@@ -31,8 +26,8 @@ public class ClientWalls {
 	//layers, parts
 	OrderedMap<Integer, Map<IntVector2, ClientPart>> partLayers;
 
-	Map<IntVector2, ClientWall> walls;
 
+	QuadTileDrawer walls;
 
 	float tileWidth, tileHeight;
 
@@ -42,7 +37,7 @@ public class ClientWalls {
 
 	public void initialize(VehicleLayoutPacket vlp) {
 		//this.walls = new DynamicMultiArray<>(10, 10);
-		this.walls = new HashMap<>();
+		this.walls = new QuadTileDrawer();
 		this.partLayers = new OrderedMap<>();
 		this.tileWidth = Common.toPixelCoordinates(vlp.partWidth);
 		this.tileHeight = Common.toPixelCoordinates(vlp.partHeight);
@@ -70,13 +65,10 @@ public class ClientWalls {
 
 		if (wallPacket.itemId == noTile) {
 			walls.remove(wallIndex);
-			updateWallTexture(wallIndex);
-			return;
+		}else{
+			walls.set(wallIndex, wallPacket.itemId);
 		}
 
-		walls.put(wallIndex, new ClientWall(wallPacket.itemId));
-
-		updateWallTexture(wallIndex);
 
 		//loop through layers and remove parts on this index
 		for (OrderedMap.Entry<Integer, Map<IntVector2, ClientPart>> entry : partLayers.entries()) {
@@ -122,7 +114,7 @@ public class ClientWalls {
 		}
 	}
 
-
+/*
 
 	private void updateWallTexture(IntVector2 wallIndex) {
 
@@ -165,7 +157,7 @@ public class ClientWalls {
 			up.updateWallTexture(noTile);
 		}
 
-	}
+	}*/
 
 	//TODO this whole thing
 	public void render(Batch batch, float posX, float posY, float angle) {
@@ -179,18 +171,8 @@ public class ClientWalls {
 		}
 
 		//render walls
-		for (Map.Entry<IntVector2, ClientWall> entry : walls.entrySet()) {
+		walls.render(batch, posX, posY, tileWidth, tileHeight, angle);
 
-			ClientWall wall = entry.getValue();
-			IntVector2 wallIndex = entry.getKey();
-			int x = wallIndex.x;
-			int y = wallIndex.y;
-
-			wall.render(batch, posX + (x * tileWidth), posY + (y * tileHeight), -(x * tileWidth), -(y * tileHeight), tileWidth, tileHeight, angle);
-
-
-			//renderWall(batch,entry.getValue(),entry.getKey(), posX, posY, angle);
-		}
 
 		//render the other parts
 		for (OrderedMap.Entry<Integer, Map<IntVector2,ClientPart>> layerEntry : partLayers.entries()){
@@ -221,19 +203,6 @@ public class ClientWalls {
 					1, 1, part.angle + angle);
 	}
 
-	private void renderWall(Batch batch, ClientWall wall, IntVector2 wallIndex, float posX, float posY, float angle) {
-		int x = wallIndex.x;
-		int y = wallIndex.y;
-		//render wall
 
-		wall.render(batch, posX + (x * tileWidth), posY + (y * tileHeight), -(x * tileWidth), -(y * tileHeight), tileWidth, tileHeight, angle);
-		/*
-		if (wall.getWallTexture() != null) {
-			batch.draw(wall.getWallTexture(),
-					posX + (x * tileWidth), posY + (y * tileHeight),
-					-(x * tileWidth), -(y * tileHeight),
-					tileWidth, tileHeight,
-					1, 1, angle);
-		}*/
-	}
+
 }

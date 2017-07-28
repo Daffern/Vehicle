@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import no.daffern.vehicle.container.IntVector2;
+import no.daffern.vehicle.utils.Tools;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,12 +47,28 @@ public class QuadTileDrawer {
 
 	Map<Integer, QuadTileset> tilesets = new HashMap<>();
 
-	public void setTile(IntVector2 index) {
+	public void addTileset(TextureAtlas textureAtlas, String tilePath, int id) {
+		QuadTileset quadTileset = new QuadTileset(textureAtlas, tilePath);
 
-
-		quadTiles.put(index, new QuadTile());
+		tilesets.put(id, quadTileset);
 	}
 
+	public void set(IntVector2 index, int id) {
+
+		QuadTileset tileset = tilesets.get(id);
+		if (tileset == null)
+			Tools.log(this, "Tileset with id: " + id + " not loaded");
+
+		quadTiles.put(index, new QuadTile());
+
+		resolve(index.x, index.y);
+	}
+
+	public void remove(IntVector2 index) {
+		quadTiles.remove(index);
+
+		resolve(index.x , index.y);
+	}
 
 	public void resolve(int x, int y) {
 
@@ -153,13 +170,13 @@ public class QuadTileDrawer {
 		return quadTiles.get(new IntVector2(x, y));
 	}
 
-	public void render(Batch batch, float posX, float posY, float quadWidth, float quadHeight, float angle){
+	public void render(Batch batch, float posX, float posY, float quadWidth, float quadHeight, float angle) {
 
 		float quadHalfWidth = quadWidth / 2;
 		float quadHalfHeight = quadHeight / 2;
 
 
-		for(Map.Entry<IntVector2, QuadTile> entry : quadTiles.entrySet()){
+		for (Map.Entry<IntVector2, QuadTile> entry : quadTiles.entrySet()) {
 
 			IntVector2 index = entry.getKey();
 
@@ -168,48 +185,46 @@ public class QuadTileDrawer {
 
 
 			if (entry.getValue().southWest != null)
-			batch.draw(entry.getValue().southWest,
-					posX + x, posY + y,
-					-x, -y,
-					quadHalfWidth, quadHalfHeight,
-					1, 1, angle);
+				batch.draw(entry.getValue().southWest,
+						posX + x, posY + y,
+						-x, -y,
+						quadHalfWidth, quadHalfHeight,
+						1, 1, angle);
 
 			if (entry.getValue().northWest != null)
 				batch.draw(entry.getValue().northWest,
-					posX + x, posY + y + quadHalfHeight,
-					-x, -y,
-					quadHalfWidth, quadHalfHeight,
-					1, 1, angle);
+						posX + x, posY + y + quadHalfHeight,
+						-x, -y,
+						quadHalfWidth, quadHalfHeight,
+						1, 1, angle);
 
 			if (entry.getValue().northEast != null)
 				batch.draw(entry.getValue().southWest,
-					posX + x + quadHalfWidth, posY + y + quadHalfHeight,
-					-x, -y,
-					quadHalfWidth, quadHalfHeight,
-					1, 1, angle);
+						posX + x + quadHalfWidth, posY + y + quadHalfHeight,
+						-x, -y,
+						quadHalfWidth, quadHalfHeight,
+						1, 1, angle);
 
 			if (entry.getValue().southEast != null)
 				batch.draw(entry.getValue().southWest,
-					posX + x + quadHalfWidth, posY + y,
-					-x, -y,
-					quadHalfWidth, quadHalfHeight,
-					1, 1, angle);
+						posX + x + quadHalfWidth, posY + y,
+						-x, -y,
+						quadHalfWidth, quadHalfHeight,
+						1, 1, angle);
 
 		}
 
 
-
-
 	}
 
-	class QuadTile {
+	private class QuadTile {
 		TextureRegion northWest;
 		TextureRegion northEast;
 		TextureRegion southWest;
 		TextureRegion southEast;
 	}
 
-	class QuadTileset {
+	private class QuadTileset {
 
 		AtlasRegion top;
 		AtlasRegion topLeftCorner;
@@ -228,13 +243,32 @@ public class QuadTileDrawer {
 		AtlasRegion topRightEdge;
 
 
-		public QuadTileset(TextureAtlas textureAtlas) {
+		public QuadTileset(TextureAtlas textureAtlas, String tilePath) {
+			topLeftCorner = findRegion(textureAtlas,tilePath + "topLeft");
+			top = findRegion(textureAtlas,tilePath + "top");
+			topRightCorner = findRegion(textureAtlas,tilePath + "topRight");
+
+			left = findRegion(textureAtlas,tilePath + "left");
+			center = findRegion(textureAtlas,tilePath + "center");
+			right = findRegion(textureAtlas,tilePath + "right");
+
+			bottomLeftCorner = findRegion(textureAtlas,tilePath + "botRight");
+			bottom = findRegion(textureAtlas,tilePath + "bot");
+			bottomLeftCorner = findRegion(textureAtlas,tilePath + "botLeft");
+
+			topLeftEdge = findRegion(textureAtlas,tilePath + "topLeftEdge");
+			topRightEdge = findRegion(textureAtlas,tilePath + "topRightEdge");
+			bottomLeftEdge = findRegion(textureAtlas,tilePath + "botLeftEdge");
+			bottomRightEdge = findRegion(textureAtlas,tilePath + "botRightEdge");
 
 		}
 
 
-		private AtlasRegion findRegion(TextureAtlas textureAtlas, String name){
-
+		private TextureAtlas.AtlasRegion findRegion(TextureAtlas textureAtlas, String region){
+			TextureAtlas.AtlasRegion atlasRegion = textureAtlas.findRegion(region);
+			if (atlasRegion == null)
+				Tools.log(this, "Did not find region with name: " + region);
+			return atlasRegion;
 		}
 	}
 }

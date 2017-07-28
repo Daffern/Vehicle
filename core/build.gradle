@@ -7,5 +7,5 @@ eclipse.project {
     name = appName + "-core"
 }
 dependencies {
-compile 'com.badlogicgames.gdx:gdx-tools:1.9.6'
+    compile 'com.badlogicgames.gdx:gdx-tools:1.9.6'
 }

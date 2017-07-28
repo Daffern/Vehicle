@@ -87,26 +87,8 @@ public class MapHandler implements SystemInterface {
     }
 
     public void receiveTerrainPacket(TerrainPacket tp) {
-        if (tp == null || tp.vertices == null || tp.vertices.length < 1)
-            return;
         if (terrainDrawer != null && terrainDrawer.isInitialized()) {
-
-            float lastX = Common.toPixelCoordinates(tp.vertices[0]);
-            float lastY = Common.toPixelCoordinates(tp.vertices[1]);
-
-            for (int i = 2; i < tp.vertices.length ;) {
-
-                float x = Common.toPixelCoordinates(tp.vertices[i++]);
-                float y = Common.toPixelCoordinates(tp.vertices[i++]);
-
-                terrainDrawer.addLine(lastX, lastY, x, y);
-
-                lastX = x;
-                lastY = y;
-
-            }
-
-
+	        terrainDrawer.receiveTerrainPacket(tp);
         } else {
             Tools.log(this, "terrainDrawer is not initiliazed");
         }

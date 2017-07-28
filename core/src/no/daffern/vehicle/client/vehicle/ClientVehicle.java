@@ -1,28 +1,24 @@
 package no.daffern.vehicle.client.vehicle;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import no.daffern.vehicle.client.ResourceManager;
+import no.daffern.vehicle.client.player.ClientEntity;
 import no.daffern.vehicle.common.Common;
-import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.container.IntVector2;
-import no.daffern.vehicle.graphics.TileDrawer;
-import no.daffern.vehicle.network.MyClient;
-import no.daffern.vehicle.network.packets.*;
+import no.daffern.vehicle.network.packets.VehicleLayoutPacket;
+import no.daffern.vehicle.network.packets.VehicleOutputPacket;
+import no.daffern.vehicle.network.packets.WallPacket;
 import no.daffern.vehicle.utils.Tools;
 
 /**
  * Created by Daffern on 17.11.2016.
  */
-public class ClientVehicle {
+public class ClientVehicle extends ClientEntity{
 
 	public int vehicleId;
 
-	private float posX, posY, width, height;
+	private float width, height;
 	private float partWidth, partHeight;
-	private float angle = 0;
-	private float radAngle = 0;
 
 	ClientWalls clientWalls;
 
@@ -36,12 +32,10 @@ public class ClientVehicle {
 	}
 
 	public void receiveOutput(VehicleOutputPacket vop) {
-		posX = Common.toPixelCoordinates(vop.x);
-		posY = Common.toPixelCoordinates(vop.y);
-		angle = (float) Math.toDegrees(vop.angle);
-		radAngle = vop.angle;
 
-		clientWalls.update(posX, posY, angle);
+
+		super.receiveOutput(vop);
+
 
 		if (vop.partUpdates != null && vop.partUpdates.length > 0)
 			clientWalls.updateParts(vop.partUpdates);
@@ -50,9 +44,10 @@ public class ClientVehicle {
 
 
 	public void receiveLayout(VehicleLayoutPacket vlp) {
+		super.initialize(Common.toPixelCoordinates(vlp.x), Common.toPixelCoordinates(vlp.x), 0);
+
+
 		this.vehicleId = vlp.vehicleId;
-		this.posX = Common.toPixelCoordinates(vlp.x);
-		this.posY = Common.toPixelCoordinates(vlp.y);
 		this.width = Common.toPixelCoordinates(vlp.width);
 		this.height = Common.toPixelCoordinates(vlp.height);
 		this.partWidth = Common.toPixelCoordinates(vlp.partWidth);
@@ -69,17 +64,19 @@ public class ClientVehicle {
 
 
 	public IntVector2 findTileIndex(float x, float y) {
-		Vector2 rp = Tools.rotatePoint(x, y, posX, posY, -radAngle);
+		Vector2 pos = getAbsolutePosition();
+
+		Vector2 rp = Tools.rotatePoint(x, y, pos.x, pos.y, getAbsoluteAngle());
 
 
-		if (rp.x < posX || rp.x > posX + width || rp.y < posY || rp.y > posY + height)
+		if (rp.x < pos.x || rp.x > pos.x + width || rp.y < pos.y || rp.y > pos.y + height)
 			return null;
 
 		IntVector2 vec = new IntVector2();
 
 
-		vec.x = (int) ((rp.x - posX) / partWidth);
-		vec.y = (int) ((rp.y - posY) / partHeight);
+		vec.x = (int) ((rp.x - pos.x) / partWidth);
+		vec.y = (int) ((rp.y - pos.y) / partHeight);
 
 		return vec;
 	}
@@ -90,15 +87,13 @@ public class ClientVehicle {
 
 	public void render(Batch batch) {
 
-		clientWalls.render(batch);
+		interpolate();
+
+		Vector2 pos = getPosition();
+
+		clientWalls.render(batch,pos.x, pos.y, getAngle());
 	}
 
-	public float getPosX() {
-		return posX;
-	}
 
-	public float getPosY() {
-		return posY;
-	}
 
 }

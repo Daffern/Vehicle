@@ -2,6 +2,7 @@ package no.daffern.vehicle.server.world;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.FloatArray;
+import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.network.MyServer;
 import no.daffern.vehicle.network.packets.StartContinuousMapPacket;
 import no.daffern.vehicle.network.packets.TerrainPacket;
@@ -95,24 +96,26 @@ public class ContinuousWorldHandler {
 
         Map<Integer, ServerPlayer> players = S.playerHandler.players;
 
-        float minX = 0, maxX = 0;
+        if (players.size() > 0) {
 
-        for (Map.Entry<Integer, ServerPlayer> entry : players.entrySet()) {
+	        float minX = Float.MAX_VALUE, maxX = Float.MIN_VALUE;
 
-            float playerX = entry.getValue().getPosition().x;
+	        for (Map.Entry<Integer, ServerPlayer> entry : players.entrySet()) {
 
-            if (playerX > maxX) {
-                maxX = playerX;
-            }
-            if (playerX < minX) {
-                minX = playerX;
-            }
+		        float playerX = entry.getValue().getPosition().x;
+
+		        if (playerX > maxX) {
+			        maxX = playerX + 10;
+		        }
+		        if (playerX < minX) {
+			        minX = playerX - 10;
+		        }
 
 
+	        }
+
+	        createSegments(minX, maxX);
         }
-
-
-        createSegments(minX, maxX);
 
     }
 
@@ -176,6 +179,7 @@ public class ContinuousWorldHandler {
 
         TerrainPacket terrainPacket = new TerrainPacket();
         terrainPacket.vertices = vertices;
+
 
         myServer.sendToAllTCP(terrainPacket);
 

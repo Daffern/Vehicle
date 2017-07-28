@@ -29,6 +29,8 @@ public abstract class Wall extends Entity {
 
 	protected boolean isCreated = false;
 
+	public int floodFillValue = -1;
+
 	public Wall(int itemId, int type, int wallX, int wallY) {
 		super(GameItemTypes.WALL_TYPE_NONE);
 
@@ -142,6 +144,33 @@ public abstract class Wall extends Entity {
 				return part;
 		}
 		return null;
+	}
+	public List<Wall> getNearbyWalls(){
+		List<Wall> walls = new Vector(4);
+
+
+		if (left != null) walls.add(left);
+		if (right != null) walls.add(right);
+		if (down != null) walls.add(down);
+		if (up != null) walls.add(up);
+
+		return walls;
+	}
+
+	public List findNearbyParts(int partType){
+		List parts = new Vector(4);
+
+		Part leftPart = left.findPart(partType);
+		Part rightPart = right.findPart(partType);
+		Part downPart = down.findPart(partType);
+		Part upPart = up.findPart(partType);
+
+		if (leftPart != null) parts.add(leftPart);
+		if (rightPart != null) parts.add(rightPart);
+		if (downPart != null) parts.add(downPart);
+		if (upPart != null) parts.add(upPart);
+
+		return parts;
 	}
 
 	public int getNumParts() {

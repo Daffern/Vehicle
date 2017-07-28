@@ -23,6 +23,20 @@ public class ClientEntity {
 
 	private static float maxInterpolationPeriod = 0.6f;
 
+
+	public void initialize(float x, float y, float angle){
+		newPosition.x = x;
+		newPosition.y = y;
+		position.x = x;
+		position.y = y;
+		oldPosition.x = x;
+		oldPosition.y = y;
+
+		oldAngle = angle;
+		newAngle = angle;
+		this.angle = angle;
+	}
+
 	public void receiveOutput(EntityOutputPacket eop) {
 
 		oldPosition = newPosition;
@@ -60,8 +74,16 @@ public class ClientEntity {
 	public Vector2 getPosition(){
 		return position;
 	}
-	public float getNewAngle(){
+
+	public Vector2 getAbsolutePosition(){
+		return newPosition;
+	}
+
+	public float getAngle(){
 		return angle;
+	}
+	public float getAbsoluteAngle(){
+		return newAngle;
 	}
 
 }

@@ -35,6 +35,11 @@ public class Walls {
 		int x = wall.getWallX();
 		int y = wall.getWallY();
 
+
+		Wall oldWall = array.get(x,y);
+		if (oldWall != null)
+			return false;
+
 		if (!force && wall != null) {
 			if (!hasNearbyWall(x, y)) {
 				Tools.log(this, "cannot place wall at: " + x + " " + y + " - has no nearby walls");
@@ -47,27 +52,49 @@ public class Walls {
 			}
 		}
 
-		updateWall(x, y, wall);
+		array.set(x, y, wall);
+
+		updateWallRelations(x, y);
+		createWall(x, y);//update physics
 
 		return true;
 	}
+	//true if removed
+	public boolean removeWall(int x, int y) {
 
-	public Wall removeWall(int x, int y) {
-		Wall wall = array.get(x,y);
-		updateWall(x,y,null);
-		return wall;
-	}
+		Wall wall = array.get(x, y);
 
-	private void updateWall(int x, int y, Wall wall) {
+		List<Wall> nearbyWalls = wall.getNearbyWalls();
 
-		Wall previousWall = array.get(x, y);
+		//set to null and update relations
+		array.set(x, y, null);
+		updateWallRelations(x, y);
 
-		if (previousWall != null) {
-			previousWall.destroyWall(vehicleBody);
+		//if there are more than 1 nearby walls, check if they all can still connect to each other
+		boolean hasPath = true;
+		if (nearbyWalls.size() > 1) {
+			hasPath = EdgeTraverser.traverse(nearbyWalls.remove(0), nearbyWalls);
 		}
 
-		array.set(x, y, wall);
+		//update the physics
+		if (hasPath) {
+			if (wall != null) {
+				wall.destroyWall(vehicleBody);
+			}
+			createWall(x, y);
+		}
+		//reset wall
+		else {
+			array.set(x, y, wall);
+			updateWallRelations(x, y);
+		}
 
+		return hasPath;
+	}
+
+	private void updateWallRelations(int x, int y) {
+
+		Wall wall = array.get(x, y);
 		Wall left = array.get(x - 1, y);
 		Wall right = array.get(x + 1, y);
 		Wall down = array.get(x, y - 1);
@@ -78,26 +105,44 @@ public class Walls {
 			wall.right = right;
 			wall.up = up;
 			wall.down = down;
-			wall.createWall(vehicleBody);
 		}
 		if (left != null) {
 			left.right = wall;
-			left.updateWall(vehicleBody);
 		}
 		if (right != null) {
 			right.left = wall;
-			right.updateWall(vehicleBody);
 		}
 		if (up != null) {
 			up.down = wall;
-			up.updateWall(vehicleBody);
 		}
 		if (down != null) {
 			down.up = wall;
+		}
+	}
+
+	public void createWall(int x, int y) {
+		Wall wall = array.get(x, y);
+
+		Wall left = array.get(x - 1, y);
+		Wall right = array.get(x + 1, y);
+		Wall down = array.get(x, y - 1);
+		Wall up = array.get(x, y + 1);
+
+		if (wall != null) {
+			wall.createWall(vehicleBody);
+		}
+		if (left != null) {
+			left.updateWall(vehicleBody);
+		}
+		if (right != null) {
+			right.updateWall(vehicleBody);
+		}
+		if (up != null) {
+			up.updateWall(vehicleBody);
+		}
+		if (down != null) {
 			down.updateWall(vehicleBody);
 		}
-
-
 	}
 
 
@@ -113,7 +158,6 @@ public class Walls {
 		if (wall == null)
 			return -1;
 
-		//TODO se på det her igjen (noen deler trenger ikke kollidere med hverandre)
 		//check for intersection with another part
 		int searchRadiusX = (int) Math.ceil(part.getWidth() + Part.MAX_WIDTH / Wall.WALL_WIDTH);
 		int searchRadiusY = (int) Math.ceil(part.getHeight() + Part.MAX_HEIGHT / Wall.WALL_HEIGHT);
@@ -128,8 +172,8 @@ public class Walls {
 		int endY = Math.min(array.endY(), wallIndex.y + searchRadiusY);
 
 
-		for (int x = startX; x < endX; x++)
-			for (int y = startY; y < endY; y++) {
+		for (int x = startX; x <= endX; x++)
+			for (int y = startY; y <= endY; y++) {
 
 				Wall searchWall = array.get(x, y);
 
@@ -150,8 +194,8 @@ public class Walls {
 						float tempPartRadiusWidth = searchPart.getWidth() / 2;
 						float tempPartRadiusHeight = searchPart.getHeight() / 2;
 
-						if (partRadiusWidth + tempPartRadiusWidth < distanceX ) {
-							if (partRadiusHeight + tempPartRadiusHeight < distanceY)
+						if (partRadiusWidth + tempPartRadiusWidth > distanceX) {
+							if (partRadiusHeight + tempPartRadiusHeight > distanceY)
 								return -1;
 						}
 					}
@@ -160,7 +204,6 @@ public class Walls {
 
 
 			}
-
 
 
 		//add before attach because axle network creation ordering
@@ -174,27 +217,20 @@ public class Walls {
 
 		return partIndex;
 	}
-	//TODO
-	/*
-    public boolean hasPath(int i1, int j1, int i2, int j2){
-        Wall from = walls[i1][j1];
-        Wall to = walls[i2][j2];
 
-
-
-
-    }*/
 
 	public int removePart(IntVector2 wallIndex, Part part) {
 		Wall wall = array.get(wallIndex.x, wallIndex.y);
 
-		part.detach(world, vehicleBody);
-
 		int partIndex = wall.removePart(part);
+
 		//remove from the dynamic list
-		if (!wall.hasAnimatedPart()){
+		if (!wall.hasAnimatedPart()) {
 			animatedWalls.remove(wall);
 		}
+
+		//detach last
+		part.detach(world, vehicleBody, wall);
 
 		return partIndex;
 	}

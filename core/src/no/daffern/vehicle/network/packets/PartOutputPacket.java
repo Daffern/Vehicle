@@ -4,15 +4,15 @@ package no.daffern.vehicle.network.packets;
  * Created by Daffern on 28.04.2017.
  */
 public class PartOutputPacket {
-    public int wallX, wallY, partIndex;
+    public int wallX, wallY, layer;
     public float angle;
     public PartOutputPacket(){
 
     }
-    public PartOutputPacket(int wallX, int wallY, int partIndex, float angle) {
+    public PartOutputPacket(int wallX, int wallY, int layer, float angle) {
         this.wallX = wallX;
         this.wallY = wallY;
-        this.partIndex = partIndex;
+        this.layer = layer;
         this.angle = angle;
     }
 }

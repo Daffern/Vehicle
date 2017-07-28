@@ -32,7 +32,7 @@ public class CameraHandler implements SystemInterface{
     private float cameraInterpolation = 0.05f;
 
     private GiveControlPacket controlPacket;
-    public ClientPlayer activePlayer;
+    public ClientPlayer currentPlayer;
 
     public float zoom = 1f;
 
@@ -45,24 +45,19 @@ public class CameraHandler implements SystemInterface{
 
         updateScreenSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        C.myClient.addListener(new Listener() {
-            public void received(Connection connection, Object object) {
-                if (object instanceof GiveControlPacket) {
-                    controlPacket = ((GiveControlPacket) object);
-                }
-            }
-        });
+    }
 
-
+    public void setCurrentPlayer(ClientPlayer clientPlayer){
+        this.currentPlayer = clientPlayer;
     }
 
 
     public void updatePosition(float delta) {
 
-        if (activePlayer != null) {
+        if (currentPlayer != null) {
 
 
-            Vector2 playerPos = activePlayer.getPosition();
+            Vector2 playerPos = currentPlayer.getPosition();
 
             float camX = MathUtils.lerp(gameCamera.position.x, playerPos.x, 1f - (float)Math.pow(cameraInterpolation, delta));
             float camY = MathUtils.lerp(gameCamera.position.y, playerPos.y, 1f - (float)Math.pow(cameraInterpolation, delta));
@@ -72,12 +67,6 @@ public class CameraHandler implements SystemInterface{
 
 
             setCameraPositions(playerPos.x, playerPos.y);
-
-        } else if (controlPacket != null) {
-            activePlayer = C.playerHandler.players.get(controlPacket.clientId);
-	        Vector2 playerPos = activePlayer.getPosition();
-
-	        setCameraPositions(playerPos.x, playerPos.y);
 
         }
     }

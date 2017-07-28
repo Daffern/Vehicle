@@ -2,11 +2,9 @@ package no.daffern.vehicle.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import net.dermetfan.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;

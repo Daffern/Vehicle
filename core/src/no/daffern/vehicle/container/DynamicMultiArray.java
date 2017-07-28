@@ -1,6 +1,8 @@
 package no.daffern.vehicle.container;
 
 
+import java.util.Vector;
+
 /**
  * Created by Daffern on 06.06.2017.
  *

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Vector;
 
 /**
+ * TODO lets do this again some time
+ *
  * Created by Daffern on 04.07.2017.
  */
 public class PartAxle extends Part {
@@ -30,6 +32,38 @@ public class PartAxle extends Part {
 		buildAxleNetwork(world,wall);
 
 	}
+	@Override
+	public void detach(World world, Body vehicleBody, Wall wall) {
+
+		//destroy previous network
+		if (axleNetwork != null)
+			axleNetwork.destroyJoints(world);
+
+		//create networks for nearby walls
+		List<Wall> nearbyWalls = wall.getNearbyWalls();
+
+		AxleNetwork newAxleNetwork = new AxleNetwork();
+
+		//loop through nearby walls and create the axlenetwork
+		for (Wall nearbyWall : nearbyWalls){
+			PartAxle partAxle = (PartAxle)nearbyWall.findPart(GameItemTypes.PART_TYPE_AXLE);
+
+			if (partAxle != null){
+
+				partAxle.buildAxleNetwork(nearbyWall, newAxleNetwork);
+
+				//create new network if previous network didnt connect
+				if (partAxle.getAxleNetwork() != newAxleNetwork){
+					newAxleNetwork = new AxleNetwork();
+				}
+
+			}
+
+
+		}
+
+	}
+
 
 	public void buildAxleNetwork(World world, Wall wall){
 
@@ -40,15 +74,20 @@ public class PartAxle extends Part {
 		buildAxleNetwork(wall, axleNetwork);
 
 		axleNetwork.createJoints(world);
+
 	}
+
 
 	/**
 	 * Flood fill find parts of itemTypes connected through PartAxles
+	 * @param wall
+	 * @param axleNetwork
+	 * @return true if already filled
 	 */
-	private void buildAxleNetwork(Wall wall, AxleNetwork axleNetwork) {
+	private boolean buildAxleNetwork(Wall wall, AxleNetwork axleNetwork) {
 
 		if (this.axleNetwork == axleNetwork){
-			return;
+			return true;
 		}else{
 
 			this.axleNetwork = axleNetwork;
@@ -57,9 +96,10 @@ public class PartAxle extends Part {
 		}
 
 		Part partEngine = wall.findPart(GameItemTypes.PART_TYPE_ENGINE);
-		if (partEngine != null)
-			axleNetwork.engines.add((PartEngine)partEngine);
+		if (partEngine != null) {
+			axleNetwork.engines.add((PartEngine) partEngine);
 
+		}
 		Part partWheel = wall.findPart(GameItemTypes.PART_TYPE_WHEEL);
 		if (partWheel != null)
 			axleNetwork.wheels.add((PartWheel)partWheel);
@@ -70,6 +110,7 @@ public class PartAxle extends Part {
 		iterateWall(wall.down, axleNetwork);
 		iterateWall(wall.up, axleNetwork);
 
+		return false;
 	}
 	//calls buildAxleNetwork on a wall (if it has a PartAxle)
 	private void iterateWall(Wall wall, AxleNetwork axleNetwork){
@@ -84,10 +125,10 @@ public class PartAxle extends Part {
 	}
 
 
-
-	@Override
-	public void detach(World world, Body vehicleBody) {
+	public AxleNetwork getAxleNetwork(){
+		return axleNetwork;
 	}
+
 
 	//called if this part is in the range of another part, return true if the other part should be placed
 	@Override
@@ -121,8 +162,8 @@ public class PartAxle extends Part {
 	}
 
 	private class AxleNetwork{
-		private List<PartWheel> wheels = new Vector<>(5,1);
-		private List<PartEngine> engines = new Vector<>(5,1);
+		private List<PartWheel> wheels = new Vector<>(5,5);
+		private List<PartEngine> engines = new Vector<>(5,5);
 
 		private List<GearJoint> joints = new Vector<>();
 

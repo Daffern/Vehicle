@@ -9,6 +9,7 @@ import no.daffern.vehicle.server.handlers.ItemHandler;
 import no.daffern.vehicle.server.handlers.ServerPlayerHandler;
 import no.daffern.vehicle.server.handlers.ServerVehicleHandler;
 import no.daffern.vehicle.server.world.WorldHandler;
+import no.daffern.vehicle.utils.Tools;
 
 import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,10 +22,11 @@ public class ServerMain extends Thread {
 
     ServerMenu serverMenu;
 
-    private float accumulator = 0;
-    double oldTime;
+    private long oldTime;
+	private long accumulator = 0;
 
-    boolean running = true;
+
+	boolean running = true;
 
     Object lock = new Object();
 
@@ -94,7 +96,7 @@ public class ServerMain extends Thread {
         S.worldHandler.loadContinuousWorld();
 
 
-        start();//star thread
+        start();//start thread
     }
 
     private void initServer(int tcpPort, int udpPort) {
@@ -116,21 +118,45 @@ public class ServerMain extends Thread {
         }
     }
 
+	private int tickCounter = 0;
+    private long time = System.currentTimeMillis();
+	private int ups = 0;
+
+
     @Override
     public void run() {
 
 
         while (running) {
 
-            double currentTime = (double) System.currentTimeMillis() / 1000.0;
-            float delta = (float) (currentTime - oldTime);
-            oldTime = currentTime;
-
-            float frameTime = Math.min(delta, 0.25f);
-            accumulator += frameTime;
 
 
-            while (accumulator >= Common.TIME_STEP) {
+
+			if (System.currentTimeMillis() - time > 1000){
+				Tools.log(this, "ticks a second: " + tickCounter);
+				time = System.currentTimeMillis();
+				tickCounter = 0;
+			}
+
+
+			//fix my timestep
+	        long NANOTIMESTEP = (long)Math.ceil((double)Common.TIME_STEP * 1000000000.0);
+
+
+	        long currentTime = System.nanoTime();
+	        long deltaTime = currentTime - oldTime;
+
+	        oldTime = currentTime;
+
+	        long frameTime = Math.min(deltaTime, 250000000);//max 1/4 second between each frame?
+	        accumulator += frameTime;
+
+
+
+
+            while (accumulator >= NANOTIMESTEP) {
+
+	            tickCounter++;
 
                 synchronized (lock) {
 
@@ -146,13 +172,15 @@ public class ServerMain extends Thread {
 
                 }
 
-                accumulator -= Common.TIME_STEP;
+
+	            accumulator -= NANOTIMESTEP;
             }
         }
     }
 
 
     public void render(float deltaTime) {
+
 
         synchronized (lock){
             S.worldHandler.debugRender();

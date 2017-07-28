@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.utils.FloatArray;
 import no.daffern.vehicle.client.ResourceManager;
-import no.daffern.vehicle.container.DynamicList;
+import no.daffern.vehicle.common.Common;
+import no.daffern.vehicle.container.OffsetList;
+import no.daffern.vehicle.network.packets.TerrainPacket;
 import no.daffern.vehicle.utils.Tools;
 
 /**
@@ -15,7 +17,7 @@ public class TerrainDrawer {
 	TextureRegion surfaceRegion;
 	TextureRegion groundRegion;
 
-	DynamicList<Section> sections;
+	OffsetList<Section> sections;
 
 	FloatArray queuedLines;
 
@@ -29,7 +31,7 @@ public class TerrainDrawer {
 	boolean initialized = false;
 
 	public TerrainDrawer() {
-		sections = new DynamicList(10,5,0);
+		sections = new OffsetList(10,5,0);
 		queuedLines = new FloatArray();
 		color = new Color(1,1,1,1);
 	}
@@ -61,12 +63,36 @@ public class TerrainDrawer {
 		initialized = true;
 	}
 
+	public void receiveTerrainPacket(TerrainPacket tp){
+		if (tp == null || tp.vertices == null || tp.vertices.length < 1)
+			return;
+
+
+		for (int i = 0; i < tp.vertices.length -2; i+=2) {
+
+			float x = Common.toPixelCoordinates(tp.vertices[i]);
+			float y = Common.toPixelCoordinates(tp.vertices[i+1]);
+			float x2 = Common.toPixelCoordinates(tp.vertices[i+2]);
+			float y2 = Common.toPixelCoordinates(tp.vertices[i+3]);
+
+			if (Math.abs(x-x2) > 20){
+				Tools.log(this, "Received huge x-x2: "+(x-x2));
+			}
+
+			addLine(x, y, x2, y2);
+
+
+		}
+
+	}
+
 
 	public void addLine(float x, float y, float x2, float y2) {
 		if (surfaceRegion == null) {//queues up lines if the texture is not yet loaded
 			queuedLines.addAll(x, y, x2, y2);
 			return;
 		}
+
 
 		float color = this.color.toFloatBits();
 
@@ -110,7 +136,7 @@ public class TerrainDrawer {
 		Color groundColor = new Color(this.color);
 		float lastColor = color;
 
-		for (int i = 0; i < groundHeight / 50; i++) {
+		for (int i = 0; i < 1; i++) {
 
 			groundColor.mul(0.6f,0.6f,0.6f,1f);
 			color = groundColor.toFloatBits();
@@ -139,9 +165,11 @@ public class TerrainDrawer {
 	public void draw(Batch batch) {
 		if (groundRegion != null && surfaceRegion != null){
 
-			for (int i = sections.getHead(); i <= sections.getTail() ; i++){
 
-				Section section = sections.get(i);
+
+			for (int i = 0; i < sections.getSize() ; i++){
+
+				Section section = sections.getNoOffset(i);
 
 				if (section != null) {
 

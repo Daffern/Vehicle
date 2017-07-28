@@ -2,8 +2,9 @@ package no.daffern.vehicle.server.vehicle;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import javafx.util.Pair;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.container.IntVector2;
@@ -12,7 +13,6 @@ import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -95,7 +95,7 @@ public class ServerVehicle {
 	}
 
 	public boolean removeWall(IntVector2 wallIndex) {
-		if (walls.removeWall(wallIndex.x, wallIndex.y) != null) {
+		if (walls.removeWall(wallIndex.x, wallIndex.y)) {
 
 			sendWallPacket(wallIndex);
 			return true;
@@ -162,7 +162,7 @@ public class ServerVehicle {
 
 						Part part = wall.getPart(i);
 
-						wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getWidth(), part.getHeight(), part.getAngle());
+						wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
 
 
 					}
@@ -217,7 +217,7 @@ public class ServerVehicle {
 
 					Part part = wall.getPart(i);
 
-					wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getWidth(), part.getHeight(), part.getAngle());
+					wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
 
 				}
 			}
@@ -290,6 +290,7 @@ public class ServerVehicle {
 	}
 
 
+
 	public void preStep() {
 
 	}
@@ -309,7 +310,7 @@ public class ServerVehicle {
 			for (int j = 0 ; j < wall.getNumParts() ; j++){
 				Part part = wall.getPart(j);
 				if (part.isDynamic()){
-					partUpdates.add(new PartOutputPacket(wall.getWallX(), wall.getWallY(), j, part.getAngle()));
+					partUpdates.add(new PartOutputPacket(wall.getWallX(), wall.getWallY(), part.getLayer(), part.getAngle()));
 				}
 			}
 		}
@@ -319,8 +320,7 @@ public class ServerVehicle {
 
 		VehicleOutputPacket vehicleOutputPacket = new VehicleOutputPacket();
 		vehicleOutputPacket.vehicleId = vehicleId;
-		vehicleOutputPacket.x = position.x;
-		vehicleOutputPacket.y = position.y;
+		vehicleOutputPacket.position = position;
 		vehicleOutputPacket.angle = vehicleBody.getAngle();
 		vehicleOutputPacket.partUpdates = partUpdates.toArray(new PartOutputPacket[partUpdates.size()]);
 

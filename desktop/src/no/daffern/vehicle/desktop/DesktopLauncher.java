@@ -13,13 +13,6 @@ public class DesktopLauncher {
 
 
 
-		if (false){
-			TexturePacker.Settings settings = new TexturePacker.Settings();
-
-			TexturePacker.process(settings, "./interface", "./texturepacker/", "game");
-
-		}
-
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.foregroundFPS = 0;
 		config.vSyncEnabled = false;

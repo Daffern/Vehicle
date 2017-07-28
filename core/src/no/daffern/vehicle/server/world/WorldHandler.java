@@ -85,7 +85,7 @@ public class WorldHandler {
 	public void loadContinuousWorld() {
 		if (worldGenerator == null)
 			//worldGenerator = new ContinuousWorldHandler(world, S.myServer, new SimpleRandomTerrainGenerator(0.2f));
-			worldGenerator = new ContinuousWorldHandler(world, S.myServer, new MidpointDisplacementTerrainGenerator(0f,1f));
+			worldGenerator = new ContinuousWorldHandler(world, S.myServer, new MidpointDisplacementTerrainGenerator(3f,1f));
 			//worldGenerator = new ContinuousWorldHandler(world, S.myServer, new SimplexNoiseTerrainGenerator());
 
 		worldGenerator.begin(0, -5);

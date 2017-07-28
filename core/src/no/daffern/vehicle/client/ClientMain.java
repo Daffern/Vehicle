@@ -41,7 +41,8 @@ public class ClientMain extends Thread {
         start();//start thread
 
         try {
-            C.myClient.connect(100000, ip, tcpPort, udpPort);
+	        C.myClient.start();
+	        C.myClient.connect(100000, ip, tcpPort, udpPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,7 +95,8 @@ public class ClientMain extends Thread {
             public void onJoinClicked(String address, int tcpPort, int udpPort) {
 
                 try {
-                    C.myClient.connect(10000, address, tcpPort, udpPort);
+	                C.myClient.start();
+	                C.myClient.connect(10000, address, tcpPort, udpPort);
                 } catch (IOException e) {
                     clientMenu.appendConsole("failed to connect");
                     e.printStackTrace();
@@ -114,11 +116,12 @@ public class ClientMain extends Thread {
 
         while (running) {
 
+            /*
             try {
                 C.myClient.update(25);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             double currentTime = (double) System.currentTimeMillis() / 1000.0;
             float delta = (float) (currentTime - oldTime);
@@ -145,6 +148,8 @@ public class ClientMain extends Thread {
     }
 
     public void render(float delta) {
+
+        C.myClient.dispatchQueues();
 
         ResourceManager.update();
 

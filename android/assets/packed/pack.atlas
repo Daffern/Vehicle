@@ -6,196 +6,203 @@ filter: Nearest,Nearest
 repeat: none
 ground/ground2
   rotate: false
-  xy: 2, 247
+  xy: 2, 235
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 ground/surface
   rotate: false
-  xy: 260, 426
+  xy: 260, 414
   size: 393, 77
   orig: 393, 77
   offset: 0, 0
   index: -1
 ground/surface2
   rotate: false
-  xy: 2, 100
+  xy: 2, 88
   size: 256, 145
   orig: 256, 145
   offset: 0, 0
   index: -1
 interface/selected
   rotate: false
-  xy: 2, 2
+  xy: 220, 56
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 interface/uibox
   rotate: false
-  xy: 260, 110
+  xy: 560, 316
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 placeholder
   rotate: false
-  xy: 757, 439
+  xy: 260, 86
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 player/robotv2
   rotate: false
-  xy: 655, 442
+  xy: 655, 430
   size: 100, 61
   orig: 100, 61
   offset: 0, 0
   index: -1
 player/yellow
   rotate: false
-  xy: 742, 376
+  xy: 390, 285
   size: 50, 61
   orig: 50, 61
   offset: 0, 0
   index: 0
 player/yellow
   rotate: false
-  xy: 794, 376
+  xy: 508, 285
   size: 50, 61
   orig: 50, 61
   offset: 0, 0
   index: 1
 tools/eraser
   rotate: false
-  xy: 346, 340
+  xy: 88, 2
   size: 19, 18
   orig: 19, 18
   offset: 0, 0
   index: -1
 vehicle/1/bot
   rotate: false
-  xy: 2, 34
+  xy: 260, 218
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/botCenter
   rotate: false
-  xy: 260, 274
+  xy: 390, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/botLeft
   rotate: false
-  xy: 346, 360
+  xy: 88, 22
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/botRight
   rotate: false
-  xy: 68, 34
+  xy: 260, 152
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/center
   rotate: false
-  xy: 260, 208
+  xy: 456, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/centerLeft
   rotate: false
-  xy: 412, 360
+  xy: 154, 22
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/centerRight
   rotate: false
-  xy: 134, 34
+  xy: 522, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/horizontal
   rotate: false
-  xy: 478, 360
+  xy: 326, 218
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/left
   rotate: false
-  xy: 544, 360
+  xy: 326, 152
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/right
   rotate: false
-  xy: 823, 439
+  xy: 326, 86
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/top
   rotate: false
-  xy: 889, 439
+  xy: 757, 427
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/topCenter
   rotate: false
-  xy: 955, 439
+  xy: 823, 427
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/topLeft
   rotate: false
-  xy: 200, 34
+  xy: 889, 427
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/topRight
   rotate: false
-  xy: 610, 360
+  xy: 955, 427
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/1/vertical
   rotate: false
-  xy: 676, 376
+  xy: 442, 282
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/axle
   rotate: false
-  xy: 260, 340
+  xy: 2, 2
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 vehicle/engine
   rotate: false
-  xy: 260, 142
+  xy: 588, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/wheel
   rotate: false
-  xy: 846, 412
+  xy: 260, 284
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+vehicle/wheelOld
+  rotate: false
+  xy: 220, 29
   size: 25, 25
   orig: 25, 25
   offset: 0, 0

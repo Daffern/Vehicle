@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class MyServer extends Server {
 
-    private List<Listener> listeners = new ArrayList<>(100);
+    private List<Listener> listeners = new ArrayList<>(20);
     private Object listenerLock = new Object();
 
     private Queue<Connection> connectedQueue = new ConcurrentLinkedQueue<>();

@@ -34,6 +34,12 @@ public class TexturePackerHelper {
 
 		TexturePacker.Settings settings = new TexturePacker.Settings();
 		settings.combineSubdirectories = true;
+
+		/*settings.duplicatePadding = true;
+		settings.paddingX = 4;
+		settings.paddingY = 4;
+		*/
+
 		TexturePacker.process(settings, inputFolder, output, packName);
 	}
 

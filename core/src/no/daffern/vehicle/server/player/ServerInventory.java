@@ -1,7 +1,5 @@
 package no.daffern.vehicle.server.player;
 
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.container.IntVector2;

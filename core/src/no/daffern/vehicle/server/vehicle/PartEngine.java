@@ -2,15 +2,9 @@ package no.daffern.vehicle.server.vehicle;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.joints.GearJoint;
-import com.badlogic.gdx.physics.box2d.joints.GearJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import no.daffern.vehicle.common.GameItemTypes;
-import no.daffern.vehicle.server.world.CollisionCategories;
-
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by Daffern on 04.07.2017.
@@ -19,8 +13,8 @@ public class PartEngine extends Part {
 
 	private boolean running = false;
 
-	private float maxSpeed = 3f;
-	private float maxTorque = 20f;
+	private float maxSpeed = 9f;
+	private float maxTorque = 50f;
 
 
 	private Body engineBody;
@@ -28,7 +22,7 @@ public class PartEngine extends Part {
 
 
 	public PartEngine(int itemId) {
-		super(itemId, GameItemTypes.PART_TYPE_ENGINE, true, 0.8f, 0.8f);
+		super(itemId, GameItemTypes.PART_TYPE_ENGINE, false, 0.8f, 0.8f);
 	}
 
 	public RevoluteJoint getJoint(){
@@ -77,7 +71,7 @@ public class PartEngine extends Part {
 	}
 
 	@Override
-	public void detach(World world, Body vehicleBody) {
+	public void detach(World world, Body vehicleBody, Wall wall) {
 		world.destroyJoint(engineJoint);
 		world.destroyBody(engineBody);
 		engineJoint = null;

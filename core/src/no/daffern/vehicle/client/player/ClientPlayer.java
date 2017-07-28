@@ -76,28 +76,14 @@ public class ClientPlayer extends ClientEntity{
 
     public void render(Batch batch, float delta) {
 
-		interpolate();
-/*
-	    if (animation != null) {
 
-
-            animation.setPosition(inter.x, inter.y);
-
-            if (speed > 0.5f){
-                animation.flip(false);
-            }else if (speed < -0.5f){
-                animation.flip(true);
-            }
-
-            animation.render(batch, Math.abs(speed * delta * 3));
-        }*/
         if (testTexture != null){
+
+	        interpolate();
 
         	Vector2 pos = getPosition();
 
-        	batch.draw(testTexture,pos.x-width/2,pos.y-height/2,width/2,height/2,width,height, 1,1, getNewAngle());
-
-	        //batch.draw(testTexture,posX-width/2,posY-height/2,width/2,height/2,width,height,1,1,angle);
+        	batch.draw(testTexture,pos.x-width/2,pos.y-height/2,width/2,height/2,width,height, 1,1, getAngle());
 
         }
     }

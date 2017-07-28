@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import com.badlogic.gdx.physics.box2d.joints.WheelJoint;
-import com.badlogic.gdx.physics.box2d.joints.WheelJointDef;
 import no.daffern.vehicle.server.world.CollisionCategories;
 import no.daffern.vehicle.common.GameItemTypes;
 
@@ -77,13 +75,18 @@ public class PartWheel extends Part {
     }
 
     @Override
-    public void detach(World world, Body vehicleBody) {
+    public void detach(World world, Body vehicleBody, Wall wall) {
         world.destroyJoint(revoluteJoint);
         world.destroyBody(wheelBody);
         revoluteJoint = null;
         wheelBody = null;
         attached = false;
 
+    }
+
+    @Override
+    public int getLayer(){
+    	return -1;
     }
 
     @Override

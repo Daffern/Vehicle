@@ -14,6 +14,7 @@ images/tools/eraser.png
 images/vehicle/axle.png
 images/vehicle/engine.png
 images/vehicle/wheel.png
+images/vehicle/wheelOld.png
 images/vehicle/1/bot.png
 images/vehicle/1/botCenter.png
 images/vehicle/1/botLeft.png

@@ -17,6 +17,8 @@ public class StatusMenu {
 	private Stage stage;
 
     private float fps;
+    private float ups = -1;
+
     private int delay;
 	private Label label;
 
@@ -45,12 +47,19 @@ public class StatusMenu {
     public void setFps(float fps){
         this.fps = fps;
     }
+    public void setUps(float ups){
+    	this.ups = ups;
+    }
     public void setNetworkDelay(int delay){
     	this.delay = delay;
     }
 
     public void render(float delta){
-        label.setText("FPS: " + fps + ", delay: " + delay + "ms");
+    	String text = "FPS: " + fps + ", delay: " + delay + "ms";
+    	if (ups != -1)
+    		text += " SUPS: "+ups;
+
+        label.setText(text);
         stage.act(delta);
         stage.draw();
 

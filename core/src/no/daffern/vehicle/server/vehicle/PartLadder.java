@@ -2,7 +2,6 @@ package no.daffern.vehicle.server.vehicle;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import net.dermetfan.gdx.physics.box2d.WorldObserver;
 import no.daffern.vehicle.common.GameItemTypes;
 
 /**
@@ -39,7 +38,7 @@ public class PartLadder extends Part {
 	}
 
 	@Override
-	public void detach(World world, Body vehicleBody) {
+	public void detach(World world, Body vehicleBody, Wall wall) {
 
 		vehicleBody.destroyFixture(fixture);
 		fixture = null;

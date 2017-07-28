@@ -38,7 +38,7 @@ public class MidpointDisplacementTerrainGenerator implements TerrainGenerator {
 		//generate the y coordinates first
 		float[] points = new float[size];
 		points[0] = startY;
-		points[subSize] = startY + ((float)(Math.random()*10)-5) *scale;
+		points[subSize] = startY + ((float)(Math.random()*heightScale)-heightScale/2) *scale;
 
 
 		while (stride != 0){

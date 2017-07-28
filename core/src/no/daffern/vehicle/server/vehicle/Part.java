@@ -30,6 +30,10 @@ public abstract class Part extends Entity{
         this.width = width;
         this.height = height;
     }
+
+    public int getLayer(){
+    	return type;
+    }
     /**
      *
      * @param world
@@ -37,7 +41,7 @@ public abstract class Part extends Entity{
      * @param wall
      */
     public abstract void attach(World world, Body vehicleBody, Wall wall);
-    public abstract void detach(World world, Body vehicleBody);
+    public abstract void detach(World world, Body vehicleBody, Wall wall);
 
     public abstract boolean checkCollision(Part otherPart);
 

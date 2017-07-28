@@ -26,7 +26,7 @@ public class Main implements ApplicationListener {
 	public void create() {
 
 		TexturePackerHelper.ensureAtlasUpdated("images","packed/pack");
-		//TexturePackerHelper.updateAtlas("images","packed","pack");
+		TexturePackerHelper.updateAtlas("images","packed/pack");
 
 
 

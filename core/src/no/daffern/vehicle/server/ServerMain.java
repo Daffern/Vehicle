@@ -1,6 +1,5 @@
 package no.daffern.vehicle.server;
 
-import com.esotericsoftware.kryonet.*;
 import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.Packets;
 import no.daffern.vehicle.menu.ServerMenu;
@@ -9,10 +8,8 @@ import no.daffern.vehicle.server.handlers.ItemHandler;
 import no.daffern.vehicle.server.handlers.ServerPlayerHandler;
 import no.daffern.vehicle.server.handlers.ServerVehicleHandler;
 import no.daffern.vehicle.server.world.WorldHandler;
-import no.daffern.vehicle.utils.Tools;
 
 import java.io.IOException;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Daffern on 04.11.2016.
@@ -133,7 +130,7 @@ public class ServerMain extends Thread {
 
 
 			if (System.currentTimeMillis() - time > 1000){
-				Tools.log(this, "ticks a second: " + tickCounter);
+				//Tools.log(this, "ticks a second: " + tickCounter);
 				time = System.currentTimeMillis();
 				tickCounter = 0;
 			}
@@ -195,8 +192,9 @@ public class ServerMain extends Thread {
     }
 
     public void resize(int width, int height) {
-        S.worldHandler.camera.viewportWidth = width * Common.pixelToUnits * Common.cameraScaleX;
-        S.worldHandler.camera.viewportHeight = height * Common.pixelToUnits * Common.cameraScaleY;
+        S.worldHandler.camera.viewportWidth = width * Common.pixelToUnits;
+        S.worldHandler.camera.viewportHeight = height * Common.pixelToUnits;
+        S.worldHandler.camera.zoom = Common.cameraZoom;
         S.worldHandler.camera.update();
     }
 

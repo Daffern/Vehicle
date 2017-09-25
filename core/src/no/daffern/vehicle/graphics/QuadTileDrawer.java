@@ -12,6 +12,8 @@ import java.util.Map;
 
 /**
  * Created by Daffern on 28.07.2017.
+ * <p>
+ * IF HELL
  */
 public class QuadTileDrawer {
 
@@ -53,13 +55,17 @@ public class QuadTileDrawer {
 		tilesets.put(id, quadTileset);
 	}
 
+	public boolean hasTileset(int id) {
+		return tilesets.containsKey(id);
+	}
+
 	public void set(IntVector2 index, int id) {
 
 		QuadTileset tileset = tilesets.get(id);
 		if (tileset == null)
 			Tools.log(this, "Tileset with id: " + id + " not loaded");
 
-		quadTiles.put(index, new QuadTile());
+		quadTiles.put(index, new QuadTile(id));
 
 		resolve(index.x, index.y);
 	}
@@ -72,8 +78,12 @@ public class QuadTileDrawer {
 
 	public void resolve(int x, int y) {
 
+		QuadTileset tileset = tilesets.entrySet().iterator().next().getValue();//get first tileset
 
-		QuadTileset tileset = tilesets.get(1);
+		if (tileset == null) {
+			Tools.log(this, "tileset not loaded");
+			return;
+		}
 
 		QuadTile center = get(x, y);
 
@@ -86,10 +96,45 @@ public class QuadTileDrawer {
 		QuadTile west = get(x - 1, y);
 		QuadTile northWest = get(x - 1, y + 1);
 
-		resolveNorthWestQuad(tileset, center, north, northWest, west);
-		resolveNorthEastQuad(tileset, center, north, northEast, east);
-		resolveSouthEastQuad(tileset, center, south, southEast, east);
-		resolveSouthWestQuad(tileset, center, south, southWest, west);
+
+		if (center != null) {
+			resolveNorthWestQuad(tileset, center, north, northWest, west);
+			resolveNorthEastQuad(tileset, center, north, northEast, east);
+			resolveSouthEastQuad(tileset, center, south, southEast, east);
+			resolveSouthWestQuad(tileset, center, south, southWest, west);
+		}
+
+		//adjacents
+		if (north != null) {
+			resolveSouthEastQuad(tileset, north, center, east, northEast);
+			resolveSouthWestQuad(tileset, north, center, west, northWest);
+		}
+		if (south != null) {
+			resolveNorthEastQuad(tileset, south, center, east, southEast);
+			resolveNorthWestQuad(tileset, south, center, west, southWest);
+		}
+		if (east != null) {
+			resolveNorthWestQuad(tileset, east, northEast, north, center);
+			resolveSouthWestQuad(tileset, east, southEast, south, center);
+		}
+		if (west != null) {
+			resolveNorthEastQuad(tileset, west, northWest, north, center);
+			resolveSouthEastQuad(tileset, west, southWest, south, center);
+		}
+
+		//edges
+		if (northEast != null) {
+			resolveSouthWestQuad(tileset, northEast, east, center, north);
+		}
+		if (southEast != null) {
+			resolveNorthWestQuad(tileset, southEast, east, center, south);
+		}
+		if (southWest != null) {
+			resolveNorthEastQuad(tileset, southWest, west, center, south);
+		}
+		if (northWest != null) {
+			resolveSouthEastQuad(tileset, northWest, west, center, north);
+		}
 
 	}
 
@@ -194,21 +239,21 @@ public class QuadTileDrawer {
 			if (entry.getValue().northWest != null)
 				batch.draw(entry.getValue().northWest,
 						posX + x, posY + y + quadHalfHeight,
-						-x, -y,
+						-x, -y - quadHalfHeight,
 						quadHalfWidth, quadHalfHeight,
 						1, 1, angle);
 
 			if (entry.getValue().northEast != null)
-				batch.draw(entry.getValue().southWest,
+				batch.draw(entry.getValue().northEast,
 						posX + x + quadHalfWidth, posY + y + quadHalfHeight,
-						-x, -y,
+						-x - quadHalfWidth, -y - quadHalfHeight,
 						quadHalfWidth, quadHalfHeight,
 						1, 1, angle);
 
 			if (entry.getValue().southEast != null)
-				batch.draw(entry.getValue().southWest,
+				batch.draw(entry.getValue().southEast,
 						posX + x + quadHalfWidth, posY + y,
-						-x, -y,
+						-x - quadHalfWidth, -y,
 						quadHalfWidth, quadHalfHeight,
 						1, 1, angle);
 
@@ -218,10 +263,15 @@ public class QuadTileDrawer {
 	}
 
 	private class QuadTile {
+		int tileId;
 		TextureRegion northWest;
 		TextureRegion northEast;
 		TextureRegion southWest;
 		TextureRegion southEast;
+
+		public QuadTile(int tileId) {
+			this.tileId = tileId;
+		}
 	}
 
 	private class QuadTileset {
@@ -244,27 +294,27 @@ public class QuadTileDrawer {
 
 
 		public QuadTileset(TextureAtlas textureAtlas, String tilePath) {
-			topLeftCorner = findRegion(textureAtlas,tilePath + "topLeft");
-			top = findRegion(textureAtlas,tilePath + "top");
-			topRightCorner = findRegion(textureAtlas,tilePath + "topRight");
+			topLeftCorner = findRegion(textureAtlas, tilePath + "topLeft");
+			top = findRegion(textureAtlas, tilePath + "top");
+			topRightCorner = findRegion(textureAtlas, tilePath + "topRight");
 
-			left = findRegion(textureAtlas,tilePath + "left");
-			center = findRegion(textureAtlas,tilePath + "center");
-			right = findRegion(textureAtlas,tilePath + "right");
+			left = findRegion(textureAtlas, tilePath + "left");
+			center = findRegion(textureAtlas, tilePath + "center");
+			right = findRegion(textureAtlas, tilePath + "right");
 
-			bottomLeftCorner = findRegion(textureAtlas,tilePath + "botRight");
-			bottom = findRegion(textureAtlas,tilePath + "bot");
-			bottomLeftCorner = findRegion(textureAtlas,tilePath + "botLeft");
+			bottomRightCorner = findRegion(textureAtlas, tilePath + "botRight");
+			bottom = findRegion(textureAtlas, tilePath + "bot");
+			bottomLeftCorner = findRegion(textureAtlas, tilePath + "botLeft");
 
-			topLeftEdge = findRegion(textureAtlas,tilePath + "topLeftEdge");
-			topRightEdge = findRegion(textureAtlas,tilePath + "topRightEdge");
-			bottomLeftEdge = findRegion(textureAtlas,tilePath + "botLeftEdge");
-			bottomRightEdge = findRegion(textureAtlas,tilePath + "botRightEdge");
+			topLeftEdge = findRegion(textureAtlas, tilePath + "topLeftEdge");
+			topRightEdge = findRegion(textureAtlas, tilePath + "topRightEdge");
+			bottomLeftEdge = findRegion(textureAtlas, tilePath + "botLeftEdge");
+			bottomRightEdge = findRegion(textureAtlas, tilePath + "botRightEdge");
 
 		}
 
 
-		private TextureAtlas.AtlasRegion findRegion(TextureAtlas textureAtlas, String region){
+		private TextureAtlas.AtlasRegion findRegion(TextureAtlas textureAtlas, String region) {
 			TextureAtlas.AtlasRegion atlasRegion = textureAtlas.findRegion(region);
 			if (atlasRegion == null)
 				Tools.log(this, "Did not find region with name: " + region);

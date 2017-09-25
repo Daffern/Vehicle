@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -14,7 +17,6 @@ import no.daffern.vehicle.network.packets.StartTmxMapPacket;
 import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.server.player.ServerPlayer;
 import no.daffern.vehicle.server.world.terrainGenerator.MidpointDisplacementTerrainGenerator;
-import no.daffern.vehicle.server.world.terrainGenerator.SimplexNoiseTerrainGenerator;
 import no.daffern.vehicle.utils.ContactListenerMultiplexer;
 
 import java.util.Map;
@@ -44,14 +46,18 @@ public class WorldHandler {
 	public WorldType activeWorld;
 
 	public WorldHandler() {
-		camera = new OrthographicCamera(Common.toWorldCoordinates(Gdx.graphics.getWidth()) * Common.cameraScaleX, Common.toWorldCoordinates(Gdx.graphics.getHeight() * Common.cameraScaleY));
+		camera = new OrthographicCamera();
+		camera.viewportWidth = Common.toWorldCoordinates(Gdx.graphics.getWidth());
+		camera.viewportHeight = Common.toWorldCoordinates(Gdx.graphics.getHeight());
+		camera.zoom = Common.cameraZoom;
+		camera.update();
+
 		world = new World(new Vector2(0, -9.8f), true);
 
 		debugRenderer = new Box2DDebugRenderer();
 
 		contactListenerMultiplexer = new ContactListenerMultiplexer();
 		world.setContactListener(contactListenerMultiplexer);
-
 
 		S.myServer.addListener(new Listener() {
 			public void connected(Connection connection) {

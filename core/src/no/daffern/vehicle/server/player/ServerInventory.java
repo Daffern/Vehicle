@@ -8,7 +8,14 @@ import no.daffern.vehicle.network.packets.GameItemPacket;
 import no.daffern.vehicle.network.packets.InventoryPacket;
 import no.daffern.vehicle.network.packets.PlayerClickPacket;
 import no.daffern.vehicle.server.S;
-import no.daffern.vehicle.server.vehicle.*;
+import no.daffern.vehicle.server.vehicle.ServerVehicle;
+import no.daffern.vehicle.server.vehicle.Wall;
+import no.daffern.vehicle.server.vehicle.WallSquare;
+import no.daffern.vehicle.server.vehicle.WallTriangle;
+import no.daffern.vehicle.server.vehicle.parts.Part;
+import no.daffern.vehicle.server.vehicle.parts.PartAxle;
+import no.daffern.vehicle.server.vehicle.parts.PartEngine;
+import no.daffern.vehicle.server.vehicle.parts.PartWheel;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.HashMap;

@@ -3,9 +3,10 @@ package no.daffern.vehicle.server.vehicle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
-import no.daffern.vehicle.server.world.CollisionCategories;
 import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.container.Vector4;
+import no.daffern.vehicle.server.vehicle.parts.Part;
+import no.daffern.vehicle.server.world.CollisionCategories;
 
 import java.util.ArrayList;
 import java.util.List;

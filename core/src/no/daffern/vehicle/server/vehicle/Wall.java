@@ -2,12 +2,10 @@ package no.daffern.vehicle.server.vehicle;
 
 
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.server.handlers.Entity;
 import no.daffern.vehicle.utils.Tools;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,11 +23,12 @@ public abstract class Wall extends Entity {
 
 	public Wall left, right, up, down;
 
-	protected List<Part> parts;
+	protected List<no.daffern.vehicle.server.vehicle.parts.Part> parts;
 
 	protected boolean isCreated = false;
 
 	public int floodFillValue = -1;
+	public static int nextFloodFillValue = 0;
 
 	public Wall(int itemId, int type, int wallX, int wallY) {
 		super(GameItemTypes.WALL_TYPE_NONE);
@@ -48,7 +47,7 @@ public abstract class Wall extends Entity {
 	 * @param part
 	 * @return index to the part added, -1 if part type already exists
 	 */
-	int addPart(Part part) {
+	int addPart(no.daffern.vehicle.server.vehicle.parts.Part part) {
 
 		int partIndex = -1;
 		if (parts == null || parts.size() == 0) {
@@ -92,7 +91,7 @@ public abstract class Wall extends Entity {
 	 * @param part
 	 * @return index of the part removed
 	 */
-	int removePart(Part part) {
+	int removePart(no.daffern.vehicle.server.vehicle.parts.Part part) {
 		if (parts == null)
 			return -1;
 
@@ -113,7 +112,7 @@ public abstract class Wall extends Entity {
 	}
 	//
 
-	public Part getPart(int part) {
+	public no.daffern.vehicle.server.vehicle.parts.Part getPart(int part) {
 		return parts.get(part);
 	}
 
@@ -129,18 +128,27 @@ public abstract class Wall extends Entity {
 	public boolean containsPartType(int partType) {
 		if (parts == null)
 			return false;
-		for (Part part : parts) {
+		for (no.daffern.vehicle.server.vehicle.parts.Part part : parts) {
 			if (part.getType() == partType)
 				return true;
 		}
 		return false;
 	}
 
-	public Part findPart(int partType) {
+	public no.daffern.vehicle.server.vehicle.parts.Part findPart(int partType) {
 		if (parts == null)
 			return null;
-		for (Part part : parts) {
+		for (no.daffern.vehicle.server.vehicle.parts.Part part : parts) {
 			if (part.getType() == partType)
+				return part;
+		}
+		return null;
+	}
+	public no.daffern.vehicle.server.vehicle.parts.Part findPartById(int itemId){
+		if (parts == null)
+			return null;
+		for (no.daffern.vehicle.server.vehicle.parts.Part part : parts) {
+			if (part.getItemId() == itemId)
 				return part;
 		}
 		return null;
@@ -160,10 +168,10 @@ public abstract class Wall extends Entity {
 	public List findNearbyParts(int partType){
 		List parts = new Vector(4);
 
-		Part leftPart = left.findPart(partType);
-		Part rightPart = right.findPart(partType);
-		Part downPart = down.findPart(partType);
-		Part upPart = up.findPart(partType);
+		no.daffern.vehicle.server.vehicle.parts.Part leftPart = left.findPart(partType);
+		no.daffern.vehicle.server.vehicle.parts.Part rightPart = right.findPart(partType);
+		no.daffern.vehicle.server.vehicle.parts.Part downPart = down.findPart(partType);
+		no.daffern.vehicle.server.vehicle.parts.Part upPart = up.findPart(partType);
 
 		if (leftPart != null) parts.add(leftPart);
 		if (rightPart != null) parts.add(rightPart);
@@ -195,10 +203,18 @@ public abstract class Wall extends Entity {
 			return true;
 		if (right != null && right.type != GameItemTypes.WALL_TYPE_NONE)
 			return true;
-		if (up != null && up.type != GameItemTypes.WALL_TYPE_NONE)
-			return true;
+		return up != null && up.type != GameItemTypes.WALL_TYPE_NONE;
 
-		return false;
+	}
+	public boolean hasEdge(){
+		if (left == null)
+			return true;
+		if (right == null)
+			return true;
+		if (down == null)
+			return true;
+		return up == null;
+
 	}
 
 	public boolean isCreated() {

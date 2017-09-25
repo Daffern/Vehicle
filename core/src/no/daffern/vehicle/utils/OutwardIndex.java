@@ -19,10 +19,7 @@ public class OutwardIndex {
     }
 
     public boolean hasNext(){
-        if (i == length)
-            return false;
-        else
-            return true;
+	    return i != length;
     }
 
     public int getNext(){

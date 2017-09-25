@@ -19,8 +19,8 @@ public class GameItemTypes {
     //order defines order of the walls, from lowest to highest (see Wall.addPart())
     public final static int PART_TYPE_WHEEL = 4;
     public final static int PART_TYPE_LADDER = 5;
-    public final static int PART_TYPE_AXLE = 6;
-    public final static int PART_TYPE_ENGINE = 7;
+    public final static int PART_TYPE_AXLE = 7;
+    public final static int PART_TYPE_ENGINE = 6;
 
 
 

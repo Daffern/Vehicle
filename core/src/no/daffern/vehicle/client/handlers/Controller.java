@@ -13,8 +13,8 @@ import no.daffern.vehicle.client.player.ClientInventory;
 import no.daffern.vehicle.client.player.ClientPlayer;
 import no.daffern.vehicle.common.SystemInterface;
 import no.daffern.vehicle.network.MyClient;
-import no.daffern.vehicle.network.packets.PlayerInputPacket;
 import no.daffern.vehicle.network.packets.PlayerClickPacket;
+import no.daffern.vehicle.network.packets.PlayerInputPacket;
 import no.daffern.vehicle.utils.PriorityInputHandler;
 import no.daffern.vehicle.utils.Tools;
 
@@ -81,11 +81,8 @@ public class Controller implements InputProcessor, SystemInterface {
                 return true;
         }
 
-        if (clientInventory.keyDown(keycode)){
-            return true;
-        }
+	    return clientInventory.keyDown(keycode);
 
-        return false;
     }
 
     @Override
@@ -223,22 +220,10 @@ public class Controller implements InputProcessor, SystemInterface {
 
         @Override
         public boolean pan(float x, float y, float deltaX, float deltaY) {
-            if (x < (Gdx.graphics.getWidth() * touchAreaScale)){
-                playerInputPacket.leftPressed = true;
-            }else{
-                playerInputPacket.leftPressed = false;
-            }
-            if (x > (Gdx.graphics.getWidth() - Gdx.graphics.getWidth() * touchAreaScale)){
-                playerInputPacket.rightPressed = true;
-            }else{
-                playerInputPacket.rightPressed = false;
-            }
+	        playerInputPacket.leftPressed = x < (Gdx.graphics.getWidth() * touchAreaScale);
+	        playerInputPacket.rightPressed = x > (Gdx.graphics.getWidth() - Gdx.graphics.getWidth() * touchAreaScale);
 
-            if (deltaY < -10){
-                playerInputPacket.upPressed = true;
-            }else{
-                playerInputPacket.upPressed = false;
-            }
+	        playerInputPacket.upPressed = deltaY < -10;
             return false;
         }
 

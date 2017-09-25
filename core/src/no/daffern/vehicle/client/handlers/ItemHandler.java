@@ -1,5 +1,6 @@
 package no.daffern.vehicle.client.handlers;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.esotericsoftware.kryonet.Connection;
@@ -40,6 +41,9 @@ public class ItemHandler implements SystemInterface {
 
 							@Override
 							public void onAssetLoaded(TextureAtlas asset) {
+
+								asset.getTextures().first().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Nearest);
+								asset.getTextures().first().setWrap(Texture.TextureWrap.ClampToEdge, Texture.TextureWrap.ClampToEdge);
 
 								GameItemPair gameItemPair = new GameItemPair(asset, gameItem);
 

@@ -1,7 +1,5 @@
 package no.daffern.vehicle.common;
 
-import com.badlogic.gdx.math.Vector2;
-
 /**
  * Created by Daffern on 16.11.2016.
  */
@@ -23,13 +21,13 @@ public class Common {
 
     //1 meter = 32 pixels
     public final static float unitsToPixels = 32f;
-    public final static float pixelToUnits = 1/32f;
+    public final static float pixelToUnits = 1f/32f;
 
     public final static int defaultTcpPort = 1337;
     public final static int defaultUdpPort = 1337;
 
-    public final static float cameraScaleX = 0.4f;
-    public final static float cameraScaleY = 0.4f;
+
+	public final static float cameraZoom = 0.5f;
 
 
     public static float toWorldCoordinates(float val){

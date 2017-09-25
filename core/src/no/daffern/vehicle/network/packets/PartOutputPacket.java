@@ -6,6 +6,7 @@ package no.daffern.vehicle.network.packets;
 public class PartOutputPacket {
     public int wallX, wallY, layer;
     public float angle;
+    public byte state;
     public PartOutputPacket(){
 
     }

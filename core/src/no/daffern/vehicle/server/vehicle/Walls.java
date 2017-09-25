@@ -4,6 +4,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import no.daffern.vehicle.container.DynamicMultiArray;
 import no.daffern.vehicle.container.IntVector2;
+import no.daffern.vehicle.server.vehicle.parts.Part;
+import no.daffern.vehicle.server.vehicle.parts.network.NetworkManager;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.List;
 
 /**
  * Created by Daffern on 17.05.2017.
+ *
+ * NO NETWORKING IN HERE
  */
 public class Walls {
 
@@ -21,12 +25,14 @@ public class Walls {
 
 	List<Wall> animatedWalls;
 
+	NetworkManager networkManager;
 
 	public Walls(World world, Body vehicleBody, int initialWidth, int initialHeight) {
-		array = new DynamicMultiArray<>(initialWidth, initialHeight);
+		this.array = new DynamicMultiArray<>(initialWidth, initialHeight);
 		this.world = world;
 		this.vehicleBody = vehicleBody;
 		this.animatedWalls = new ArrayList<>();
+		this.networkManager = new NetworkManager(world);
 	}
 
 
@@ -73,7 +79,7 @@ public class Walls {
 		//if there are more than 1 nearby walls, check if they all can still connect to each other
 		boolean hasPath = true;
 		if (nearbyWalls.size() > 1) {
-			hasPath = EdgeTraverser.traverse(nearbyWalls.remove(0), nearbyWalls);
+			hasPath = HeuristicFloodFill.hasPath(nearbyWalls);
 		}
 
 		//update the physics
@@ -201,8 +207,6 @@ public class Walls {
 					}
 
 				}
-
-
 			}
 
 
@@ -214,6 +218,10 @@ public class Walls {
 		if (part.isDynamic()) {
 			animatedWalls.add(wall);
 		}
+
+		//do the PartNetwork stuff
+		networkManager.tryAddPart(part, wall);
+
 
 		return partIndex;
 	}
@@ -232,6 +240,10 @@ public class Walls {
 		//detach last
 		part.detach(world, vehicleBody, wall);
 
+		//do the network stuff
+		networkManager.tryRemovePart(part, wall);
+
+
 		return partIndex;
 	}
 
@@ -248,9 +260,7 @@ public class Walls {
 			return true;
 		if (array.get(x, y - 1) != null)
 			return true;
-		if (array.get(x, y + 1) != null)
-			return true;
-		return false;
+		return array.get(x, y + 1) != null;
 	}
 
 

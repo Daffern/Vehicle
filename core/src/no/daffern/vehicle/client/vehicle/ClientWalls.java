@@ -1,20 +1,22 @@
 package no.daffern.vehicle.client.vehicle;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.OrderedMap;
+import no.daffern.vehicle.client.C;
+import no.daffern.vehicle.client.handlers.ItemHandler;
 import no.daffern.vehicle.common.Common;
+import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.graphics.QuadTileDrawer;
-import no.daffern.vehicle.network.packets.PartOutputPacket;
-import no.daffern.vehicle.network.packets.PartPacket;
-import no.daffern.vehicle.network.packets.VehicleLayoutPacket;
-import no.daffern.vehicle.network.packets.WallPacket;
+import no.daffern.vehicle.network.packets.*;
 import no.daffern.vehicle.utils.Tools;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Daffern on 08.06.2017.
@@ -24,10 +26,11 @@ public class ClientWalls {
 	int noTile;
 
 	//layers, parts
-	OrderedMap<Integer, Map<IntVector2, ClientPart>> partLayers;
-
+	Map<Integer, PartLayerI> partLayers;
 
 	QuadTileDrawer walls;
+	//queue for the walls
+	List<WallPacket> queuedWalls;
 
 	float tileWidth, tileHeight;
 
@@ -38,7 +41,8 @@ public class ClientWalls {
 	public void initialize(VehicleLayoutPacket vlp) {
 		//this.walls = new DynamicMultiArray<>(10, 10);
 		this.walls = new QuadTileDrawer();
-		this.partLayers = new OrderedMap<>();
+		queuedWalls = new ArrayList<>();
+		this.partLayers = new TreeMap<>();
 		this.tileWidth = Common.toPixelCoordinates(vlp.partWidth);
 		this.tileHeight = Common.toPixelCoordinates(vlp.partHeight);
 
@@ -66,13 +70,32 @@ public class ClientWalls {
 		if (wallPacket.itemId == noTile) {
 			walls.remove(wallIndex);
 		}else{
-			walls.set(wallIndex, wallPacket.itemId);
+			if (!walls.hasTileset(wallPacket.itemId)){
+
+				queuedWalls.add(wallPacket);
+
+				C.itemHandler.loadGameItem(wallPacket.itemId, new ItemHandler.GameItemListener(){
+
+					@Override
+					public void onGameItemLoaded(TextureAtlas textureAtlas, GameItemPacket gameItem) {
+						walls.addTileset(textureAtlas, gameItem.tilePath, gameItem.itemId);
+
+						while (queuedWalls.size() > 0){
+							WallPacket wallPacket1 = queuedWalls.remove(0);
+							setWall(wallPacket1);
+						}
+
+					}
+				});
+
+			}else{
+				walls.set(wallIndex, wallPacket.itemId);
+			}
 		}
 
-
 		//loop through layers and remove parts on this index
-		for (OrderedMap.Entry<Integer, Map<IntVector2, ClientPart>> entry : partLayers.entries()) {
-			entry.value.remove(wallIndex);
+		for (Map.Entry<Integer, PartLayerI> entry : partLayers.entrySet()) {
+			entry.getValue().remove(wallIndex);
 		}
 
 
@@ -83,15 +106,23 @@ public class ClientWalls {
 		for (int i = 0; i < wallPacket.partPackets.length; i++) {
 			PartPacket partPacket = wallPacket.partPackets[i];
 
-			Map<IntVector2, ClientPart> parts = partLayers.get(partPacket.layer);
+			PartLayerI partLayer = partLayers.get(partPacket.layer);
 
-			if (parts == null) {
-				parts = new HashMap<>();
-				partLayers.put(partPacket.layer, parts);
+			if (partLayer == null) {
+
+				switch (partPacket.type){
+					case GameItemTypes.PART_TYPE_AXLE:
+						partLayer = new ConnectedPartLayer(partPacket.itemId);
+						break;
+
+					default:
+						partLayer = new BasicPartLayer();
+				}
+
+				partLayers.put(partPacket.layer, partLayer);
 			}
 
-			parts.put(wallIndex, new ClientPart(partPacket.itemId, Common.toPixelCoordinates(partPacket.width), Common.toPixelCoordinates(partPacket.height)));
-
+			partLayer.add(wallIndex, partPacket.itemId, Common.toPixelCoordinates(partPacket.width), Common.toPixelCoordinates(partPacket.height));
 		}
 
 	}
@@ -101,16 +132,10 @@ public class ClientWalls {
 
 		for (PartOutputPacket pop : pops) {
 
-			Map<IntVector2, ClientPart> parts = partLayers.get(pop.layer);
+			PartLayerI partLayer = partLayers.get(pop.layer);
 
-			ClientPart part = parts.get(new IntVector2(pop.wallX, pop.wallY));
+			partLayer.update(new IntVector2(pop.wallX, pop.wallY),pop.angle);
 
-			if (part == null) {
-				Tools.log(this, "Part was null?????");
-				continue;
-			}
-
-			part.angle = MathUtils.radiansToDegrees * pop.angle;
 		}
 	}
 
@@ -163,11 +188,9 @@ public class ClientWalls {
 	public void render(Batch batch, float posX, float posY, float angle) {
 
 		//render below wall layer
-		Map<IntVector2, ClientPart> layer0 = partLayers.get(-1);
+		PartLayerI layer0 = partLayers.get(-1);
 		if (layer0 != null) {
-			for (Map.Entry<IntVector2, ClientPart> entry : layer0.entrySet()) {
-				renderPart(batch, entry.getValue(), entry.getKey(), posX, posY, angle);
-			}
+			layer0.render(batch,posX,posY,tileWidth,tileHeight,angle);
 		}
 
 		//render walls
@@ -175,20 +198,31 @@ public class ClientWalls {
 
 
 		//render the other parts
-		for (OrderedMap.Entry<Integer, Map<IntVector2,ClientPart>> layerEntry : partLayers.entries()){
+		for (Map.Entry<Integer, PartLayerI> layerEntry : partLayers.entrySet()){
 
-			if (layerEntry.key == -1)
+			if (layerEntry.getKey() == -1)
 				continue;
 
-			for (Map.Entry<IntVector2, ClientPart> entry : layerEntry.value.entrySet()) {
-				renderPart(batch, entry.getValue(), entry.getKey(), posX, posY, angle);
-			}
+			layerEntry.getValue().render(batch,posX,posY,tileWidth,tileHeight,angle);
 		}
+	}
 
+	private void renderPart(Batch batch, Map.Entry<IntVector2,ClientPart> entry, float posX, float posY, float angle){
+		IntVector2 wallIndex = entry.getKey();
 
+		Vector2 point = Tools.rotatePoint(
+				posX + wallIndex.x * tileWidth + tileWidth / 2,
+				posY + wallIndex.y * tileHeight + tileHeight / 2,
+				posX, posY, MathUtils.degreesToRadians * angle);
+
+		ClientPart clientPart = entry.getValue();
+
+		clientPart.render(batch, point.x, point.y, angle);
 
 	}
 
+
+/*
 	private void renderPart(Batch batch, ClientPart part, IntVector2 wallIndex, float posX, float posY, float angle) {
 		Vector2 point = Tools.rotatePoint(
 				posX + wallIndex.x * tileWidth + tileWidth / 2,
@@ -202,7 +236,7 @@ public class ClientWalls {
 					part.width, part.height,
 					1, 1, part.angle + angle);
 	}
-
+*/
 
 
 }

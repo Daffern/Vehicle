@@ -10,6 +10,7 @@ import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.network.packets.*;
 import no.daffern.vehicle.server.S;
+import no.daffern.vehicle.server.vehicle.parts.Part;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ public class ServerVehicle {
 
 						Part part = wall.getPart(i);
 
-						wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
+						wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getType(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
 
 
 					}
@@ -217,7 +218,7 @@ public class ServerVehicle {
 
 					Part part = wall.getPart(i);
 
-					wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
+					wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getType(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
 
 				}
 			}
@@ -264,10 +265,7 @@ public class ServerVehicle {
 
 		Vector2 rp = Tools.rotatePoint(x, y, pos.x, pos.y, -vehicleBody.getAngle());
 
-		if (rp.x < pos.x || rp.x > pos.x + width || rp.y < pos.y || rp.y > pos.y + height)
-			return false;
-		else
-			return true;
+		return !(rp.x < pos.x) && !(rp.x > pos.x + width) && !(rp.y < pos.y) && !(rp.y > pos.y + height);
 
 	}
 

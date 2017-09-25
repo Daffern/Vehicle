@@ -3,7 +3,6 @@ package no.daffern.vehicle.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
-import com.kotcrab.vis.ui.widget.file.FileUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +33,9 @@ public class TexturePackerHelper {
 
 		TexturePacker.Settings settings = new TexturePacker.Settings();
 		settings.combineSubdirectories = true;
+		settings.paddingX = 10;
+		settings.paddingY = 10;
+		settings.duplicatePadding = true;
 
 		/*settings.duplicatePadding = true;
 		settings.paddingX = 4;

@@ -3,18 +3,12 @@ package no.daffern.vehicle.client.handlers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import no.daffern.vehicle.client.C;
 import no.daffern.vehicle.client.player.ClientPlayer;
 import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.SystemInterface;
 import no.daffern.vehicle.network.packets.GiveControlPacket;
-import no.daffern.vehicle.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +28,6 @@ public class CameraHandler implements SystemInterface{
     private GiveControlPacket controlPacket;
     public ClientPlayer currentPlayer;
 
-    public float zoom = 1f;
 
     private List<CameraListener> cameraListeners = new ArrayList<CameraListener>();
 
@@ -82,12 +75,14 @@ public class CameraHandler implements SystemInterface{
     }
 
     public void updateScreenSize(int width, int height) {
-        gameCamera.viewportWidth = width * Common.cameraScaleX * zoom;
-        gameCamera.viewportHeight = height * Common.cameraScaleY * zoom;
+        gameCamera.viewportWidth = width;
+        gameCamera.viewportHeight = height;
+        gameCamera.zoom = Common.cameraZoom;
         gameCamera.update();
 
-        debugCamera.viewportWidth = Common.toWorldCoordinates(width) * Common.cameraScaleX;
-        debugCamera.viewportHeight = Common.toWorldCoordinates(height)* Common.cameraScaleY ;
+        debugCamera.viewportWidth = Common.toWorldCoordinates(width);
+        debugCamera.viewportHeight = Common.toWorldCoordinates(height);
+        debugCamera.zoom = Common.cameraZoom;
         debugCamera.update();
 
         uiCamera.viewportWidth = width ;

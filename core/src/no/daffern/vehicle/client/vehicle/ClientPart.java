@@ -1,11 +1,10 @@
 package no.daffern.vehicle.client.vehicle;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import no.daffern.vehicle.client.C;
-import no.daffern.vehicle.client.ResourceManager;
 import no.daffern.vehicle.client.handlers.ItemHandler;
+import no.daffern.vehicle.network.packets.GameItemPacket;
 
 /**
  * Created by Daffern on 08.06.2017.
@@ -28,13 +27,26 @@ public class ClientPart {
         this.height = height;
         this.angle = angle;
 
-        C.itemHandler.loadRegion(itemId, new ItemHandler.AtlasRegionListener(){
+        C.itemHandler.loadGameItem(itemId, new ItemHandler.GameItemListener(){
 
 	        @Override
-	        public void onRegionLoaded(TextureAtlas.AtlasRegion atlasRegion) {
-		        region = atlasRegion;
+	        public void onGameItemLoaded(TextureAtlas textureAtlas, GameItemPacket gameItem) {
+		        region = textureAtlas.findRegion(gameItem.iconName);
 	        }
+
+
         });
 
     }
+
+	public void render(Batch batch, float posX, float posY, float angle) {
+
+
+		if (region != null)
+			batch.draw(region,
+					posX - width / 2, posY - height / 2,
+					width / 2, height / 2,
+					width, height,
+					1, 1, this.angle + angle);
+	}
 }

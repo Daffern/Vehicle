@@ -1,10 +1,9 @@
 package no.daffern.vehicle.server.vehicle;
 
-import no.daffern.vehicle.utils.Tools;
-
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated //does not work
 public class EdgeTraverser {
 
 
@@ -13,20 +12,87 @@ public class EdgeTraverser {
 	private final static int RIGHT = 2;
 	private final static int DOWN = 3;
 
+
+	public static boolean traverse(List<Wall> traverseWalls){
+
+
+
+
+		Wall wall = traverseWalls.remove(0);
+
+
+		List<Wall> searchWalls = new ArrayList<>();
+		searchWalls.addAll(traverseWalls);
+
+		int floodFillValue = Wall.nextFloodFillValue++;
+
+		while(searchWalls.size() > 0){
+
+			boolean left = wall.left != null;
+			boolean right = wall.right != null;
+			boolean down = wall.down != null;
+			boolean up = wall.up != null;
+
+
+
+
+		}
+
+
+		return false;
+	}
+
+
+
+
+
+
+
+
 	/**
-	 * @param start
-	 * @param goalWalls can only be on the traversing edge
+	 * @param traverseWalls can only be on the traversing edge
 	 * @return
 	 */
-	public static boolean traverse(Wall start, List<Wall> goalWalls) {
-
-		Wall wall = start;
-
-		int direction = UP;
-
-		boolean searching = true;
+	public static boolean traverseEdges(List<Wall> traverseWalls){
 
 		List<Integer> path = new ArrayList<>();
+
+		if (traverseClockWise(traverseWalls, path)){
+			return true;
+		}
+
+		path.clear();
+
+		if (traverseCounterClockwise(traverseWalls,path)){
+
+
+
+		}
+
+
+		return false;
+	}
+
+
+	public static boolean traverseClockWise(List<Wall> traverseWalls, List<Integer> path) {
+
+
+		//find the upperleftmost wall
+		Wall wall = traverseWalls.get(0);
+
+		for (int i = 1 ; i < traverseWalls.size() ; i++){
+			Wall searchWall = traverseWalls.get(i);
+			if (searchWall.getWallX() + searchWall.getWallY() < wall.getWallX() + wall.getWallY()){
+				wall = searchWall;
+			}
+		}
+
+		List<Wall> goalWalls = copyAndExclude(traverseWalls, wall);
+
+
+		int direction = DOWN;
+
+		boolean searching = true;
 
 		while (searching) {
 
@@ -122,29 +188,18 @@ public class EdgeTraverser {
 				}
 			}
 
-			//all goal nodes found
-			if (goalWalls.size() == 0) {
-				printPath(path);
-				return true;
-			}
-			//traversed the edge and ended up at start
-			else if (wall == start) {
-				printPath(path);
-				return false;
-			}
-
 		}
 
 		return false;
 	}
 
-	public static boolean traverseClockwise(Wall start, List<Wall> goalNodes){
+	public static boolean traverseCounterClockwise(List<Wall> goalNodes, List<Integer> path){
 
 
 		return false;
 	}
 
-	private static void printPath(List<Integer> path) {
+	private static String pathToString(List<Integer> path) {
 		String output = "";
 
 		for (int i : path) {
@@ -166,8 +221,22 @@ public class EdgeTraverser {
 			}
 		}
 
-		Tools.log(EdgeTraverser.class,output);
-
+		return output;
 	}
 
+
+	public static <T> List<T>  copyAndExclude(List<T> list, T exclude){
+
+		List<T> newList = new ArrayList<>(list.size()-1);
+
+		for (int i = 0 ; i < list.size() ; i++){
+
+			if (list.get(i) != exclude){
+				newList.add(list.get(i));
+			}
+
+		}
+
+		return newList;
+	}
 }

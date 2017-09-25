@@ -1,8 +1,6 @@
 package no.daffern.vehicle.container;
 
 
-import java.util.Vector;
-
 /**
  * Created by Daffern on 06.06.2017.
  *
@@ -137,9 +135,7 @@ public class DynamicMultiArray<T> {
     }
 
     private boolean withinBounds(int i, int j) {
-        if (i < 0 || j < 0 || i >= sizeX || j >= sizeY)
-            return false;
-        return true;
+	    return i >= 0 && j >= 0 && i < sizeX && j < sizeY;
     }
 
     public int getSizeX() {

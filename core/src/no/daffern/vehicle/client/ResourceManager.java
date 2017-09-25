@@ -43,7 +43,7 @@ public class ResourceManager {
             List<AssetListener> list = listeners.get(fileName);
 
             if (list == null){
-                list = new ArrayList<AssetListener>();
+                list = new ArrayList<>();
             }
             list.add(assetListener);
 

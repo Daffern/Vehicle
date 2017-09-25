@@ -2,7 +2,6 @@ package no.daffern.vehicle.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import no.daffern.vehicle.Main;
 
 public class DesktopLauncher {
@@ -16,6 +15,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.foregroundFPS = 0;
 		config.vSyncEnabled = false;
+		config.samples = 5;
 
 		new LwjglApplication(new Main(), config);
 	}

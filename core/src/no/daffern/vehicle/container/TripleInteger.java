@@ -15,9 +15,7 @@ public class TripleInteger {
 
         if (int1 != other.int1) return false;
         if (int2 != other.int2) return false;
-        if (int3 != other.int3) return false;
-
-        return true;
+	    return int3 == other.int3;
     }
 
     @Override

@@ -67,7 +67,7 @@ public class Tools {
 
 
     public static <T> List<T> toSingleList(T[][] array){
-        List list = new ArrayList<T>();
+        List list = new ArrayList<T>(array.length*array[0].length);
         if (array == null)
             return list;
         for (T[] ts : array){
@@ -79,7 +79,7 @@ public class Tools {
     }
 
     public static <T> Array<T> toSingleArray(T[][] array){
-        Array list = new Array<T>();
+        Array list = new Array<T>(array.length*array[0].length);
         if (array == null)
             return list;
         for (T[] ts : array){
@@ -89,4 +89,5 @@ public class Tools {
         }
         return list;
     }
+
 }

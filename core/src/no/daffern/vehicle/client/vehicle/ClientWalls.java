@@ -112,11 +112,12 @@ public class ClientWalls {
 
 				switch (partPacket.type){
 					case GameItemTypes.PART_TYPE_AXLE:
-						partLayer = new ConnectedPartLayer(partPacket.itemId);
+						partLayer = new WangPartLayer(partPacket.itemId);
 						break;
 
 					default:
 						partLayer = new BasicPartLayer();
+						break;
 				}
 
 				partLayers.put(partPacket.layer, partLayer);

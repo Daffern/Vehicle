@@ -4,6 +4,7 @@ import no.daffern.vehicle.network.MyServer;
 import no.daffern.vehicle.server.handlers.ItemHandler;
 import no.daffern.vehicle.server.handlers.ServerPlayerHandler;
 import no.daffern.vehicle.server.handlers.ServerVehicleHandler;
+import no.daffern.vehicle.server.handlers.TickHandler;
 import no.daffern.vehicle.server.world.WorldHandler;
 
 /**
@@ -16,4 +17,5 @@ public class S {
     public static ServerPlayerHandler playerHandler;
     public static ServerVehicleHandler vehicleHandler;
     public static ItemHandler itemHandler;
+    public static TickHandler tickHandler;
 }

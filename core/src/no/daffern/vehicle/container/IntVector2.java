@@ -1,7 +1,5 @@
 package no.daffern.vehicle.container;
 
-import java.util.Objects;
-
 /**
  * Created by Daffern on 19.12.2016.
  */
@@ -17,6 +15,21 @@ public class IntVector2 {
     public String toString(){
         return "X: " + x + ", Y: " + y;
     }
+
+
+    public IntVector2 left(){
+    	return new IntVector2(x-1,y);
+    }
+	public IntVector2 right(){
+		return new IntVector2(x+1,y);
+	}
+	public IntVector2 down(){
+		return new IntVector2(x,y-1);
+	}
+	public IntVector2 up(){
+		return new IntVector2(x,y+1);
+	}
+
 
     @Override
     public boolean equals(Object object){

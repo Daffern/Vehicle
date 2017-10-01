@@ -7,6 +7,7 @@ import no.daffern.vehicle.network.MyServer;
 import no.daffern.vehicle.server.handlers.ItemHandler;
 import no.daffern.vehicle.server.handlers.ServerPlayerHandler;
 import no.daffern.vehicle.server.handlers.ServerVehicleHandler;
+import no.daffern.vehicle.server.handlers.TickHandler;
 import no.daffern.vehicle.server.world.WorldHandler;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class ServerMain extends Thread {
         S.itemHandler = new ItemHandler();
         S.playerHandler = new ServerPlayerHandler();
         S.vehicleHandler = new ServerVehicleHandler();
+        S.tickHandler = new TickHandler();
 /*
         AbstractInputProcessor abstractInputProcessor = new AbstractInputProcessor() {
             @Override
@@ -85,6 +87,7 @@ public class ServerMain extends Thread {
         S.itemHandler = new ItemHandler();
         S.playerHandler = new ServerPlayerHandler();
         S.vehicleHandler = new ServerVehicleHandler();
+	    S.tickHandler = new TickHandler();
 
 
         initServer(tcpPort, udpPort);
@@ -163,6 +166,8 @@ public class ServerMain extends Thread {
                     S.vehicleHandler.preStep();
 
                     S.worldHandler.worldStep();
+
+                    S.tickHandler.step();
 
                     S.playerHandler.postStep();
                     S.vehicleHandler.postStep();

@@ -31,7 +31,7 @@ public class ClientInventory implements SystemInterface {
 
 
 
-    int inventoryWidth = 5, inventoryHeight = 1;
+    int inventoryWidth = 10, inventoryHeight = 1;
     Map<Integer, InventorySlot> inventory = new ConcurrentHashMap<Integer, InventorySlot>();
     int selectedItem = 0;
 

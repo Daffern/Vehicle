@@ -4,7 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import no.daffern.vehicle.common.GameItemTypes;
-import no.daffern.vehicle.network.packets.*;
+import no.daffern.vehicle.network.packets.GiveControlPacket;
+import no.daffern.vehicle.network.packets.PlayerClickPacket;
+import no.daffern.vehicle.network.packets.PlayerInputPacket;
+import no.daffern.vehicle.network.packets.PlayerPacket;
 import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.server.player.ServerPlayer;
 import no.daffern.vehicle.server.vehicle.ServerVehicle;
@@ -59,6 +62,7 @@ public class ServerPlayerHandler implements ServerHandler {
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_WHEEL).get(0), 1, true);
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_AXLE).get(0), 1, true);
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_ENGINE).get(0), 1, true);
+                player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_ENGINE).get(1), 1, true);
 
 
 

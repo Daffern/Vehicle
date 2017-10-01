@@ -14,6 +14,16 @@ public abstract class NetworkHandler {
 		this.nodes = nodes;
 		onCreate(world);
 	}
+
+	/**
+	 * When network is created or updated
+	 * @param world
+	 */
 	protected abstract void onCreate(World world);
+
+	/**
+	 * When network is destroyed (number of nodes = 0)
+	 * @param world
+	 */
 	protected abstract void onDestroy(World world);
 }

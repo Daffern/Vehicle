@@ -20,7 +20,7 @@ public class PartEngine extends PartNode {
 
 	private float maxSpeed = 9f;
 	private float maxTorque = 50f;
-
+	private int powerDemand = 100;
 
 	private Body engineBody;
 	private RevoluteJoint engineJoint;//is the "engine"
@@ -35,6 +35,15 @@ public class PartEngine extends PartNode {
 	}
 	public Body getBody(){
 		return engineBody;
+	}
+
+
+	public int getPowerDemand(){
+		return powerDemand;
+	}
+	public void setPowerSupply(int supply){
+		float torque = powerDemand / supply * maxTorque;
+		engineJoint.setMaxMotorTorque(torque);
 	}
 
 	@Override

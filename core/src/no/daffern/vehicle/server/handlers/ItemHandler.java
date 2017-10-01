@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import no.daffern.vehicle.common.GameItemLoader;
-import no.daffern.vehicle.network.packets.GameItemPacket;
 import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.network.MyServer;
+import no.daffern.vehicle.network.packets.GameItemPacket;
 import no.daffern.vehicle.network.packets.GameItemRequestPacket;
 import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.utils.Tools;
@@ -41,6 +41,7 @@ public class ItemHandler {
 		createGameItemFromAtlas("packed/pack.atlas", "vehicle/wheel", "", GameItemTypes.PART_TYPE_WHEEL);
 		createGameItemFromAtlas("packed/pack.atlas", "vehicle/axle", "", GameItemTypes.PART_TYPE_AXLE);
 		createGameItemFromAtlas("packed/pack.atlas", "vehicle/engine", "", GameItemTypes.PART_TYPE_ENGINE);
+		createGameItemFromAtlas("packed/pack.atlas", "vehicle/battery", "", GameItemTypes.PART_TYPE_ENGINE);
 
 
 		//createGameItemFromAtlas("pack/pack.atlas","vehicle/triangle_wall.png", GameItemTypes.WALL_TYPE_TRIANGLE);

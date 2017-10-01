@@ -11,11 +11,13 @@ images/player/robotv2.png
 images/player/yellow_0.png
 images/player/yellow_1.png
 images/tools/eraser.png
-images/vehicle/axle_0.png
-images/vehicle/axle_1.png
+images/vehicle/axle.png
+images/vehicle/battery.png
 images/vehicle/engine.png
+images/vehicle/off.png
+images/vehicle/on.png
 images/vehicle/wheel.png
-images/vehicle/wheelOld.png
+images/vehicle/wire.png
 images/vehicle/1/bot.png
 images/vehicle/1/botLeft.png
 images/vehicle/1/botLeftEdge.png

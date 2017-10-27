@@ -1,11 +1,15 @@
 package no.daffern.vehicle.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.FloatCounter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
+import no.daffern.vehicle.client.C;
+import no.daffern.vehicle.server.S;
 
 /**
  * Created by Daffern on 15.12.2016.
@@ -13,14 +17,10 @@ import com.kotcrab.vis.ui.VisUI;
 public class StatusMenu {
 
 	private Skin skin;
-
 	private Stage stage;
-
-    private float fps;
-    private float ups = -1;
-
-    private int delay;
 	private Label label;
+
+	private FloatCounter clientCounter;
 
     public StatusMenu() {
 
@@ -31,6 +31,7 @@ public class StatusMenu {
             VisUI.load();
         skin = VisUI.getSkin();
 
+        clientCounter = new FloatCounter(50);
     }
 
     public void load(){
@@ -44,20 +45,21 @@ public class StatusMenu {
         stage.clear();
     }
 
-    public void setFps(float fps){
-        this.fps = fps;
-    }
-    public void setUps(float ups){
-    	this.ups = ups;
-    }
-    public void setNetworkDelay(int delay){
-    	this.delay = delay;
-    }
+
 
     public void render(float delta){
-    	String text = "FPS: " + fps + ", delay: " + delay + "ms";
-    	if (ups != -1)
-    		text += " SUPS: "+ups;
+    	float fps = Gdx.graphics.getFramesPerSecond();
+    	float delay = C.myClient.getReturnTripTime();
+
+    	clientCounter.put(C.myClient.getBpsOutLastFrame());
+	    float clientbps = clientCounter.mean.getMean();
+	    float serverbps = 0;
+
+
+
+
+    	String text = "FPS: " + fps + ", " + delay + "ms, COBps: " + clientbps + ", SOBps: " + serverbps + ", "+ S.myServer.getBpsOut();
+
 
         label.setText(text);
         stage.act(delta);

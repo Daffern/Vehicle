@@ -4,12 +4,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.GameItemTypes;
-import no.daffern.vehicle.server.handlers.Entity;
-import no.daffern.vehicle.server.world.CollisionCategories;
-import no.daffern.vehicle.network.packets.*;
+import no.daffern.vehicle.network.packets.PlayerClickPacket;
+import no.daffern.vehicle.network.packets.PlayerInputPacket;
+import no.daffern.vehicle.network.packets.PlayerOutputPacket;
+import no.daffern.vehicle.network.packets.PlayerPacket;
 import no.daffern.vehicle.server.S;
+import no.daffern.vehicle.server.handlers.Entity;
 import no.daffern.vehicle.server.vehicle.ServerVehicle;
+import no.daffern.vehicle.server.world.CollisionCategories;
 import no.daffern.vehicle.utils.Box2dUtils;
 
 /**
@@ -58,8 +62,10 @@ public class ServerPlayer extends Entity {
 		this.playerInputPacket = input;
 	}
 
-	public void receiveInventoryUsePacket(PlayerClickPacket playerClickPacket) {
-		inventory.useItem(playerClickPacket);
+	public void receiveInventoryUsePacket(PlayerClickPacket pcp) {
+		float x = Common.toWorldCoordinates(pcp.x);
+		float y = Common.toWorldCoordinates(pcp.y);
+		inventory.useItem(pcp.itemId,x,y);
 	}
 
 	public Body createBody(float startX, float startY) {

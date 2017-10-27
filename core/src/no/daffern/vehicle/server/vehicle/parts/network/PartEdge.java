@@ -3,14 +3,14 @@ package no.daffern.vehicle.server.vehicle.parts.network;
 
 import no.daffern.vehicle.server.vehicle.parts.Part;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 public abstract class PartEdge extends Part {
 
 	PartEdge left, right, up, down;
-	private PartNode[] nodes;
+	private List<PartNode> nodes;//TODO optimize with array
 
 	public int networkId = -1;
 
@@ -21,7 +21,7 @@ public abstract class PartEdge extends Part {
 
 
 	public List<PartEdge> getNeighbours(){
-		Vector<PartEdge> neighbours = new Vector<>(2,1);
+		List<PartEdge> neighbours = new ArrayList<>(2);
 		if (left != null)
 			neighbours.add(left);
 		if (right != null)
@@ -32,11 +32,17 @@ public abstract class PartEdge extends Part {
 			neighbours.add(up);
 		return neighbours;
 	}
-	public PartNode[] getNodes(){
+	public List<PartNode> getNodes(){
 		return nodes;
 	}
-	public void setNodes(PartNode[] nodes){
+	public void setNodes(List<PartNode> nodes){
 		this.nodes = nodes;
+	}
+	public void addNode(PartNode partNode){
+		nodes.add(partNode);
+	}
+	public void removeNode(PartNode partNode){
+		nodes.remove(partNode);
 	}
 
 	public void clearData(){

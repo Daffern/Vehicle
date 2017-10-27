@@ -5,9 +5,7 @@ package no.daffern.vehicle.network.packets;
  */
 
 public class PlayerInputPacket {
-    public int snapshotId;
     public boolean leftPressed;
     public boolean rightPressed;
     public boolean upPressed;
-
 }

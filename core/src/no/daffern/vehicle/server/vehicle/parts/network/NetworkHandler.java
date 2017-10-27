@@ -10,6 +10,7 @@ public abstract class NetworkHandler {
 	protected List<PartNode> getNodes(){
 		return nodes;
 	}
+
 	void initOnCreate(List<PartNode> nodes, World world){
 		this.nodes = nodes;
 		onCreate(world);

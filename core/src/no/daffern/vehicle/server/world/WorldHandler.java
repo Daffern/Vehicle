@@ -16,6 +16,7 @@ import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.network.packets.StartTmxMapPacket;
 import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.server.player.ServerPlayer;
+import no.daffern.vehicle.server.world.destructible.DestructibleWorldGenerator;
 import no.daffern.vehicle.server.world.terrainGenerator.MidpointDisplacementTerrainGenerator;
 import no.daffern.vehicle.utils.ContactListenerMultiplexer;
 
@@ -36,10 +37,11 @@ public class WorldHandler {
 
 	String currentTmxMap;
 
-	private ContinuousWorldHandler worldGenerator;
+	private WorldGeneratorI worldGenerator;
 
 	private enum WorldType {
 		Continuous,
+		Destructible,
 		Tmx
 	}
 
@@ -89,17 +91,26 @@ public class WorldHandler {
 	}
 
 	public void loadContinuousWorld() {
-		if (worldGenerator == null)
-			//worldGenerator = new ContinuousWorldHandler(world, S.myServer, new SimpleRandomTerrainGenerator(0.2f));
-			worldGenerator = new ContinuousWorldHandler(world, S.myServer, new MidpointDisplacementTerrainGenerator(3f,1f));
-			//worldGenerator = new ContinuousWorldHandler(world, S.myServer, new SimplexNoiseTerrainGenerator());
+
+		//worldGenerator = new ContinuousWorldGenerator(world, S.myServer, new SimpleRandomTerrainGenerator(0.2f));
+		worldGenerator = new ContinuousWorldGenerator(world, S.myServer, new MidpointDisplacementTerrainGenerator(3f, 1f));
+		//worldGenerator = new ContinuousWorldGenerator(world, S.myServer, new SimplexNoiseTerrainGenerator());
 
 		worldGenerator.begin(0, -5);
 
 		activeWorld = WorldType.Continuous;
 	}
 
-	public void loadWorld(String tmxMap) {
+	public void loadDestructibleWorld() {
+		worldGenerator = new DestructibleWorldGenerator(this, S.myServer);
+
+		worldGenerator.begin(0, 0);
+
+		activeWorld = WorldType.Destructible;
+
+	}
+
+	public void loadTmxWorld(String tmxMap) {
 		TmxWorldLoader loader = new TmxWorldLoader();
 		loader.loadMap(world, tmxMap, Common.pixelToUnits);
 
@@ -124,6 +135,11 @@ public class WorldHandler {
 	public void zeroWorldStep() {
 		world.step(0, 0, 0);
 
+	}
+	public void tryClipWorld(float[] vertices){
+		if (worldGenerator instanceof DestructibleWorldGenerator){
+			((DestructibleWorldGenerator)worldGenerator).clip(vertices);
+		}
 	}
 
 	public void translateWorldToPlayers() {

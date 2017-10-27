@@ -57,9 +57,13 @@ public class NetworkManager {
 			if (part instanceof PartEdge){
 				PartEdge partEdge = (PartEdge)part;
 
+				//add node
+				partEdge.addNode(partNode);
+
 				//add Node the the network
 				NetworkHandler networkHandler = networks.get(partEdge.networkId);
 
+				//add node to network and update
 				if (networkHandler != null){
 					networkHandler.getNodes().add(partNode);
 					networkHandler.onCreate(world);
@@ -69,16 +73,20 @@ public class NetworkManager {
 	}
 
 	private void removePartNode(PartNode partNode, Wall wall){
-		//check if wall has a Edge
+		//find an edge with a network id and remove this node from the nodes list
 		for(int i = 0 ; i < wall.getNumParts() ; i++){
 			Part part = wall.getPart(i);
 
 			if (part instanceof PartEdge){
 				PartEdge partEdge = (PartEdge)part;
 
-				//add Node the the network
+				//remove node
+				partEdge.removeNode(partNode);
+
+				//get the network
 				NetworkHandler networkHandler = networks.get(partEdge.networkId);
 
+				//remove node from network and update
 				if (networkHandler != null){
 					networkHandler.getNodes().remove(partNode);
 					networkHandler.onCreate(world);
@@ -268,8 +276,7 @@ public class NetworkManager {
 				up.down = null;
 		}
 
-
-		List<PartNode> nodes = new Vector<>(1, 1);
+		List<PartNode> nodes = new ArrayList<>( 1);
 
 		for (int i = 0; i < wall.getNumParts(); i++) {
 			Part part = wall.getPart(i);
@@ -278,12 +285,14 @@ public class NetworkManager {
 			}
 		}
 
-		partEdge.setNodes(nodes.toArray(new PartNode[nodes.size()]));
+		partEdge.setNodes(nodes);
 
 	}
 
 
 	private int getNextNetworkId() {
+		if (nextNetworkId == Integer.MAX_VALUE)
+			nextNetworkId = 0;
 		return nextNetworkId++;
 	}
 

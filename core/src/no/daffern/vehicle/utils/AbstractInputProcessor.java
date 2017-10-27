@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
  */
 public abstract class AbstractInputProcessor implements InputProcessor{
 
+
     @Override
     public boolean keyDown(int keycode) {
         return false;
@@ -46,4 +47,6 @@ public abstract class AbstractInputProcessor implements InputProcessor{
     public boolean scrolled(int amount) {
         return false;
     }
+
+
 }

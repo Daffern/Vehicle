@@ -11,6 +11,7 @@ import no.daffern.vehicle.server.vehicle.Wall;
 import no.daffern.vehicle.server.vehicle.parts.network.NetworkHandler;
 import no.daffern.vehicle.server.vehicle.parts.network.PartEdge;
 import no.daffern.vehicle.server.vehicle.parts.network.PartNode;
+import no.daffern.vehicle.utils.Tools;
 
 import java.util.Vector;
 
@@ -45,6 +46,11 @@ public class PartAxle extends PartEdge {
 					case GameItemTypes.PART_TYPE_ENGINE:
 
 						PartEngine pe = (PartEngine) part;
+
+						if (pe.getJoint() == null)
+							Tools.log(this, "Joint is null");
+						if (pe.getBody() == null)
+							Tools.log(this, "Body is null");
 
 						if (nodeJoints.size() > 0) {
 
@@ -92,12 +98,10 @@ public class PartAxle extends PartEdge {
 
 		@Override
 		public void onDestroy(World world) {
-			if (joints != null) {
-				for (GearJoint gearJoint : joints) {
-					world.destroyJoint(gearJoint);
-				}
-				joints.clear();
+			for (GearJoint gearJoint : joints) {
+				world.destroyJoint(gearJoint);
 			}
+			joints.clear();
 		}
 
 

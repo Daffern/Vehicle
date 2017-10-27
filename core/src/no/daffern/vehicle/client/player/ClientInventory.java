@@ -18,6 +18,8 @@ import no.daffern.vehicle.graphics.NinePatchRepeated;
 import no.daffern.vehicle.graphics.TextField;
 import no.daffern.vehicle.network.packets.GameItemPacket;
 import no.daffern.vehicle.network.packets.InventoryPacket;
+import no.daffern.vehicle.utils.AbstractInputProcessor;
+import no.daffern.vehicle.utils.PriorityInputHandler;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.Map;
@@ -27,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Daffern on 25.03.2017.
  */
-public class ClientInventory implements SystemInterface {
+public class ClientInventory extends AbstractInputProcessor implements SystemInterface {
 
 
 
@@ -87,6 +89,8 @@ public class ClientInventory implements SystemInterface {
 
             }
         });
+
+	    PriorityInputHandler.getInstance().addInputProcessor(this,200);
     }
 
     private void handleInventoryPacket(InventoryPacket inventoryPacket) {
@@ -108,6 +112,7 @@ public class ClientInventory implements SystemInterface {
         }
     }
 
+    @Override
     public boolean keyDown(int keycode) {
         if (keycode >= Input.Keys.NUM_1 && keycode <= Input.Keys.NUM_6) {
             selectedItem = keycode - Input.Keys.NUM_1;
@@ -116,6 +121,7 @@ public class ClientInventory implements SystemInterface {
         return false;
     }
 
+    @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 mousePos = Tools.mouseToWorldCoordinates(C.cameraHandler.uiCamera, screenX, screenY);
 
@@ -148,6 +154,7 @@ public class ClientInventory implements SystemInterface {
 
         return null;
     }
+
 
     public int getInventorySize() {
         return inventoryHeight * inventoryWidth;

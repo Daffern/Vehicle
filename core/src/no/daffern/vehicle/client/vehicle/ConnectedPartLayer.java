@@ -10,6 +10,8 @@ import no.daffern.vehicle.client.C;
 import no.daffern.vehicle.client.handlers.ItemHandler;
 import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.network.packets.GameItemPacket;
+import no.daffern.vehicle.network.packets.PartOutputPacket;
+import no.daffern.vehicle.network.packets.PartPacket;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.HashMap;
@@ -43,7 +45,7 @@ public class ConnectedPartLayer implements PartLayerI {
 	}
 
 	@Override
-	public void add(IntVector2 wallIndex, int itemId, float width, float height) {
+	public void add(IntVector2 wallIndex, PartPacket pp) {
 		tiles.put(wallIndex, new Tile());
 
 		update(wallIndex);
@@ -57,7 +59,7 @@ public class ConnectedPartLayer implements PartLayerI {
 	}
 
 	@Override
-	public void update(IntVector2 wallIndex, float angle) {
+	public void update(IntVector2 wallIndex, PartOutputPacket pop) {
 
 	}
 

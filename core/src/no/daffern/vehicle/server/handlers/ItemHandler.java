@@ -38,10 +38,14 @@ public class ItemHandler {
 		createGameItemFromAtlas("packed/pack.atlas", "vehicle/1/center", "vehicle/1/", GameItemTypes.WALL_TYPE_SQUARE);
 
 		createGameItemFromAtlas("packed/pack.atlas", "tools/eraser", "", GameItemTypes.REMOVE_TOOL);
+		createGameItemFromAtlas("packed/pack.atlas", "tools/shovel", "", GameItemTypes.SHOVEL_TOOL);
 		createGameItemFromAtlas("packed/pack.atlas", "vehicle/wheel", "", GameItemTypes.PART_TYPE_WHEEL);
 		createGameItemFromAtlas("packed/pack.atlas", "vehicle/axle", "", GameItemTypes.PART_TYPE_AXLE);
 		createGameItemFromAtlas("packed/pack.atlas", "vehicle/engine", "", GameItemTypes.PART_TYPE_ENGINE);
-		createGameItemFromAtlas("packed/pack.atlas", "vehicle/battery", "", GameItemTypes.PART_TYPE_ENGINE);
+		createGameItemFromAtlas("packed/pack.atlas", "vehicle/battery", "", GameItemTypes.PART_TYPE_BATTERY);
+		createGameItemFromAtlas("packed/pack.atlas", "vehicle/solar", "", GameItemTypes.PART_TYPE_SOLAR);
+		createGameItemFromAtlas("packed/pack.atlas", "vehicle/wire", "", GameItemTypes.PART_TYPE_WIRE);
+		createGameItemFromAtlas("packed/pack.atlas", "vehicle/drill", "", GameItemTypes.PART_TYPE_DRILL);
 
 
 		//createGameItemFromAtlas("pack/pack.atlas","vehicle/triangle_wall.png", GameItemTypes.WALL_TYPE_TRIANGLE);

@@ -79,7 +79,7 @@ public class TexturePackerHelper {
 
 	private static  List<FileHandle> findAllDirectories(FileHandle root) {
 
-		ArrayList<FileHandle> files = new ArrayList<>();
+		ArrayList<FileHandle> files = new ArrayList<FileHandle>();
 		files.add(root);
 		int index = 0;
 

@@ -27,21 +27,21 @@ ground/surface2
   index: -1
 interface/selected
   rotate: false
-  xy: 620, 165
+  xy: 651, 91
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 interface/uibox
   rotate: false
-  xy: 660, 165
+  xy: 691, 91
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 placeholder
   rotate: false
-  xy: 941, 439
+  xy: 666, 173
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -55,112 +55,140 @@ player/robotv2
   index: -1
 player/yellow
   rotate: false
-  xy: 518, 176
+  xy: 740, 176
   size: 50, 61
   orig: 50, 61
   offset: 0, 0
   index: 0
 player/yellow
   rotate: false
-  xy: 271, 15
+  xy: 409, 31
   size: 50, 61
   orig: 50, 61
   offset: 0, 0
   index: 1
+state/off
+  rotate: false
+  xy: 1013, 501
+  size: 2, 2
+  orig: 2, 2
+  offset: 0, 0
+  index: -1
+state/on
+  rotate: false
+  xy: 271, 10
+  size: 2, 2
+  orig: 2, 2
+  offset: 0, 0
+  index: -1
+state/power
+  rotate: false
+  xy: 469, 77
+  size: 8, 15
+  orig: 8, 15
+  offset: 0, 0
+  index: -1
 tools/eraser
   rotate: false
-  xy: 877, 305
+  xy: 483, 148
   size: 19, 18
   orig: 19, 18
   offset: 0, 0
   index: -1
+tools/shovel
+  rotate: false
+  xy: 609, 131
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 vehicle/1/bot
   rotate: false
-  xy: 345, 118
+  xy: 800, 190
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/botLeft
   rotate: false
-  xy: 803, 259
+  xy: 842, 190
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/botLeftEdge
   rotate: false
-  xy: 877, 333
+  xy: 884, 190
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/botRight
   rotate: false
-  xy: 941, 397
+  xy: 926, 190
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/botRightEdge
   rotate: false
-  xy: 578, 205
+  xy: 968, 190
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/center
   rotate: false
-  xy: 620, 205
+  xy: 483, 106
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/left
   rotate: false
-  xy: 662, 205
+  xy: 525, 131
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/right
   rotate: false
-  xy: 704, 205
+  xy: 567, 131
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/top
   rotate: false
-  xy: 746, 205
+  xy: 651, 131
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/topLeft
   rotate: false
-  xy: 345, 76
+  xy: 693, 131
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/topLeftEdge
   rotate: false
-  xy: 845, 259
+  xy: 525, 89
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/topRight
   rotate: false
-  xy: 983, 397
+  xy: 567, 89
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 vehicle/1/topRightEdge
   rotate: false
-  xy: 578, 163
+  xy: 609, 89
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -174,35 +202,35 @@ vehicle/axle
   index: -1
 vehicle/battery
   rotate: false
-  xy: 271, 86
+  xy: 518, 173
   size: 64, 64
   orig: 64, 64
+  offset: 0, 0
+  index: -1
+vehicle/drill
+  rotate: false
+  xy: 803, 232
+  size: 200, 271
+  orig: 200, 271
   offset: 0, 0
   index: -1
 vehicle/engine
   rotate: false
-  xy: 803, 301
+  xy: 592, 173
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-vehicle/off
+vehicle/solar
   rotate: false
-  xy: 387, 148
-  size: 2, 2
-  orig: 2, 2
-  offset: 0, 0
-  index: -1
-vehicle/on
-  rotate: false
-  xy: 803, 247
-  size: 2, 2
-  orig: 2, 2
+  xy: 409, 102
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 vehicle/wheel
   rotate: false
-  xy: 803, 375
+  xy: 271, 22
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

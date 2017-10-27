@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Created by Daffern on 17.05.2017.
- *
+ * <p>
  * NO NETWORKING IN HERE
  */
 public class Walls {
@@ -42,7 +42,7 @@ public class Walls {
 		int y = wall.getWallY();
 
 
-		Wall oldWall = array.get(x,y);
+		Wall oldWall = array.get(x, y);
 		if (oldWall != null)
 			return false;
 
@@ -65,6 +65,7 @@ public class Walls {
 
 		return true;
 	}
+
 	//true if removed
 	public boolean removeWall(int x, int y) {
 
@@ -164,6 +165,12 @@ public class Walls {
 		if (wall == null)
 			return -1;
 
+		if (wall.containsPartType(part.getType()))
+			return -1;
+
+		if (!part.canPlace(this, wallIndex))
+			return -1;
+
 		//check for intersection with another part
 		int searchRadiusX = (int) Math.ceil(part.getWidth() + Part.MAX_WIDTH / Wall.WALL_WIDTH);
 		int searchRadiusY = (int) Math.ceil(part.getHeight() + Part.MAX_HEIGHT / Wall.WALL_HEIGHT);
@@ -190,6 +197,7 @@ public class Walls {
 				float distanceX = Math.abs(wallIndex.x - x) * Wall.WALL_WIDTH;
 				float distanceY = Math.abs(wallIndex.y - y) * Wall.WALL_HEIGHT;
 
+				//check each part
 				for (int k = 0; k < searchWall.getNumParts(); k++) {
 
 					Part searchPart = searchWall.parts.get(k);
@@ -216,7 +224,8 @@ public class Walls {
 		part.attach(world, vehicleBody, wall);
 
 		if (part.isDynamic()) {
-			animatedWalls.add(wall);
+			if (!animatedWalls.contains(wall))
+				animatedWalls.add(wall);
 		}
 
 		//do the PartNetwork stuff
@@ -237,11 +246,11 @@ public class Walls {
 			animatedWalls.remove(wall);
 		}
 
+		//do the network stuff, remove from network before detaching! (because of the tickHandler thingy)
+		networkManager.tryRemovePart(part, wall);
+
 		//detach last
 		part.detach(world, vehicleBody, wall);
-
-		//do the network stuff
-		networkManager.tryRemovePart(part, wall);
 
 
 		return partIndex;

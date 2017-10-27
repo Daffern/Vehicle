@@ -17,7 +17,6 @@ public class PartWheel extends PartNode {
     private Body wheelBody;
     private RevoluteJoint revoluteJoint;
 
-
     public PartWheel(int itemId) {
         super(itemId, GameItemTypes.PART_TYPE_WHEEL, true, 2, 2);
     }
@@ -59,7 +58,6 @@ public class PartWheel extends PartNode {
         wheelBody.createFixture(fixtureDef);
 
         //joint
-
         RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
         revoluteJointDef.bodyA = vehicleBody;
         revoluteJointDef.bodyB = wheelBody;
@@ -89,11 +87,6 @@ public class PartWheel extends PartNode {
     @Override
     public int getLayer(){
     	return -1;
-    }
-
-    @Override
-    public boolean checkCollision(Part otherPart) {
-        return otherPart.getType() == getType();
     }
 
     @Override

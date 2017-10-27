@@ -1,6 +1,7 @@
 package no.daffern.vehicle;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.kotcrab.vis.ui.VisUI;
 import no.daffern.vehicle.client.ClientMain;
@@ -25,9 +26,9 @@ public class Main implements ApplicationListener {
 	@Override
 	public void create() {
 
+
 		TexturePackerHelper.ensureAtlasUpdated("images","packed/pack");
 		TexturePackerHelper.updateAtlas("images","packed/pack");
-
 
 
 		startMenu = new StartMenu();

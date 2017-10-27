@@ -1,7 +1,9 @@
 package no.daffern.vehicle.utils;
 
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.utils.OrderedMap;
+
+import java.util.Collections;
+import java.util.Vector;
 
 /**
  * Created by Daff on 13.11.2016.
@@ -16,17 +18,14 @@ public class PriorityInputHandler implements InputProcessor {
         return singleton;
     }
 
-    private OrderedMap<Integer, InputProcessor> inputProcessors;
+    private Vector<PriorityInputProcessor> inputProcessors = new Vector(3,1);
 
-    public PriorityInputHandler() {
-        inputProcessors = new OrderedMap<Integer, InputProcessor>();
-    }
 
     public void addInputProcessor(InputProcessor inputProcessor, int priority) {
-        if (inputProcessors.get(priority) != null){
-            Tools.log(this, "Priority value already allocated");
-        }
-        inputProcessors.put(priority, inputProcessor);
+
+    	inputProcessors.add(new PriorityInputProcessor(inputProcessor, priority));
+
+	    Collections.sort(inputProcessors);
     }
     public void removeInputProcessor(int priority) {
         inputProcessors.remove(priority);
@@ -35,74 +34,89 @@ public class PriorityInputHandler implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.keyDown(keycode))
-                return true;
+        for (PriorityInputProcessor inputProcessor : inputProcessors){
+        	if (inputProcessor.inputProcessor.keyDown(keycode))
+        		return true;
         }
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.keyUp(keycode))
-                return true;
-        }
+	    for (PriorityInputProcessor inputProcessor : inputProcessors){
+		    if (inputProcessor.inputProcessor.keyUp(keycode))
+			    return true;
+	    }
         return false;
     }
 
     @Override
     public boolean keyTyped(char character) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.keyTyped(character))
-                return true;
-        }
+	    for (PriorityInputProcessor inputProcessor : inputProcessors){
+		    if (inputProcessor.inputProcessor.keyTyped(character))
+			    return true;
+	    }
         return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.touchDown(screenX, screenY, pointer, button))
-                return true;
-        }
+	    for (PriorityInputProcessor inputProcessor : inputProcessors){
+		    if (inputProcessor.inputProcessor.touchDown(screenX,screenY,pointer,button))
+			    return true;
+	    }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.touchUp(screenX, screenY, pointer, button))
-                return true;
-        }
+	    for (PriorityInputProcessor inputProcessor : inputProcessors){
+		    if (inputProcessor.inputProcessor.touchUp(screenX,screenY,pointer,button))
+			    return true;
+	    }
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.touchDragged(screenX, screenY, pointer))
-                return true;
-        }
+	    for (PriorityInputProcessor inputProcessor : inputProcessors){
+		    if (inputProcessor.inputProcessor.touchDragged(screenX, screenY, pointer))
+			    return true;
+	    }
         return false;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.mouseMoved(screenX, screenY))
-                return true;
-        }
+	    for (PriorityInputProcessor inputProcessor : inputProcessors){
+		    if (inputProcessor.inputProcessor.mouseMoved(screenX,screenY))
+			    return true;
+	    }
         return false;
     }
 
     @Override
     public boolean scrolled(int amount) {
-        for (OrderedMap.Entry<Integer, InputProcessor> inputProcessor : inputProcessors.entries()) {
-            if (inputProcessor.value.scrolled(amount))
-                return true;
-        }
+	    for (PriorityInputProcessor inputProcessor : inputProcessors){
+		    if (inputProcessor.inputProcessor.scrolled(amount))
+			    return true;
+	    }
         return false;
     }
 
+	private class PriorityInputProcessor implements Comparable<PriorityInputProcessor>{
+    	int priority;
+    	InputProcessor inputProcessor;
+    	private PriorityInputProcessor(InputProcessor inputProcessor, int priority){
+    		this.inputProcessor = inputProcessor;
+    		this.priority = priority;
+	    }
+
+		@Override
+		public int compareTo(PriorityInputProcessor o) {
+    		if (o.priority == priority)
+    			throw new IllegalArgumentException("Two input processors has the same priority: " + priority);
+			return o.priority - priority;
+		}
+	}
 }

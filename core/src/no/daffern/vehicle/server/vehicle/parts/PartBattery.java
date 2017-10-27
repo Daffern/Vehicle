@@ -15,21 +15,22 @@ public class PartBattery extends PartNode{
 
 	int capacity = 10000;
 	int level = 0;
-	int maxFlow = 200;
+	int maxOutput = 100; //infinite input for simplicity
 
-	public int getCapacity() {
-		return capacity;
+	public int takePower(){
+		if (level >= maxOutput){
+			level -= maxOutput;
+			return maxOutput;
+		}else{
+			int supply = level;
+			level = 0;
+			return supply;
+		}
 	}
-
-	public int getMaxOutput(){
-		if (level == 0)
-			return 0;
-		else
-			return maxFlow;
-	}
-
-	public void setFlow(int flow){
-
+	public void supplyPower(int power){
+		level += power;
+		if (level > capacity)
+			level = capacity;
 	}
 
 	@Override
@@ -50,6 +51,11 @@ public class PartBattery extends PartNode{
 	@Override
 	public float getAngle() {
 		return 0;
+	}
+
+	@Override
+	public byte getState(){
+		return (byte)(100*level/capacity);
 	}
 
 	@Override

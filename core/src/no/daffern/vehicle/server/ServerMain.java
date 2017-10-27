@@ -93,7 +93,7 @@ public class ServerMain extends Thread {
         initServer(tcpPort, udpPort);
 
         //S.worldHandler.loadWorld("test.tmx");
-        S.worldHandler.loadContinuousWorld();
+        S.worldHandler.loadDestructibleWorld();
 
 
         start();//start thread

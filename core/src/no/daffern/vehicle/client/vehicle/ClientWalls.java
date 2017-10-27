@@ -111,6 +111,7 @@ public class ClientWalls {
 			if (partLayer == null) {
 
 				switch (partPacket.type){
+					case GameItemTypes.PART_TYPE_WIRE:
 					case GameItemTypes.PART_TYPE_AXLE:
 						partLayer = new WangPartLayer(partPacket.itemId);
 						break;
@@ -123,7 +124,7 @@ public class ClientWalls {
 				partLayers.put(partPacket.layer, partLayer);
 			}
 
-			partLayer.add(wallIndex, partPacket.itemId, Common.toPixelCoordinates(partPacket.width), Common.toPixelCoordinates(partPacket.height));
+			partLayer.add(wallIndex, partPacket);
 		}
 
 	}
@@ -135,7 +136,9 @@ public class ClientWalls {
 
 			PartLayerI partLayer = partLayers.get(pop.layer);
 
-			partLayer.update(new IntVector2(pop.wallX, pop.wallY),pop.angle);
+			IntVector2 index = new IntVector2(pop.wallX,pop.wallY);
+
+			partLayer.update(index, pop);
 
 		}
 	}

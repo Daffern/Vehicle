@@ -9,7 +9,7 @@ import no.daffern.vehicle.server.vehicle.parts.network.PartNode;
 
 public class PartSolarPanel extends PartNode{
 
-	private int powerGen = 100;
+	private int powerGen = 20;
 
 	public PartSolarPanel(int itemId) {
 		super(itemId, GameItemTypes.PART_TYPE_SOLAR, false, 1f, 1f);

@@ -20,14 +20,14 @@ public class Common {
 
 
     //1 meter = 32 pixels
-    public final static float unitsToPixels = 32f;
-    public final static float pixelToUnits = 1f/32f;
+    public final static float unitsToPixels = 64f;
+    public final static float pixelToUnits = 1f/unitsToPixels;
 
     public final static int defaultTcpPort = 1337;
     public final static int defaultUdpPort = 1337;
 
 
-	public final static float cameraZoom = 0.5f;
+	public final static float cameraZoom = 0.8f;
 
 
     public static float toWorldCoordinates(float val){

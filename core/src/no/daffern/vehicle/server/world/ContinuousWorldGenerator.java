@@ -2,14 +2,13 @@ package no.daffern.vehicle.server.world;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.FloatArray;
-import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.network.MyServer;
 import no.daffern.vehicle.network.packets.StartContinuousMapPacket;
 import no.daffern.vehicle.network.packets.TerrainPacket;
 import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.server.player.ServerPlayer;
-import no.daffern.vehicle.utils.Tools;
 import no.daffern.vehicle.server.world.terrainGenerator.TerrainGenerator;
+import no.daffern.vehicle.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Daffern on 04.05.2017.
  */
-public class ContinuousWorldHandler {
+public class ContinuousWorldGenerator implements WorldGeneratorI {
 
     MyServer myServer;
     StartContinuousMapPacket smp;
@@ -44,7 +43,7 @@ public class ContinuousWorldHandler {
     boolean started = false;
 
 
-    public ContinuousWorldHandler(World world, MyServer myServer, TerrainGenerator terrainGenerator) {
+    public ContinuousWorldGenerator(World world, MyServer myServer, TerrainGenerator terrainGenerator) {
         this.myServer = myServer;
         this.world = world;
         this.terrainGenerator = terrainGenerator;
@@ -74,6 +73,7 @@ public class ContinuousWorldHandler {
         started = true;
     }
 
+    @Override
     public void sendWorld(int clientId) {
         myServer.sendToTCP(clientId, smp);
 

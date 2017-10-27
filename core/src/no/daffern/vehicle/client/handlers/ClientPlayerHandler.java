@@ -40,7 +40,6 @@ public class ClientPlayerHandler implements SystemInterface{
                     ClientPlayer currentPlayer = updatePlayer(giveControlPacket.playerPacket);
 
                     C.cameraHandler.setCurrentPlayer(currentPlayer);
-                    C.controller.setCurrentPlayer(currentPlayer);
                     C.clientInventory.setCurrentPlayer(currentPlayer);
                 }
 

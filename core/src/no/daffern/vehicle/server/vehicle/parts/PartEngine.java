@@ -18,9 +18,9 @@ public class PartEngine extends PartNode {
 
 	private boolean running = false;
 
-	private float maxSpeed = 9f;
-	private float maxTorque = 50f;
-	private int powerDemand = 100;
+	private float maxSpeed = 6;
+	private float maxTorque = 40;
+	private int powerDemand = 50;
 
 	private Body engineBody;
 	private RevoluteJoint engineJoint;//is the "engine"
@@ -30,20 +30,33 @@ public class PartEngine extends PartNode {
 		super(itemId, GameItemTypes.PART_TYPE_ENGINE, false, 0.8f, 0.8f);
 	}
 
-	public RevoluteJoint getJoint(){
+	public RevoluteJoint getJoint() {
 		return engineJoint;
 	}
-	public Body getBody(){
+
+	public Body getBody() {
 		return engineBody;
 	}
 
-
-	public int getPowerDemand(){
-		return powerDemand;
+	public int supplyPower(int power) {
+		if (power >= powerDemand) {
+			calcMotorSpeed(powerDemand);
+			return power - powerDemand;
+		}
+		else {
+			calcMotorSpeed(power);
+			return 0;
+		}
 	}
-	public void setPowerSupply(int supply){
-		float torque = powerDemand / supply * maxTorque;
-		engineJoint.setMaxMotorTorque(torque);
+
+	public void resetMotor() {
+		if (engineJoint != null)
+			engineJoint.setMaxMotorTorque(0);
+	}
+
+	private void calcMotorSpeed(int power) {
+		engineJoint.setMaxMotorTorque((float) power / (float) powerDemand * maxTorque);
+		engineJoint.setMotorSpeed((float) power / (float) powerDemand * maxSpeed);
 	}
 
 	@Override
@@ -67,15 +80,15 @@ public class PartEngine extends PartNode {
 		RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
 		revoluteJointDef.bodyA = engineBody;
 		revoluteJointDef.bodyB = vehicleBody;
-		revoluteJointDef.localAnchorA.set(0,0);
+		revoluteJointDef.localAnchorA.set(0, 0);
 		revoluteJointDef.localAnchorB.set(localPos);
 
 		revoluteJointDef.enableMotor = true;
-		revoluteJointDef.motorSpeed = maxSpeed;
-		revoluteJointDef.maxMotorTorque = maxTorque;
+		revoluteJointDef.motorSpeed = 0;
+		revoluteJointDef.maxMotorTorque = 0;
 
 
-		engineJoint = (RevoluteJoint)world.createJoint(revoluteJointDef);
+		engineJoint = (RevoluteJoint) world.createJoint(revoluteJointDef);
 
 	}
 
@@ -118,7 +131,4 @@ public class PartEngine extends PartNode {
 		running = false;
 		return false;
 	}
-
-
-
 }

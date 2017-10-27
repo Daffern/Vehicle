@@ -1,7 +1,9 @@
 package no.daffern.vehicle.graphics;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.FloatArray;
 import no.daffern.vehicle.client.ResourceManager;
 import no.daffern.vehicle.common.Common;
@@ -75,7 +77,7 @@ public class TerrainDrawer {
 			float x2 = Common.toPixelCoordinates(tp.vertices[i+2]);
 			float y2 = Common.toPixelCoordinates(tp.vertices[i+3]);
 
-			if (Math.abs(x-x2) > 20){
+			if (Math.abs(x-x2) > 40){
 				Tools.log(this, "Received huge x-x2: "+(x-x2));
 			}
 

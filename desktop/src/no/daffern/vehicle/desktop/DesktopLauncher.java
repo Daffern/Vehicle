@@ -13,7 +13,8 @@ public class DesktopLauncher {
 
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.foregroundFPS = 0;
+		config.backgroundFPS = 10;
+		config.foregroundFPS = 100;
 		config.vSyncEnabled = false;
 		config.samples = 5;
 

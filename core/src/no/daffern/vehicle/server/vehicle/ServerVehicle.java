@@ -163,7 +163,7 @@ public class ServerVehicle {
 
 						Part part = wall.getPart(i);
 
-						wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getType(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
+						wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getType(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle(), part.getState());
 
 
 					}
@@ -218,7 +218,7 @@ public class ServerVehicle {
 
 					Part part = wall.getPart(i);
 
-					wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getType(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle());
+					wallPacket.partPackets[i] = new PartPacket(part.getItemId(), part.getType(), part.getLayer(), part.getWidth(), part.getHeight(), part.getAngle(), part.getState());
 
 				}
 			}
@@ -308,7 +308,7 @@ public class ServerVehicle {
 			for (int j = 0 ; j < wall.getNumParts() ; j++){
 				Part part = wall.getPart(j);
 				if (part.isDynamic()){
-					partUpdates.add(new PartOutputPacket(wall.getWallX(), wall.getWallY(), part.getLayer(), part.getAngle()));
+					partUpdates.add(new PartOutputPacket(wall.getWallX(), wall.getWallY(), part.getLayer(), part.getAngle(), part.getState()));
 				}
 			}
 		}

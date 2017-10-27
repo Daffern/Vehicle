@@ -1,5 +1,7 @@
 package no.daffern.vehicle.server.handlers;
 
+import no.daffern.vehicle.utils.Tools;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -9,6 +11,10 @@ public class TickHandler {
 	List<TickListener> listeners = new Vector<>(1,1);
 
 	public void addTickListener(TickListener tickListener, byte interval){
+
+		if (interval < 0)
+			Tools.log(this, "Interval is negative: " + interval);
+
 		tickListener.interval = interval;
 
 		listeners.add(tickListener);
@@ -28,9 +34,9 @@ public class TickHandler {
 		}
 	}
 
-	public abstract class TickListener{
+	public abstract static class TickListener{
 		private byte interval = 0;
 		private byte step = 0;
-		abstract void onTick();
+		protected abstract void onTick();
 	}
 }

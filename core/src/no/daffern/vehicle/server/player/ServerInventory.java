@@ -1,21 +1,16 @@
 package no.daffern.vehicle.server.player;
 
-import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.network.MyServer;
 import no.daffern.vehicle.network.packets.GameItemPacket;
 import no.daffern.vehicle.network.packets.InventoryPacket;
-import no.daffern.vehicle.network.packets.PlayerClickPacket;
 import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.server.vehicle.ServerVehicle;
 import no.daffern.vehicle.server.vehicle.Wall;
 import no.daffern.vehicle.server.vehicle.WallSquare;
 import no.daffern.vehicle.server.vehicle.WallTriangle;
-import no.daffern.vehicle.server.vehicle.parts.Part;
-import no.daffern.vehicle.server.vehicle.parts.PartAxle;
-import no.daffern.vehicle.server.vehicle.parts.PartEngine;
-import no.daffern.vehicle.server.vehicle.parts.PartWheel;
+import no.daffern.vehicle.server.vehicle.parts.*;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.HashMap;
@@ -40,22 +35,19 @@ public class ServerInventory {
 	}
 
 
-	public void useItem(PlayerClickPacket playerClickPacket) {
-		playerClickPacket.x = Common.toWorldCoordinates(playerClickPacket.x);
-		playerClickPacket.y = Common.toWorldCoordinates(playerClickPacket.y);
-
-		ItemSlot itemSlot = inventory.get(playerClickPacket.itemId);
+	public boolean useItem(int itemId, float x, float y) {
+		ItemSlot itemSlot = inventory.get(itemId);
 
 		if (itemSlot == null || itemSlot.getCount() <= 0)
-			return;
+			return false;
 
 		ServerVehicle serverVehicle = player.serverVehicle;
 		if (serverVehicle == null)
-			return;
+			return false;
 
-		IntVector2 wallIndex = serverVehicle.findTileIndex(playerClickPacket.x, playerClickPacket.y);
+		IntVector2 wallIndex = serverVehicle.findTileIndex(x, y);
 		if (wallIndex == null)
-			return;
+			return false;
 
 		Wall wall = serverVehicle.getWall(wallIndex.x, wallIndex.y);
 
@@ -65,7 +57,7 @@ public class ServerInventory {
 
 			case GameItemTypes.REMOVE_TOOL: {
 				if (wall == null)
-					return;
+					return false;
 
 				if (wall.getNumParts() > 0) {
 					Part part = wall.getPart(wall.getNumParts() - 1);
@@ -77,6 +69,19 @@ public class ServerInventory {
 						addOneItem(wall.getItemId());
 					}
 				}
+				break;
+			}
+			case GameItemTypes.SHOVEL_TOOL: {
+
+				float[] clip = new float[]{
+						x-0.5f,y-0.5f,
+						x-0.5f,y+0.5f,
+						x+0.5f,y+0.5f,
+						x+0.5f,y-0.5f
+				};
+
+				S.worldHandler.tryClipWorld(clip);
+
 				break;
 			}
 
@@ -109,50 +114,52 @@ public class ServerInventory {
 				}
 			}
 			case GameItemTypes.PART_TYPE_WHEEL: {
-				if (wall == null)
-					return;
-				if (wall.containsPartType(GameItemTypes.PART_TYPE_WHEEL))
-					return;
-
 				if (wall.getType() == GameItemTypes.WALL_TYPE_SQUARE) {
 					if (serverVehicle.addPart(wallIndex, new PartWheel(itemSlot.gameItem.itemId)))
 						itemSlot.addCount(-1);
 				}
-
 				break;
 			}
 			case GameItemTypes.PART_TYPE_AXLE: {
-				if (wall == null)
-					return;
-				if (wall.containsPartType(GameItemTypes.PART_TYPE_AXLE))
-					return;
-				if (serverVehicle.addPart(wallIndex, new PartAxle(itemSlot.gameItem.itemId))) {
+				if (serverVehicle.addPart(wallIndex, new PartAxle(itemSlot.gameItem.itemId)))
 					itemSlot.addCount(-1);
-				}
-
+				break;
+			}
+			case GameItemTypes.PART_TYPE_WIRE: {
+				if (serverVehicle.addPart(wallIndex, new PartWire(itemSlot.gameItem.itemId)))
+					itemSlot.addCount(-1);
 				break;
 			}
 			case GameItemTypes.PART_TYPE_ENGINE: {
-				if (wall == null)
-					return;
-				if (wall.containsPartType(GameItemTypes.PART_TYPE_ENGINE))
-					return;
-				if (serverVehicle.addPart(wallIndex, new PartEngine(itemSlot.gameItem.itemId))) {
+				if (serverVehicle.addPart(wallIndex, new PartEngine(itemSlot.gameItem.itemId)))
 					itemSlot.addCount(-1);
-				}
-
+				break;
+			}
+			case GameItemTypes.PART_TYPE_BATTERY: {
+				if (serverVehicle.addPart(wallIndex, new PartBattery(itemSlot.gameItem.itemId)))
+					itemSlot.addCount(-1);
+				break;
+			}
+			case GameItemTypes.PART_TYPE_SOLAR: {
+				if (serverVehicle.addPart(wallIndex, new PartSolarPanel(itemSlot.gameItem.itemId)))
+					itemSlot.addCount(-1);
+				break;
+			}
+			case GameItemTypes.PART_TYPE_DRILL: {
+				if (serverVehicle.addPart(wallIndex, new PartDrill(itemSlot.gameItem.itemId)))
+					itemSlot.addCount(-1);
 				break;
 			}
 
 
 			default: {
 				Tools.log(this, "Unhandled item type: " + itemSlot.gameItem.type);
-				return;
+				return false;
 			}
 
 		}
 
-
+		return true;
 	}
 
 	public void addOneItem(int gameItemId) {

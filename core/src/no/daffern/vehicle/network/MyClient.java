@@ -7,15 +7,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import no.daffern.vehicle.common.SystemInterface;
-import no.daffern.vehicle.common.SystemSystem;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static com.esotericsoftware.minlog.Log.TRACE;
-import static com.esotericsoftware.minlog.Log.trace;
 
 /**
  * Created by Daffern on 09.12.2016.
@@ -29,6 +25,10 @@ public class MyClient extends Client implements SystemInterface {
     private Queue<Connection> disconnectQueue = new ConcurrentLinkedQueue<>();
     private Queue<ReceivedHolder> receiveQueue = new ConcurrentLinkedQueue<>();
     private Queue<Connection> idleQueue = new ConcurrentLinkedQueue<>();
+
+	private int totalBytesSent = 0;
+	private int bytesOutCounter = 0;
+	private int bpsOutLastFrame = 0;
 
 
     private Listener listener = new Listener() {
@@ -46,6 +46,7 @@ public class MyClient extends Client implements SystemInterface {
          * activity will not be processed until it returns. */
         public void received(Connection connection, Object object) {
             receiveQueue.add(new ReceivedHolder(connection, object));
+
         }
 
         /** Called when the connection is below the {@link Connection#setIdleThreshold(float) idle threshold}. */
@@ -57,6 +58,22 @@ public class MyClient extends Client implements SystemInterface {
     public MyClient(){
         super();
 	    super.addListener(listener);
+    }
+
+    @Override
+    public int sendTCP(Object o){
+		int sent = super.sendTCP(o);
+		bytesOutCounter += sent;
+		totalBytesSent += sent;
+		return sent;
+    }
+
+    @Override
+    public int sendUDP(Object o){
+	    int sent = super.sendUDP(o);
+	    bytesOutCounter += sent;
+	    totalBytesSent += sent;
+	    return sent;
     }
 
     public void register(Class... classes){
@@ -117,12 +134,17 @@ public class MyClient extends Client implements SystemInterface {
 
     @Override
     public void postStep() {
-
+		bpsOutLastFrame = bytesOutCounter;
+		bytesOutCounter = 0;
     }
 
     @Override
     public void render(Batch batch, float delta) {
 
+    }
+
+    public int getBpsOutLastFrame(){
+    	return bpsOutLastFrame;
     }
 
     private class ReceivedHolder {

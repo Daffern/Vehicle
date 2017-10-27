@@ -1,11 +1,14 @@
 package no.daffern.vehicle.client;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import no.daffern.vehicle.client.handlers.*;
+import no.daffern.vehicle.client.handlers.controller.ControllerAndroid;
+import no.daffern.vehicle.client.handlers.controller.ControllerDesktop;
 import no.daffern.vehicle.client.player.ClientInventory;
 import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.Packets;
@@ -13,7 +16,6 @@ import no.daffern.vehicle.common.SystemSystem;
 import no.daffern.vehicle.menu.ClientMenu;
 import no.daffern.vehicle.menu.StatusMenu;
 import no.daffern.vehicle.network.MyClient;
-import no.daffern.vehicle.utils.Tools;
 
 import java.io.IOException;
 
@@ -57,13 +59,18 @@ public class ClientMain extends Thread {
 
         batch = new PolygonSpriteBatch();
 
+
+
+
         systemSystem = new SystemSystem(
                 C.myClient = new MyClient(),
                 C.cameraHandler = new CameraHandler(),
                 C.itemHandler = new ItemHandler(),
 
                 C.clientInventory = new ClientInventory(),
-                C.controller = new Controller(),
+
+                C.controller = (Gdx.app.getType() == Application.ApplicationType.Android ? new ControllerAndroid() : new ControllerDesktop()),
+
                 C.vehicleHandler = new ClientVehicleHandler(),
                 C.playerHandler = new ClientPlayerHandler(),
                 C.mapHandler = new MapHandler()
@@ -174,8 +181,7 @@ public class ClientMain extends Thread {
             clientMenu.render();
 
         if (statusMenu != null) {
-            statusMenu.setNetworkDelay(C.myClient.getReturnTripTime());
-            statusMenu.setFps(Gdx.graphics.getFramesPerSecond());
+
             statusMenu.render(delta);
         }
 

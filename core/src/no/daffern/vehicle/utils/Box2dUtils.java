@@ -54,11 +54,11 @@ public class Box2dUtils {
 			float dx = x2 - x1;
 			float dy = y2 - y1;
 
-			if ( (dx*dx + dy*dy) < minDistance){
+			if ( (dx*dx + dy*dy) <= minDistance){
 				float[] newV = new float[v.length - 2];
 
 				System.arraycopy(v,0,newV,0,i-1);
-				if (v.length != i+1) System.arraycopy(v,i+1,newV,i-1,newV.length-i);
+				if (v.length != i+1) System.arraycopy(v,i+1,newV,i-1,newV.length-i+1);
 
 				v = newV;
 				i-=2;
@@ -74,31 +74,31 @@ public class Box2dUtils {
 	 * @param v
 	 * @return
 	 */
-	public static float[] findAABB(float[] v){
+	public static AABB findAABB(float[] v){
+
 	    //find aabb
-	    float minX = Float.MAX_VALUE;
-	    float maxX = -Float.MAX_VALUE;
-	    float minY = Float.MAX_VALUE;
-	    float maxY = -Float.MAX_VALUE;
+		AABB aabb = new AABB();
+	    aabb.minX = Float.MAX_VALUE;
+		aabb.maxX = -Float.MAX_VALUE;
+		aabb.minY = Float.MAX_VALUE;
+		aabb.maxY = -Float.MAX_VALUE;
 	    for (int i = 0 ; i < v.length ;){
 		    float x = v[i++];
 		    float y = v[i++];
 
-		    if (x > maxX)
-			    maxX = x;
-		    if (x < minX)
-			    minX = x;
-		    if (y > maxY)
-			    maxY = y;
-		    if (y < minY)
-			    minY = y;
+		    if (x > aabb.maxX)
+			    aabb.maxX = x;
+		    if (x < aabb.minX)
+			    aabb.minX = x;
+		    if (y > aabb.maxY)
+			    aabb.maxY = y;
+		    if (y < aabb.minY)
+			    aabb.minY = y;
 	    }
 
-	    return new float[]{
-	    		minX, minY,
-			    minX, maxY,
-			    maxX, maxY,
-			    maxX, minY
-	    };
+	    return aabb;
+    }
+    public static class AABB{
+		public float minX, minY, maxX, maxY;
     }
 }

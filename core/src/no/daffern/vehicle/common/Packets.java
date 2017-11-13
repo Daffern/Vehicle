@@ -1,6 +1,7 @@
 package no.daffern.vehicle.common;
 
 import com.badlogic.gdx.math.Vector2;
+import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.network.packets.*;
 
 /**
@@ -13,7 +14,8 @@ public class Packets {
             PlayerInputPacket.class,
 
 		    //map
-            StartTmxMapPacket.class, StartContinuousMapPacket.class, TerrainPacket.class,
+            StartTmxMapPacket.class, StartContinuousMapPacket.class, StartDestructibleMapPacket.class,
+		    TerrainPacket.class, TerrainPacketDestructible.class, TerrainPacketDestructible[].class,
 
 		    //player
             PlayerOutputPacket.class, GiveControlPacket.class, PlayerPacket.class,
@@ -27,7 +29,8 @@ public class Packets {
 		    //part
 		    PartPacket.class, PartPacket[].class, PartOutputPacket.class, PartOutputPacket[].class,
 
-            byte[][].class, int[][].class, int[].class, byte[].class, float[].class, Vector2.class,
+            byte[][].class, int[][].class, float[][].class,
+		    int[].class, byte[].class, float[].class, Vector2.class, IntVector2.class,
 
             //Item packets
             InventoryPacket.class, InventoryPacket[].class, PlayerClickPacket.class, GameItemPacket.class, GameItemRequestPacket.class

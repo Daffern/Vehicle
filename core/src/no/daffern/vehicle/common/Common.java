@@ -6,12 +6,13 @@ package no.daffern.vehicle.common;
 public class Common {
 
 
+    public final static boolean debugRender = true;
 
-    public final static float WORLD_GRAVITY = 9.8f;
+    public final static float WORLD_GRAVITY = -7f;
 
     public final static float TIME_STEP = 1f/50f;
-    public final static int VELOCITY_ITERATIONS = 6;    //6
-    public final static int POSITION_ITERATIONS = 2;    //2
+    public final static int VELOCITY_ITERATIONS = 7;    //6
+    public final static int POSITION_ITERATIONS = 3;    //2
 
     public final static int GAME_TYPE_TMX = 0;
     public final static int GAME_TYPE_CONTINUED_TERRAIN = 0;

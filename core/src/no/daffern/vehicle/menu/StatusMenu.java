@@ -18,7 +18,8 @@ public class StatusMenu {
 
 	private Skin skin;
 	private Stage stage;
-	private Label label;
+	private Label updatesLabel;
+	private Label worldLabel;
 
 	private FloatCounter clientCounter;
 
@@ -35,11 +36,15 @@ public class StatusMenu {
     }
 
     public void load(){
-        label = new Label("FPS: ", skin);
-        label.setPosition(0, 0);
-        label.setColor(Color.RED);
+        updatesLabel = new Label("", skin);
+        updatesLabel.setPosition(0, 30);
+        updatesLabel.setColor(Color.RED);
+        stage.addActor(updatesLabel);
 
-        stage.addActor(label);
+        worldLabel = new Label("",skin);
+	    worldLabel.setPosition(0,60);
+	    worldLabel.setColor(Color.RED);
+	    stage.addActor(worldLabel);
     }
     public void unload(){
         stage.clear();
@@ -55,13 +60,19 @@ public class StatusMenu {
 	    float clientbps = clientCounter.mean.getMean();
 	    float serverbps = 0;
 
+    	String updatedText = "FPS: " + fps + ", " + delay + "ms, COBps: " + clientbps + ", SOBps: " + serverbps;
+    	if (S.myServer != null ) updatedText = updatedText + ", " + S.myServer.getBpsOut();
+        updatesLabel.setText(updatedText);
 
 
+        String worldText = "";
+        if (S.worldHandler != null){
+        	worldText += "Total bodies: " + S.worldHandler.world.getBodyCount() + ", Total fixtures: " + S.worldHandler.world.getFixtureCount()+"\n";
+        	worldText += "WorldGen: " + S.worldHandler.getWorldGenerator().getDebugString();
+        }
 
-    	String text = "FPS: " + fps + ", " + delay + "ms, COBps: " + clientbps + ", SOBps: " + serverbps + ", "+ S.myServer.getBpsOut();
+        worldLabel.setText(worldText);
 
-
-        label.setText(text);
         stage.act(delta);
         stage.draw();
 

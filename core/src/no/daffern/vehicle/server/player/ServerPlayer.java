@@ -74,6 +74,7 @@ public class ServerPlayer extends Entity {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(startX, startY);
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.bullet = true;
 
 		wheelBody = world.createBody(bodyDef);
 

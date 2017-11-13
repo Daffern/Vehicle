@@ -51,6 +51,7 @@ public class ServerPlayerHandler implements ServerHandler {
                 GiveControlPacket giveControlPacket = new GiveControlPacket();
                 giveControlPacket.clientId = playerId;
                 giveControlPacket.playerPacket = playerPacket;
+                giveControlPacket.vehicleId = serverVehicle.vehicleId;
 
                 S.myServer.sendToTCP(playerId, giveControlPacket);
                 S.myServer.sendToAllTCP(playerPacket);

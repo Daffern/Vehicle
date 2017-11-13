@@ -26,5 +26,6 @@ public class C {
     public static ClientInventory clientInventory;
     public static ItemHandler itemHandler;
 
+    public static GameStateHandler gameStateHandler;
 
 }

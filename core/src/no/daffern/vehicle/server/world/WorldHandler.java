@@ -19,6 +19,7 @@ import no.daffern.vehicle.server.player.ServerPlayer;
 import no.daffern.vehicle.server.world.destructible.DestructibleWorldGenerator;
 import no.daffern.vehicle.server.world.terrainGenerator.MidpointDisplacementTerrainGenerator;
 import no.daffern.vehicle.utils.ContactListenerMultiplexer;
+import no.daffern.vehicle.utils.Tools;
 
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class WorldHandler {
 		camera.zoom = Common.cameraZoom;
 		camera.update();
 
-		world = new World(new Vector2(0, -9.8f), true);
+		world = new World(new Vector2(0, Common.WORLD_GRAVITY), true);
 
 		debugRenderer = new Box2DDebugRenderer();
 
@@ -72,7 +73,9 @@ public class WorldHandler {
 						break;
 
 					case Continuous:
+					case Destructible:
 						worldGenerator.sendWorld(connection.getID());
+						break;
 				}
 
 			}
@@ -124,9 +127,19 @@ public class WorldHandler {
 	}
 
 	public void worldStep() {
+
 		if (worldGenerator != null)
 			worldGenerator.update();
+
+		long time = System.currentTimeMillis();
+
 		world.step(Common.TIME_STEP, Common.VELOCITY_ITERATIONS, Common.POSITION_ITERATIONS);
+
+		long dTime = System.currentTimeMillis() - time;
+		if (dTime > 500){
+			Tools.log(this, "World step took way too long: " + dTime);
+			Tools.log(this, worldGenerator.getDebugString());
+		}
 
 		//translateWorldToPlayers();
 	}
@@ -138,7 +151,7 @@ public class WorldHandler {
 	}
 	public void tryClipWorld(float[] vertices){
 		if (worldGenerator instanceof DestructibleWorldGenerator){
-			((DestructibleWorldGenerator)worldGenerator).clip(vertices);
+			((DestructibleWorldGenerator)worldGenerator).tryClip(vertices);
 		}
 	}
 
@@ -196,4 +209,9 @@ public class WorldHandler {
 		debugRenderer.render(world, camera.combined);
 
 	}
+
+	public WorldGeneratorI getWorldGenerator() {
+		return worldGenerator;
+	}
+
 }

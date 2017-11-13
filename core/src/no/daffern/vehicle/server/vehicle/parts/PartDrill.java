@@ -14,8 +14,10 @@ import no.daffern.vehicle.server.world.UserData;
 
 public class PartDrill extends PartNode {
 
+	Body vehicleBody;
 	Fixture fixture;
 	TickHandler.TickListener tickListener;
+
 
 	public PartDrill(int itemId) {
 		super(itemId, GameItemTypes.PART_TYPE_DRILL, true, 1.5f, 1.5f);
@@ -23,7 +25,9 @@ public class PartDrill extends PartNode {
 
 	@Override
 	public void attach(World world, Body vehicleBody, Wall wall) {
-		Vector2 localPos = new Vector2(wall.getLocalX() + Wall.WALL_WIDTH / 2, wall.getLocalY() + Wall.WALL_HEIGHT / 2);
+		this.vehicleBody = vehicleBody;
+
+		final Vector2 localPos = new Vector2(wall.getLocalX() + Wall.WALL_WIDTH / 2, wall.getLocalY() + Wall.WALL_HEIGHT / 2);
 		Vector2 pos = vehicleBody.getWorldPoint(localPos);
 
 
@@ -33,6 +37,19 @@ public class PartDrill extends PartNode {
 				localPos.x,localPos.y-2
 		};
 
+
+
+		tickListener = new TickHandler.TickListener() {
+			@Override
+			protected void onTick() {
+				createDrillSensor(localPos);
+				//((UserData.UserDataDrill)fixture.getUserData()).recentChunks.clear();//clear to enable the same chunks to be clipped again
+			}
+		};
+		S.tickHandler.addTickListener(tickListener,(byte)120);
+	}
+
+	private void createDrillSensor(Vector2 localPos){
 		float[] drillVertices = new float[]{
 				localPos.x-2, localPos.y,
 				localPos.x+2, localPos.y,
@@ -56,14 +73,6 @@ public class PartDrill extends PartNode {
 		UserData.UserDataDrill userData = new UserData.UserDataDrill(drillVertices);
 
 		fixture.setUserData(userData);
-
-		tickListener = new TickHandler.TickListener() {
-			@Override
-			protected void onTick() {
-				((UserData.UserDataDrill)fixture.getUserData()).recentChunks.clear();//clear to enable the same chunks to be clipped again
-			}
-		};
-		S.tickHandler.addTickListener(tickListener,(byte)30);
 	}
 
 	@Override

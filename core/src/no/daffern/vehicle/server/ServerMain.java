@@ -29,6 +29,8 @@ public class ServerMain extends Thread {
     Object lock = new Object();
 
     public ServerMain() {
+        super("ServerMain");
+
         S.myServer = new MyServer();
         S.worldHandler = new WorldHandler();
         S.itemHandler = new ItemHandler();
@@ -183,9 +185,10 @@ public class ServerMain extends Thread {
 
     public void render(float deltaTime) {
 
-
-        synchronized (lock){
-            S.worldHandler.debugRender();
+        if (Common.debugRender) {
+            synchronized (lock) {
+                S.worldHandler.debugRender();
+            }
         }
 
 

@@ -1,14 +1,11 @@
 package no.daffern.vehicle.client.handlers;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Queue;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import no.daffern.vehicle.client.C;
 import no.daffern.vehicle.client.vehicle.ClientVehicle;
 import no.daffern.vehicle.common.SystemInterface;
-import no.daffern.vehicle.network.packets.PartPacket;
 import no.daffern.vehicle.network.packets.VehicleLayoutPacket;
 import no.daffern.vehicle.network.packets.VehicleOutputPacket;
 import no.daffern.vehicle.network.packets.WallPacket;
@@ -20,11 +17,10 @@ import java.util.Map;
  * Created by Daff on 24.12.2016.
  */
 public class ClientVehicleHandler implements SystemInterface{
-    public Map<Integer, ClientVehicle> vehicles;
-
+    private Map<Integer, ClientVehicle> vehicles;
 
     public ClientVehicleHandler() {
-        vehicles = new HashMap<Integer, ClientVehicle>();
+        vehicles = new HashMap<>();
 
         C.myClient.addListener(new Listener() {
             public void received(Connection connection, Object object) {
@@ -55,21 +51,20 @@ public class ClientVehicleHandler implements SystemInterface{
 						vehicle.receiveWall(wp);
 
                 }
-
-
             }
         });
     }
 
 
+    public ClientVehicle getVehicle(int vehicleId){
+        return vehicles.get(vehicleId);
+    }
 
     @Override
     public void preStep() {
         for (Map.Entry<Integer, ClientVehicle> vehicle : vehicles.entrySet()) {
             vehicle.getValue().step();
         }
-
-
     }
 
     @Override

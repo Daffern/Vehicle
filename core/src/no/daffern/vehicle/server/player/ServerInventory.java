@@ -114,10 +114,10 @@ public class ServerInventory {
 				}
 			}
 			case GameItemTypes.PART_TYPE_WHEEL: {
-				if (wall.getType() == GameItemTypes.WALL_TYPE_SQUARE) {
+				//if (wall.getType() == GameItemTypes.WALL_TYPE_SQUARE) {
 					if (serverVehicle.addPart(wallIndex, new PartWheel(itemSlot.gameItem.itemId)))
 						itemSlot.addCount(-1);
-				}
+				//}
 				break;
 			}
 			case GameItemTypes.PART_TYPE_AXLE: {

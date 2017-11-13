@@ -59,9 +59,6 @@ public class ClientMain extends Thread {
 
         batch = new PolygonSpriteBatch();
 
-
-
-
         systemSystem = new SystemSystem(
                 C.myClient = new MyClient(),
                 C.cameraHandler = new CameraHandler(),
@@ -73,7 +70,8 @@ public class ClientMain extends Thread {
 
                 C.vehicleHandler = new ClientVehicleHandler(),
                 C.playerHandler = new ClientPlayerHandler(),
-                C.mapHandler = new MapHandler()
+                C.mapHandler = new MapHandler(),
+                C.gameStateHandler = new GameStateHandler()
         );
 
         C.myClient.register(Packets.networkClasses);

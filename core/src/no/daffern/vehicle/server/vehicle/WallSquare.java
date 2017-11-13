@@ -2,11 +2,11 @@ package no.daffern.vehicle.server.vehicle;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import no.daffern.vehicle.container.IntVector2;
-import no.daffern.vehicle.server.world.CollisionCategories;
 import no.daffern.vehicle.common.GameItemTypes;
+import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.container.Vector4;
 import no.daffern.vehicle.server.S;
+import no.daffern.vehicle.server.world.CollisionCategories;
 import no.daffern.vehicle.utils.AbstractContactListener;
 
 import java.util.ArrayList;
@@ -47,27 +47,28 @@ public class WallSquare extends Wall {
             fixtureDef.shape = shape;
             fixtureDef.density = 0.5f;
             fixtureDef.friction = 0.5f;
-            fixtureDef.restitution = 0.0f;
+            fixtureDef.restitution = 0.5f;
             fixtureDef.filter.categoryBits = CollisionCategories.vehicleInside;
             fixtureDef.filter.maskBits = CollisionCategories.player;
 
             walls[i] = vehicleBody.createFixture(fixtureDef);
+            shape.dispose();
         }
 
         //back wall
         PolygonShape shape = new PolygonShape();
         shape.set(new float[]{x,y,x+WALL_WIDTH,y,x+WALL_WIDTH,y + WALL_HEIGHT,x,y + WALL_HEIGHT});
 
-
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.0f;
+        fixtureDef.restitution = 0.5f;
         fixtureDef.filter.categoryBits = CollisionCategories.vehicleOutside;
         fixtureDef.filter.maskBits = CollisionCategories.terrain;
 
         walls[walls.length-1] = vehicleBody.createFixture(fixtureDef);
+		shape.dispose();
 
         isCreated = true;
     }

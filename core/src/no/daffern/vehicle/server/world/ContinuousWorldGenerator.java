@@ -89,6 +89,11 @@ public class ContinuousWorldGenerator implements WorldGeneratorI {
         myServer.sendToTCP(clientId, terrainPacket);
     }
 
+    @Override
+    public String getDebugString() {
+        return "";
+    }
+
     public void update() {
 
         if (!started)

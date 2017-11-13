@@ -4,4 +4,5 @@ public interface WorldGeneratorI {
 	void begin(float x, float y);
 	void update();
 	void sendWorld(int clientId);
+	String getDebugString();
 }

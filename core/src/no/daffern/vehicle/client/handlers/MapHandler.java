@@ -2,6 +2,7 @@ package no.daffern.vehicle.client.handlers;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
@@ -10,17 +11,17 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import no.daffern.vehicle.common.SystemInterface;
-import no.daffern.vehicle.graphics.MyOrthogonalTiledMapRenderer;
 import no.daffern.vehicle.client.C;
+import no.daffern.vehicle.client.ResourceManager;
 import no.daffern.vehicle.common.Common;
+import no.daffern.vehicle.common.SystemInterface;
+import no.daffern.vehicle.graphics.ChunkDrawer;
+import no.daffern.vehicle.graphics.MyOrthogonalTiledMapRenderer;
+import no.daffern.vehicle.graphics.MyTmxMapLoader;
 import no.daffern.vehicle.graphics.TerrainDrawer;
-import no.daffern.vehicle.network.packets.StartContinuousMapPacket;
-import no.daffern.vehicle.network.packets.StartTmxMapPacket;
-import no.daffern.vehicle.network.packets.TerrainPacket;
+import no.daffern.vehicle.network.packets.*;
 import no.daffern.vehicle.server.world.TmxWorldLoader;
 import no.daffern.vehicle.utils.ContactListenerMultiplexer;
-import no.daffern.vehicle.graphics.MyTmxMapLoader;
 import no.daffern.vehicle.utils.Tools;
 
 /**
@@ -32,6 +33,7 @@ public class MapHandler implements SystemInterface {
     private Box2DDebugRenderer debugRenderer;
     private ContactListenerMultiplexer contactListenerMultiplexer;
 
+    ChunkDrawer chunkDrawer;
     TerrainDrawer terrainDrawer;
     MyOrthogonalTiledMapRenderer mapRenderer;
 
@@ -44,7 +46,9 @@ public class MapHandler implements SystemInterface {
         LoadTmxMap,
         InTmxMap,
         LoadContinuousMap,
-        InContinuousMap
+        InContinuousMap,
+        LoadDestructibleMap,
+	    InDestructibleMap
     }
 
     public MapState mapState = MapState.None;
@@ -66,7 +70,13 @@ public class MapHandler implements SystemInterface {
 
                 if (object instanceof TerrainPacket) {
                     receiveTerrainPacket((TerrainPacket) object);
-
+                }
+                else if (object instanceof TerrainPacketDestructible){
+					receiveDestructibleTerrain((TerrainPacketDestructible)object);
+                }
+                else if (object instanceof StartDestructibleMapPacket){
+                	receiveStartDestructibleTerrain((StartDestructibleMapPacket)object);
+                	mapState = MapState.InDestructibleMap;
                 }
                 else if (object instanceof StartContinuousMapPacket) {
                     StartContinuousMapPacket lcm = (StartContinuousMapPacket) object;
@@ -85,15 +95,38 @@ public class MapHandler implements SystemInterface {
         });
 
     }
+	private void receiveStartDestructibleTerrain(final StartDestructibleMapPacket packet){
+    	if (chunkDrawer == null)
+    		chunkDrawer = new ChunkDrawer();
 
-    public void receiveTerrainPacket(TerrainPacket tp) {
-        if (terrainDrawer != null && terrainDrawer.isInitialized()) {
-	        terrainDrawer.receiveTerrainPacket(tp);
-        } else {
-            Tools.log(this, "terrainDrawer is not initiliazed");
-        }
+    	for (TerrainPacketDestructible tpd : packet.terrainPacket){
+    		tpd.multiplyVertexList(Common.unitsToPixels);
+    		chunkDrawer.addChunk(tpd.index,tpd.vertexList);
+	    }
+
+		ResourceManager.loadAsset(packet.packName, TextureAtlas.class, new ResourceManager.AssetListener<TextureAtlas>() {
+			@Override
+			public void onAssetLoaded(TextureAtlas asset) {
+
+				chunkDrawer.initialize(asset.findRegion(packet.groundRegion), packet.chunkWidth * Common.unitsToPixels, packet.chunkHeight * Common.unitsToPixels);
+
+			}
+		});
+
+	}
+
+    private void receiveDestructibleTerrain(TerrainPacketDestructible tpd){
+	    tpd.multiplyVertexList(Common.unitsToPixels);
+	    chunkDrawer.addChunk(tpd.index,tpd.vertexList);
     }
 
+	private void receiveTerrainPacket(TerrainPacket tp) {
+		if (terrainDrawer != null && terrainDrawer.isInitialized()) {
+			terrainDrawer.receiveTerrainPacket(tp);
+		} else {
+			Tools.log(this, "terrainDrawer is not initiliazed");
+		}
+	}
     public void addContactListener(ContactListener contactListener) {
         contactListenerMultiplexer.addContactListener(contactListener);
     }
@@ -153,6 +186,9 @@ public class MapHandler implements SystemInterface {
             case InContinuousMap:
                 terrainDrawer.draw(batch);
                 break;
+	        case InDestructibleMap:
+	        	chunkDrawer.draw(batch);
+	        	break;
 
         }
 

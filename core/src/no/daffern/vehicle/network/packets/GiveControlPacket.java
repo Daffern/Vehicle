@@ -5,5 +5,6 @@ package no.daffern.vehicle.network.packets;
  */
 public class GiveControlPacket{
     public int clientId;
+    public int vehicleId;
     public PlayerPacket playerPacket;
 }

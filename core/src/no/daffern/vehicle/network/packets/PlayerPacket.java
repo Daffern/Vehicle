@@ -7,4 +7,5 @@ public class PlayerPacket {
     public float x, y;
     public float width, height;
     public int playerId;
+    public int vehicleId;
 }

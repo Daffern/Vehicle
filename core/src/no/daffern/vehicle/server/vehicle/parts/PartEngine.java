@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import no.daffern.vehicle.common.GameItemStates;
 import no.daffern.vehicle.common.GameItemTypes;
 import no.daffern.vehicle.server.vehicle.Wall;
 import no.daffern.vehicle.server.vehicle.parts.network.PartNode;
@@ -38,7 +39,11 @@ public class PartEngine extends PartNode {
 		return engineBody;
 	}
 
+	//returns power not used
 	public int supplyPower(int power) {
+		if (!running)
+			return power;
+
 		if (power >= powerDemand) {
 			calcMotorSpeed(powerDemand);
 			return power - powerDemand;
@@ -112,7 +117,8 @@ public class PartEngine extends PartNode {
 
 	@Override
 	public float getAngle() {
-		return engineBody.getAngle();
+		return 0;
+		//return engineBody.getAngle();
 	}
 
 	@Override
@@ -122,13 +128,15 @@ public class PartEngine extends PartNode {
 
 	@Override
 	public boolean interact1() {
-		running = true;
-		return false;
+		running = !running;
+		resetMotor();
+		return true;
 	}
 
-	@Override
-	public boolean interact2() {
-		running = false;
-		return false;
+	public byte getState() {
+		if (running)
+			return GameItemStates.ON;
+		else return GameItemStates.OFF;
 	}
+
 }

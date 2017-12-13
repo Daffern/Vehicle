@@ -16,7 +16,6 @@ public class HeuristicFloodFill {
 
 		PriorityQueue<Node> queue = new PriorityQueue<>();
 
-
 		int floodFillValue = Wall.nextFloodFillValue++;
 
 		Wall startWall = walls.remove(0);
@@ -41,7 +40,6 @@ public class HeuristicFloodFill {
 				return true;
 			}
 
-
 			//add nearby neighbours if they are not checked
 			List<Wall> neighbours = node.wall.getNearbyWalls();
 
@@ -55,15 +53,7 @@ public class HeuristicFloodFill {
 
 				queue.add(new Node(wall, calculateHeuristic(wall, walls)));
 			}
-
-
-
-
 		}
-
-
-
-
 
 		return false;
 	}
@@ -77,11 +67,8 @@ public class HeuristicFloodFill {
 			if (newH < h)
 				h = newH;
 		}
-
 		return h;
 	}
-
-
 
 	private static class Node implements Comparable<Node>{
 		int h;

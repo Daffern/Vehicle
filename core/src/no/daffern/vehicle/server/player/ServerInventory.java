@@ -11,6 +11,7 @@ import no.daffern.vehicle.server.vehicle.Wall;
 import no.daffern.vehicle.server.vehicle.WallSquare;
 import no.daffern.vehicle.server.vehicle.WallTriangle;
 import no.daffern.vehicle.server.vehicle.parts.*;
+import no.daffern.vehicle.utils.Box2dUtils;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.HashMap;
@@ -73,14 +74,9 @@ public class ServerInventory {
 			}
 			case GameItemTypes.SHOVEL_TOOL: {
 
-				float[] clip = new float[]{
-						x-0.5f,y-0.5f,
-						x-0.5f,y+0.5f,
-						x+0.5f,y+0.5f,
-						x+0.5f,y-0.5f
-				};
+				float[] clip = Box2dUtils.approxCircle(x,y,1,6);
 
-				S.worldHandler.tryClipWorld(clip);
+				S.worldHandler.getWorldGenerator().tryClipChunkFixture(clip);
 
 				break;
 			}
@@ -115,8 +111,8 @@ public class ServerInventory {
 			}
 			case GameItemTypes.PART_TYPE_WHEEL: {
 				//if (wall.getType() == GameItemTypes.WALL_TYPE_SQUARE) {
-					if (serverVehicle.addPart(wallIndex, new PartWheel(itemSlot.gameItem.itemId)))
-						itemSlot.addCount(-1);
+				if (serverVehicle.addPart(wallIndex, new PartWheel(itemSlot.gameItem.itemId)))
+					itemSlot.addCount(-1);
 				//}
 				break;
 			}

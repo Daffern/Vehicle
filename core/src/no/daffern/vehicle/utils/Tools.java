@@ -32,9 +32,10 @@ public class Tools {
         }
     }
 
-    public static Vector3 mouseToWorldCoordinates(OrthographicCamera camera, int mouseX, int mouseY){
+    public static Vector2 mouseToWorldCoordinates(OrthographicCamera camera, int mouseX, int mouseY){
         Vector3 vec = new Vector3(mouseX, mouseY, 0);
-        return camera.unproject(vec);
+        vec = camera.unproject(vec);
+        return new Vector2(vec.x, vec.y);
     }
 
     /**

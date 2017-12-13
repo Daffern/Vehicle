@@ -3,7 +3,6 @@ package no.daffern.vehicle.client;
 
 import no.daffern.vehicle.client.handlers.*;
 import no.daffern.vehicle.client.handlers.controller.Controller;
-import no.daffern.vehicle.client.player.ClientInventory;
 import no.daffern.vehicle.network.MyClient;
 
 /**

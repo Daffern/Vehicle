@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DestructibleWorldGenerator implements WorldGeneratorI {
+public class DestructibleWorldGenerator implements WorldGeneratorI, ContactListener {
 
 	private World world;
 	private MyServer myServer;
@@ -27,36 +27,83 @@ public class DestructibleWorldGenerator implements WorldGeneratorI {
 	private Chunks chunks;
 	private ChunkClipper chunkClipper;
 
+	private Filter emptyFilter;
+
 	public DestructibleWorldGenerator(WorldHandler worldHandler, MyServer server) {
 		this.world = worldHandler.world;
 		this.myServer = server;
 
-		worldHandler.addContactListener(new ContactListener() {
-			@Override
-			public void beginContact(Contact contact) {
-				checkCollision(contact);
-			}
-
-			@Override
-			public void endContact(Contact contact) {
-
-			}
-
-			@Override
-			public void preSolve(Contact contact, Manifold oldManifold) {
-
-			}
-
-			@Override
-			public void postSolve(Contact contact, ContactImpulse impulse) {
-				//checkCollision(contact);
-			}
-		});
+		worldHandler.addContactListener(this);
 
 		chunks = new Chunks(world);
 		chunkClipper = new ChunkClipper();
 
+		emptyFilter = new Filter();
+		emptyFilter.categoryBits = 0;
+		emptyFilter.maskBits = 0;
+
 	}
+
+	@Override
+	public void beginContact(Contact contact) {
+		Fixture fixtureA = contact.getFixtureA();
+		Fixture fixtureB = contact.getFixtureB();
+
+		if (fixtureA.getUserData() == null || fixtureB.getUserData() == null)
+			return;
+
+		UserData userDataA = (UserData) fixtureA.getUserData();
+		UserData userDataB = (UserData) fixtureB.getUserData();
+
+		if (userDataA.type == UserData.UserDataType.DRILL && userDataB.type == UserData.UserDataType.DESTRUCTIBLE) {
+
+			UserData.UserDataDrill udd = (UserData.UserDataDrill) userDataA;
+
+			udd.fixtures.add(fixtureB);
+
+		}
+		else if (userDataB.type == UserData.UserDataType.DRILL && userDataA.type == UserData.UserDataType.DESTRUCTIBLE) {
+
+			UserData.UserDataDrill udd = (UserData.UserDataDrill) userDataB;
+
+			udd.fixtures.add(fixtureA);
+
+		}
+	}
+
+	@Override
+	public void endContact(Contact contact) {
+		Fixture fixtureA = contact.getFixtureA();
+		Fixture fixtureB = contact.getFixtureB();
+
+		if (fixtureA.getUserData() == null || fixtureB.getUserData() == null)
+			return;
+
+		UserData userDataA = (UserData) fixtureA.getUserData();
+		UserData userDataB = (UserData) fixtureB.getUserData();
+
+		if (userDataA.type == UserData.UserDataType.DRILL && userDataB.type == UserData.UserDataType.DESTRUCTIBLE) {
+
+			UserData.UserDataDrill udd = (UserData.UserDataDrill) userDataA;
+			udd.fixtures.remove(fixtureB);
+		}
+		else if (userDataB.type == UserData.UserDataType.DRILL && userDataA.type == UserData.UserDataType.DESTRUCTIBLE) {
+
+			UserData.UserDataDrill udd = (UserData.UserDataDrill) userDataB;
+			udd.fixtures.remove(fixtureA);
+		}
+	}
+
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) {
+
+	}
+
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) {
+		//checkCollision(contact);
+	}
+
 
 	@Override
 	public void begin(float x, float y) {
@@ -78,11 +125,14 @@ public class DestructibleWorldGenerator implements WorldGeneratorI {
 				sendChunk(chunk);
 		}
 
-		//forceCheckCollision();
 
-		List<Chunk> chunksUpdated = chunkClipper.clipQueued();
-		for (Chunk chunk : chunksUpdated)
-			sendChunk(chunk);
+	}
+
+	private void forceCheckCollision() {
+		Array<Contact> contacts = world.getContactList();
+		for (Contact contact : contacts) {
+			beginContact(contact);
+		}
 	}
 
 	@Override
@@ -121,87 +171,73 @@ public class DestructibleWorldGenerator implements WorldGeneratorI {
 		myServer.sendToAllTCP(tpd);
 	}
 
-	private void forceCheckCollision() {
-		Array<Contact> contacts = world.getContactList();
-		for (Contact contact : contacts) {
-			checkCollision(contact);
-		}
-	}
 
-	private void checkCollision(Contact contact) {
-		Fixture fixtureA = contact.getFixtureA();
-		Fixture fixtureB = contact.getFixtureB();
+	public void clipChunkFixture(Fixture fixture, float[] vertices){
 
-		if (fixtureA.getUserData() == null || fixtureB.getUserData() == null)
+
+		if (fixture.getUserData() == null || ((UserData)fixture.getUserData()).type != UserData.UserDataType.DESTRUCTIBLE)
 			return;
 
-		UserData userDataA = (UserData) fixtureA.getUserData();
-		UserData userDataB = (UserData) fixtureB.getUserData();
+		chunkClipper.clipChunk(fixture, vertices);
 
-		if (userDataA.type == UserData.UserDataType.DRILL && userDataB.type == UserData.UserDataType.DESTRUCTIBLE) {
+		Chunk chunk = ((UserData.UserDataDestructible)fixture.getUserData()).chunk;
 
-			processCollision((UserData.UserDataDrill) userDataA, fixtureA, (UserData.UserDataDestructible) userDataB, fixtureB);
-
-		}
-		else if (userDataB.type == UserData.UserDataType.DRILL && userDataA.type == UserData.UserDataType.DESTRUCTIBLE) {
-
-			processCollision((UserData.UserDataDrill) userDataB, fixtureB, (UserData.UserDataDestructible) userDataA, fixtureA);
-
-		}
-	}
-
-	private void processCollision(UserData.UserDataDrill userDataDrill,
-	                              Fixture drillFixture,
-	                              UserData.UserDataDestructible userDataDestructible,
-	                              Fixture destructibleFixture) {
-
-		Chunk chunk = userDataDestructible.chunk;
-
-		//destroy the drill fixture sensor
-		drillFixture.getBody().destroyFixture(drillFixture);
-
-		//update chunk
-		float[] clip = Box2dUtils.transformVertices(drillFixture.getBody().getTransform(), userDataDrill.drillVertices);
-
-		chunkClipper.clipAndQueueFixtures(chunk, clip, destructibleFixture);
-
-
+		sendChunk(chunk);
 	}
 
 	/**
 	 * try to clip chunks with provided vertices
-	 *
 	 * @param vertices in world coordinates
 	 */
 
-	public void tryClip(final float[] vertices) {
+	public void tryClipChunkFixture(final float[] vertices) {
 
 		Box2dUtils.AABB aabb = Box2dUtils.findAABB(vertices);
 
+		final List<Fixture> fixtures = new ArrayList<>();
+
 		world.QueryAABB(new QueryCallback() {
+
 			@Override
 			public boolean reportFixture(Fixture fixture) {
 
 				if (fixture.getUserData() == null || ((UserData) fixture.getUserData()).type != UserData.UserDataType.DESTRUCTIBLE)
 					return true;
 
-				UserData.UserDataDestructible ud = (UserData.UserDataDestructible) fixture.getUserData();
+				fixtures.add(fixture);
 
-				chunkClipper.clipAndQueueFixtures(ud.chunk, vertices, fixture);
-
-				return false;
+				return true;
 			}
 		}, aabb.minX, aabb.minY, aabb.maxX, aabb.maxY);
 
+		for (Fixture fixture : fixtures) {
+			chunkClipper.clipChunk(fixture, vertices);
 
+			sendChunk(((UserData.UserDataDestructible) fixture.getUserData()).chunk);
+		}
 	}
 
-	public String getDebugString(){
+	public String getDebugString() {
 		int numChunks = chunks.entrySet().size();
 		int numFixtures = 0;
 		for (Map.Entry<IntVector2, Chunk> entry : chunks.entrySet())
 			numFixtures += entry.getValue().getNumFixtures();
 
 		return "numChunks: " + numChunks + ", totalFixtures: " + numFixtures;
+	}
+
+
+	private class CollisionEvent {
+
+		Fixture chunkFixture, drillFixture;
+		UserData.UserDataDestructible userDataDestructible;
+		UserData.UserDataDrill userDataDrill;
+
+		public CollisionEvent(Fixture chunkFixture, UserData.UserDataDestructible userDataDestructible, Fixture drillFixture, UserData.UserDataDrill userDataDrill) {
+			this.chunkFixture = chunkFixture;
+			this.userDataDestructible = userDataDestructible;
+			this.drillFixture = drillFixture;
+			this.userDataDrill = userDataDrill;
+		}
 	}
 }

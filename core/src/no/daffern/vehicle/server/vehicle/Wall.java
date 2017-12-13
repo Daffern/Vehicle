@@ -24,7 +24,7 @@ public abstract class Wall extends Entity {
 
 	public Wall left, right, up, down;
 
-	protected List<no.daffern.vehicle.server.vehicle.parts.Part> parts;
+	protected List<Part> parts;
 
 	protected boolean isCreated = false;
 
@@ -129,7 +129,7 @@ public abstract class Wall extends Entity {
 	public boolean containsPartType(int partType) {
 		if (parts == null)
 			return false;
-		for (no.daffern.vehicle.server.vehicle.parts.Part part : parts) {
+		for (Part part : parts) {
 			if (part.getType() == partType)
 				return true;
 		}
@@ -139,7 +139,7 @@ public abstract class Wall extends Entity {
 	public Part findPart(int partType) {
 		if (parts == null)
 			return null;
-		for (no.daffern.vehicle.server.vehicle.parts.Part part : parts) {
+		for (Part part : parts) {
 			if (part.getType() == partType)
 				return part;
 		}
@@ -148,7 +148,7 @@ public abstract class Wall extends Entity {
 	public Part findPartById(int itemId){
 		if (parts == null)
 			return null;
-		for (no.daffern.vehicle.server.vehicle.parts.Part part : parts) {
+		for (Part part : parts) {
 			if (part.getItemId() == itemId)
 				return part;
 		}
@@ -169,10 +169,10 @@ public abstract class Wall extends Entity {
 	public List findNearbyParts(int partType){
 		List parts = new Vector(4);
 
-		no.daffern.vehicle.server.vehicle.parts.Part leftPart = left.findPart(partType);
-		no.daffern.vehicle.server.vehicle.parts.Part rightPart = right.findPart(partType);
-		no.daffern.vehicle.server.vehicle.parts.Part downPart = down.findPart(partType);
-		no.daffern.vehicle.server.vehicle.parts.Part upPart = up.findPart(partType);
+		Part leftPart = left.findPart(partType);
+		Part rightPart = right.findPart(partType);
+		Part downPart = down.findPart(partType);
+		Part upPart = up.findPart(partType);
 
 		if (leftPart != null) parts.add(leftPart);
 		if (rightPart != null) parts.add(rightPart);
@@ -215,8 +215,8 @@ public abstract class Wall extends Entity {
 		if (down == null)
 			return true;
 		return up == null;
-
 	}
+
 
 	public boolean isCreated() {
 		return isCreated;

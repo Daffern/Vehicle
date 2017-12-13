@@ -8,6 +8,7 @@ public class GameItemPacket {
     public int itemId;
     public int type;
     public boolean isInfinite;
+    public boolean rotatable;
     public String packName;//atlas name
     public String iconName;//name of the region (for non-tile items)
     public String tilePath;

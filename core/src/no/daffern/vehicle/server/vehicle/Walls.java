@@ -273,6 +273,9 @@ public class Walls {
 	}
 
 
+	public Wall get(IntVector2 index){
+		return array.get(index.x, index.y);
+	}
 	public Wall get(int x, int y) {
 		return array.get(x, y);
 	}

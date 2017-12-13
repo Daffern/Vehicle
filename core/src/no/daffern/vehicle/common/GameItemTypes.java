@@ -24,10 +24,11 @@ public class GameItemTypes {
 
 	public final static int PART_TYPE_WHEEL =   1000;//overriden by part.getLayer()
 	public final static int PART_TYPE_LADDER =  1001;
-	public final static int PART_TYPE_ENGINE =  1002;
-	public final static int PART_TYPE_SOLAR =   1003;
-	public final static int PART_TYPE_BATTERY = 1004;
-	public final static int PART_TYPE_DRILL = 1005;
+	public final static int PART_TYPE_GENERATOR =  1002;
+	public final static int PART_TYPE_ENGINE =  1003;
+	public final static int PART_TYPE_SOLAR =   1004;
+	public final static int PART_TYPE_BATTERY = 1005;
+	public final static int PART_TYPE_DRILL = 1006;
 
 
 

@@ -11,7 +11,8 @@ import no.daffern.vehicle.server.vehicle.parts.network.NetworkHandler;
 import no.daffern.vehicle.server.vehicle.parts.network.PartEdge;
 import no.daffern.vehicle.server.vehicle.parts.network.PartNode;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PartWire extends PartEdge {
 	public PartWire(int itemId) {
@@ -52,7 +53,8 @@ public class PartWire extends PartEdge {
 					for (PartEngine engine : engines) {
 						restPower += engine.supplyPower(avgSupply);
 					}
-				}else{
+				}
+				else {
 					restPower = supply;
 				}
 
@@ -66,9 +68,11 @@ public class PartWire extends PartEdge {
 			}
 		};
 
-		Vector<PartBattery> batteries = new Vector<>(1, 1);
-		Vector<PartEngine> engines = new Vector<>(1, 1);
-		Vector<PartSolarPanel> solars = new Vector<>(1, 1);
+		List<PartBattery> batteries = new ArrayList<>(5);
+		List<PartEngine> engines = new ArrayList<>(5);
+		List<PartSolarPanel> solars = new ArrayList<>(5);
+		List<PartGenerator> generators = new ArrayList<>(5);
+		List<PartDrill> drills = new ArrayList<>(5);
 
 		@Override
 		protected void onCreate(World world) {
@@ -78,16 +82,18 @@ public class PartWire extends PartEdge {
 				switch (partNode.getType()) {
 					case GameItemTypes.PART_TYPE_SOLAR:
 						solars.add((PartSolarPanel) partNode);
-
 						break;
 					case GameItemTypes.PART_TYPE_BATTERY:
 						batteries.add((PartBattery) (partNode));
-
 						break;
-
 					case GameItemTypes.PART_TYPE_ENGINE:
 						engines.add((PartEngine) partNode);
-
+						break;
+					case GameItemTypes.PART_TYPE_DRILL:
+						drills.add((PartDrill) partNode);
+						break;
+					case GameItemTypes.PART_TYPE_GENERATOR:
+						generators.add((PartGenerator) partNode);
 						break;
 				}
 			}
@@ -99,7 +105,7 @@ public class PartWire extends PartEdge {
 
 		@Override
 		protected void onDestroy(World world) {
-			for (PartEngine partEngine : engines){
+			for (PartEngine partEngine : engines) {
 				partEngine.resetMotor();
 			}
 			batteries.clear();

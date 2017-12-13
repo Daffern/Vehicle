@@ -39,7 +39,6 @@ public class ServerVehicle {
 
 	//VehicleShapeBuilder vehicleShapeBuilder;
 
-
 	public ServerVehicle(float sx, float sy) {
 		world = S.worldHandler.world;
 
@@ -108,6 +107,12 @@ public class ServerVehicle {
 	public Wall getWall(int x, int y) {
 		return walls.get(x, y);
 	}
+	public Wall getWallByPos(float x, float y){
+		IntVector2 index = findTileIndex(x,y);
+		if (index == null)
+			return null;
+		return walls.get(index.x, index.y);
+	}
 
 	public boolean addPart(IntVector2 wallIndex, Part part) {
 		int partIndex = walls.addPart(wallIndex, part);
@@ -133,6 +138,17 @@ public class ServerVehicle {
 		}
 
 		return false;
+	}
+	public void interactPart1(int x, int y){
+		Wall wall = walls.get(x,y);
+		if (wall == null)
+			return;
+		for (int i = 0 ; i < wall.getNumParts() ; i++){
+			Part part = wall.getPart(i);
+			if (part.interact1()){
+				sendPartUpdate(x,y,part);
+			}
+		}
 	}
 
 	public void sendVehicleLayout() {
@@ -175,7 +191,6 @@ public class ServerVehicle {
 			}
 		}
 
-
 		VehicleLayoutPacket vehicleLayoutPacket = new VehicleLayoutPacket();
 		vehicleLayoutPacket.wallPackets = wallPackets.toArray(new WallPacket[wallPackets.size()]);
 		vehicleLayoutPacket.vehicleId = vehicleId;
@@ -183,19 +198,19 @@ public class ServerVehicle {
 		vehicleLayoutPacket.y = y;
 		vehicleLayoutPacket.width = width;
 		vehicleLayoutPacket.height = height;
-		vehicleLayoutPacket.partWidth = Wall.WALL_WIDTH;
-		vehicleLayoutPacket.partHeight = Wall.WALL_HEIGHT;
+		vehicleLayoutPacket.wallWidth = Wall.WALL_WIDTH;
+		vehicleLayoutPacket.wallHeight = Wall.WALL_HEIGHT;
 		vehicleLayoutPacket.noTile = 0;
 
 		S.myServer.sendToAllTCP(vehicleLayoutPacket);
 	}
 
 
-	public void sendWallPacket(IntVector2 wallIndex) {
+	private void sendWallPacket(IntVector2 wallIndex) {
 		sendWallPacket(wallIndex.x, wallIndex.y);
 	}
 
-	public void sendWallPacket(int x, int y) {
+	private void sendWallPacket(int x, int y) {
 
 		WallPacket wallPacket = new WallPacket();
 		wallPacket.vehicleId = vehicleId;
@@ -223,9 +238,17 @@ public class ServerVehicle {
 				}
 			}
 		}
-
 		S.myServer.sendToAllTCP(wallPacket);
-
+	}
+	private void sendPartUpdate(int x, int y, Part part){
+		PartOutputPacket pop = new PartOutputPacket();
+		pop.vehicleId = vehicleId;
+		pop.wallX = x;
+		pop.wallY = y;
+		pop.angle = part.getAngle();
+		pop.layer = part.getLayer();
+		pop.state = part.getState();
+		S.myServer.sendToAllTCP(pop);
 	}
 
 	public IntVector2 findTileIndex(float x, float y) {
@@ -238,7 +261,7 @@ public class ServerVehicle {
             return null;
         */
 
-		IntVector2 vec = new IntVector2(-1, -1);
+		IntVector2 vec = new IntVector2();
 
 
 		vec.x = MathUtils.floor((rp.x - pos.x) / Wall.WALL_WIDTH);
@@ -271,9 +294,7 @@ public class ServerVehicle {
 
 	public Vector2 findPlayerSpawnPoint() {
 
-
 		for (int x = walls.startX(); x <= walls.endX(); x++) {
-
 			for (int y = walls.startY(); y <= walls.endY(); y++) {
 
 				Wall wall = walls.get(x, y);

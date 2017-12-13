@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Listener;
 import no.daffern.vehicle.client.C;
 import no.daffern.vehicle.client.vehicle.ClientVehicle;
 import no.daffern.vehicle.common.SystemInterface;
+import no.daffern.vehicle.network.packets.PartOutputPacket;
 import no.daffern.vehicle.network.packets.VehicleLayoutPacket;
 import no.daffern.vehicle.network.packets.VehicleOutputPacket;
 import no.daffern.vehicle.network.packets.WallPacket;
@@ -42,6 +43,14 @@ public class ClientVehicleHandler implements SystemInterface{
                     ClientVehicle vehicle = vehicles.get(vop.vehicleId);
                     if (vehicle != null)
                         vehicle.receiveOutput(vop);
+                }
+                else if (object instanceof PartOutputPacket){
+                	PartOutputPacket pop = (PartOutputPacket)object;
+
+	                ClientVehicle vehicle = vehicles.get(pop.vehicleId);
+	                if (vehicle != null)
+		                vehicle.receivePartOutput(pop);
+
                 }
                 else if (object instanceof WallPacket){
                 	WallPacket wp = (WallPacket)object;

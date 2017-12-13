@@ -9,6 +9,7 @@ import no.daffern.vehicle.client.C;
 import no.daffern.vehicle.client.ResourceManager;
 import no.daffern.vehicle.client.handlers.ItemHandler;
 import no.daffern.vehicle.common.Common;
+import no.daffern.vehicle.common.GameItemStates;
 import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.network.packets.GameItemPacket;
 import no.daffern.vehicle.network.packets.PartOutputPacket;
@@ -20,10 +21,12 @@ import java.util.Map;
 
 public class BasicPartLayer implements PartLayerI {
 
-	private static final Vector2 ON_OFF_POS = new Vector2(12, 4.5f);
+	//these are relative to each wall
+	private static final Vector2 ON_OFF_POS = new Vector2(21, 42);
 	private static final Vector2 POWER_METER_POS = new Vector2(24.3f, 8.1f);//because scaling at shit
 
 	private Vector2 powerPos;
+	private Vector2 onOffPos;
 
 	TextureRegion onTexture, offTexture, powerTexture;
 
@@ -64,7 +67,9 @@ public class BasicPartLayer implements PartLayerI {
 	@Override
 	public void render(Batch batch, float posX, float posY, float tileWidth, float tileHeight, float angle) {
 
-		powerPos = Tools.rotatePoint(POWER_METER_POS.x, POWER_METER_POS.y,0,0,MathUtils.degreesToRadians * angle);
+		//rotate for all parts at once, offset in Part.render()
+		powerPos = Tools.rotatePoint(POWER_METER_POS.x, POWER_METER_POS.y, 0, 0, MathUtils.degreesToRadians * angle);
+		onOffPos = Tools.rotatePoint(ON_OFF_POS.x, ON_OFF_POS.y, 0, 0, MathUtils.degreesToRadians * angle);
 
 		for (Map.Entry<IntVector2, Part> entry : tiles.entrySet()) {
 
@@ -75,7 +80,6 @@ public class BasicPartLayer implements PartLayerI {
 					posX + wallIndex.x * tileWidth + tileWidth / 2,
 					posY + wallIndex.y * tileHeight + tileHeight / 2,
 					posX, posY, MathUtils.degreesToRadians * angle);
-
 
 
 			part.render(batch, point.x - part.width / 2, point.y - part.height / 2, angle);
@@ -125,19 +129,25 @@ public class BasicPartLayer implements PartLayerI {
 
 			//render state
 			switch (state) {
-				case PartOutputPacket.STATE_NONE:
-					break;
-				case PartOutputPacket.STATE_ON:
+				case GameItemStates.NONE:
 
 					break;
-				case PartOutputPacket.STATE_OFF:
-
+				case GameItemStates.ON:
+					batch.draw(onTexture, x + onOffPos.x, y + onOffPos.y,
+							width / 2, height / 2,
+							onTexture.getRegionWidth(), onTexture.getRegionHeight(),
+							1, 1, angle);
+					break;
+				case GameItemStates.OFF:
+					batch.draw(offTexture, x + onOffPos.x, y + onOffPos.y,
+							width / 2, height / 2,
+							onTexture.getRegionWidth(), onTexture.getRegionHeight(),
+							1, 1, angle);
 					break;
 
-				default:
-					if (powerTexture != null)
+				default://energy level
 					batch.draw(powerTexture, x + powerPos.x, y + powerPos.y,
-							width/2, height/2,
+							width / 2, height / 2,
 							7.2f, 13.5f * state / 100,//because scaling etc..
 							1, 1, angle);
 

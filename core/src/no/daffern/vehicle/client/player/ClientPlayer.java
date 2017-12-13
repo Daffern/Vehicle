@@ -16,21 +16,18 @@ import no.daffern.vehicle.network.packets.PlayerPacket;
  */
 public class ClientPlayer extends ClientEntity{
 
-
-
-
 	private float width, height;
 	private float speed;
-
-
 
     private Animation animation;
     private TextureRegion testTexture;
 
     public int playerId;
+	public int vehicleId;
 
     public ClientPlayer(PlayerPacket pp) {
         this.playerId = pp.playerId;
+        this.vehicleId = pp.vehicleId;
         this.width = Common.toPixelCoordinates(pp.width);
         this.height = Common.toPixelCoordinates(pp.height);
 

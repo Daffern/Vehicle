@@ -18,25 +18,25 @@ import java.io.IOException;
 public class ServerMain extends Thread {
 
 
-    ServerMenu serverMenu;
+	ServerMenu serverMenu;
 
-    private long oldTime;
+	private long oldTime;
 	private long accumulator = 0;
 
 
 	boolean running = true;
 
-    Object lock = new Object();
+	Object renderLock = new Object();
 
-    public ServerMain() {
-        super("ServerMain");
+	public ServerMain() {
+		super("ServerMain");
 
-        S.myServer = new MyServer();
-        S.worldHandler = new WorldHandler();
-        S.itemHandler = new ItemHandler();
-        S.playerHandler = new ServerPlayerHandler();
-        S.vehicleHandler = new ServerVehicleHandler();
-        S.tickHandler = new TickHandler();
+		S.myServer = new MyServer();
+		S.worldHandler = new WorldHandler();
+		S.itemHandler = new ItemHandler();
+		S.playerHandler = new ServerPlayerHandler();
+		S.vehicleHandler = new ServerVehicleHandler();
+		S.tickHandler = new TickHandler();
 /*
         AbstractInputProcessor abstractInputProcessor = new AbstractInputProcessor() {
             @Override
@@ -71,70 +71,68 @@ public class ServerMain extends Thread {
 
         PriorityInputHandler.getInstance().addInputProcessor(abstractInputProcessor, 3);
 */
-        serverMenu = new ServerMenu();
-        serverMenu.loadServerMenu(new ServerMenu.ServerMenuListener() {
-            @Override
-            public void onHostClicked(int tcpPort, int udpPort) {
-                initServer(tcpPort, udpPort);
-            }
-        });
+		serverMenu = new ServerMenu();
+		serverMenu.loadServerMenu(new ServerMenu.ServerMenuListener() {
+			@Override
+			public void onHostClicked(int tcpPort, int udpPort) {
+				initServer(tcpPort, udpPort);
+			}
+		});
 
-    }
+	}
 
-    //for debugging
-    public ServerMain(int tcpPort, int udpPort) {
+	//for debugging
+	public ServerMain(int tcpPort, int udpPort) {
 
-        S.myServer = new MyServer();
-        S.worldHandler = new WorldHandler();
-        S.itemHandler = new ItemHandler();
-        S.playerHandler = new ServerPlayerHandler();
-        S.vehicleHandler = new ServerVehicleHandler();
-	    S.tickHandler = new TickHandler();
-
-
-        initServer(tcpPort, udpPort);
-
-        //S.worldHandler.loadWorld("test.tmx");
-        S.worldHandler.loadDestructibleWorld();
+		S.myServer = new MyServer();
+		S.worldHandler = new WorldHandler();
+		S.itemHandler = new ItemHandler();
+		S.playerHandler = new ServerPlayerHandler();
+		S.vehicleHandler = new ServerVehicleHandler();
+		S.tickHandler = new TickHandler();
 
 
-        start();//start thread
-    }
+		initServer(tcpPort, udpPort);
 
-    private void initServer(int tcpPort, int udpPort) {
+		//S.worldHandler.loadWorld("test.tmx");
+		S.worldHandler.loadDestructibleWorld();
 
-        S.myServer.register(Packets.networkClasses);
 
-        try {
+		start();//start thread
+	}
 
-            S.myServer.bind(tcpPort, udpPort);
-            S.myServer.start();
+	private void initServer(int tcpPort, int udpPort) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (serverMenu != null)
-                serverMenu.appendConsole("Failed to start on ports: " + tcpPort + " " + udpPort);
-        } finally {
-            if (serverMenu != null)
-                serverMenu.appendConsole("Started server on ports: " + tcpPort + " " + udpPort);
-        }
-    }
+		S.myServer.register(Packets.networkClasses);
+
+		try {
+
+			S.myServer.bind(tcpPort, udpPort);
+			S.myServer.start();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			if (serverMenu != null)
+				serverMenu.appendConsole("Failed to start on ports: " + tcpPort + " " + udpPort);
+		} finally {
+			if (serverMenu != null)
+				serverMenu.appendConsole("Started server on ports: " + tcpPort + " " + udpPort);
+		}
+	}
 
 	private int tickCounter = 0;
-    private long time = System.currentTimeMillis();
+	private long time = System.currentTimeMillis();
 	private int ups = 0;
 
 
-    @Override
-    public void run() {
+	@Override
+	public void run() {
 
 
-        while (running) {
+		while (running) {
 
 
-
-
-			if (System.currentTimeMillis() - time > 1000){
+			if (System.currentTimeMillis() - time > 1000) {
 				//Tools.log(this, "ticks a second: " + tickCounter);
 				time = System.currentTimeMillis();
 				tickCounter = 0;
@@ -142,68 +140,63 @@ public class ServerMain extends Thread {
 
 
 			//fix my timestep
-	        long NANOTIMESTEP = (long)Math.ceil((double)Common.TIME_STEP * 1000000000.0);
+			long NANOTIMESTEP = (long) Math.ceil((double) Common.TIME_STEP * 1000000000.0);
 
 
-	        long currentTime = System.nanoTime();
-	        long deltaTime = currentTime - oldTime;
+			long currentTime = System.nanoTime();
+			long deltaTime = currentTime - oldTime;
 
-	        oldTime = currentTime;
+			oldTime = currentTime;
 
-	        long frameTime = Math.min(deltaTime, 250000000);//max 1/4 second between each frame?
-	        accumulator += frameTime;
-
-
+			long frameTime = Math.min(deltaTime, 250000000);//max 1/4 second between each frame?
+			accumulator += frameTime;
 
 
-            while (accumulator >= NANOTIMESTEP) {
+			while (accumulator >= NANOTIMESTEP) {
 
-	            tickCounter++;
+				tickCounter++;
 
-                synchronized (lock) {
+				synchronized (renderLock) {
 
-                    S.myServer.dispatchQueues();
+					S.myServer.dispatchQueues();
 
-                    S.playerHandler.preStep();
-                    S.vehicleHandler.preStep();
+					S.playerHandler.preStep();
+					S.vehicleHandler.preStep();
 
-                    S.worldHandler.worldStep();
+					S.worldHandler.worldStep();
 
-                    S.tickHandler.step();
+					S.tickHandler.step();
 
-                    S.playerHandler.postStep();
-                    S.vehicleHandler.postStep();
+					S.playerHandler.postStep();
+					S.vehicleHandler.postStep();
 
-                }
-
-
-	            accumulator -= NANOTIMESTEP;
-            }
-        }
-    }
+				}
 
 
-    public void render(float deltaTime) {
-
-        if (Common.debugRender) {
-            synchronized (lock) {
-                S.worldHandler.debugRender();
-            }
-        }
+				accumulator -= NANOTIMESTEP;
+			}
+		}
+	}
 
 
+	public void render(float deltaTime) {
 
-        if (serverMenu != null)
-            serverMenu.render(deltaTime);
+		if (Common.debugRender) {
+			synchronized (renderLock) {
+				S.worldHandler.debugRender();
+			}
+		}
 
+		if (serverMenu != null)
+			serverMenu.render(deltaTime);
 
-    }
+	}
 
-    public void resize(int width, int height) {
-        S.worldHandler.camera.viewportWidth = width * Common.pixelToUnits;
-        S.worldHandler.camera.viewportHeight = height * Common.pixelToUnits;
-        S.worldHandler.camera.zoom = Common.cameraZoom;
-        S.worldHandler.camera.update();
-    }
+	public void resize(int width, int height) {
+		S.worldHandler.camera.viewportWidth = width * Common.pixelToUnits;
+		S.worldHandler.camera.viewportHeight = height * Common.pixelToUnits;
+		S.worldHandler.camera.zoom = Common.cameraZoom;
+		S.worldHandler.camera.update();
+	}
 
 }

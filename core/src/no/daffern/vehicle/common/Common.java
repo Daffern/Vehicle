@@ -19,7 +19,6 @@ public class Common {
 
 
 
-
     //1 meter = 32 pixels
     public final static float unitsToPixels = 64f;
     public final static float pixelToUnits = 1f/unitsToPixels;

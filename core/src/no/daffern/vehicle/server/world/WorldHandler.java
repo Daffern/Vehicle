@@ -149,10 +149,8 @@ public class WorldHandler {
 		world.step(0, 0, 0);
 
 	}
-	public void tryClipWorld(float[] vertices){
-		if (worldGenerator instanceof DestructibleWorldGenerator){
-			((DestructibleWorldGenerator)worldGenerator).tryClip(vertices);
-		}
+	public DestructibleWorldGenerator getWorldGenerator(){
+		return (DestructibleWorldGenerator)worldGenerator;
 	}
 
 	public void translateWorldToPlayers() {
@@ -209,9 +207,4 @@ public class WorldHandler {
 		debugRenderer.render(world, camera.combined);
 
 	}
-
-	public WorldGeneratorI getWorldGenerator() {
-		return worldGenerator;
-	}
-
 }

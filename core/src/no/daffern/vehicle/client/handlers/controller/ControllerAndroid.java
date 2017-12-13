@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import no.daffern.vehicle.client.C;
 import no.daffern.vehicle.network.packets.PlayerClickPacket;
 import no.daffern.vehicle.utils.AbstractInputProcessor;
@@ -55,9 +54,9 @@ public class ControllerAndroid extends Controller {
 				setRight(true);
 				return true;
 			}else{
-				Vector3 pos = Tools.mouseToWorldCoordinates(C.cameraHandler.gameCamera, screenX, screenY);
+				Vector2 pos = Tools.mouseToWorldCoordinates(C.cameraHandler.gameCamera, screenX, screenY);
 
-				sendClickPacket(PlayerClickPacket.CLICK_TYPE_BUILD, pos.x, pos.y);
+				sendClickPacket(PlayerClickPacket.CLICK_TYPE_USE, pos.x, pos.y,0);
 			}
 			return true;
 

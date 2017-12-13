@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.GameItemTypes;
+import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.network.packets.PlayerClickPacket;
 import no.daffern.vehicle.network.packets.PlayerInputPacket;
 import no.daffern.vehicle.network.packets.PlayerOutputPacket;
@@ -65,7 +66,17 @@ public class ServerPlayer extends Entity {
 	public void receiveInventoryUsePacket(PlayerClickPacket pcp) {
 		float x = Common.toWorldCoordinates(pcp.x);
 		float y = Common.toWorldCoordinates(pcp.y);
-		inventory.useItem(pcp.itemId,x,y);
+		switch (pcp.clickType) {
+			case PlayerClickPacket.CLICK_TYPE_USE:
+				inventory.useItem(pcp.itemId, x, y);
+				break;
+
+			case PlayerClickPacket.CLICK_TYPE_INTERACT1:
+				IntVector2 index = serverVehicle.findTileIndex(x,y);
+				serverVehicle.interactPart1(index.x, index.y);
+				break;
+		}
+
 	}
 
 	public Body createBody(float startX, float startY) {
@@ -78,18 +89,19 @@ public class ServerPlayer extends Entity {
 
 		wheelBody = world.createBody(bodyDef);
 
-        /*
+/*
         CircleShape shape = new CircleShape();
         shape.setRadius(radius);*/
+
 
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(radius, radius);
 
 		//wheel fixture
 		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.density = 0.5f;
+		fixtureDef.density = 0.25f;
 		fixtureDef.shape = shape;
-		fixtureDef.restitution = 0.2f;
+		fixtureDef.restitution = 0.75f;
 		fixtureDef.friction = 1f;
 		fixtureDef.filter.categoryBits = CollisionCategories.player;
 		fixtureDef.filter.maskBits = CollisionCategories.vehicleInside | CollisionCategories.terrain;
@@ -111,7 +123,7 @@ public class ServerPlayer extends Entity {
 		jointDef.bodyA = wheelBody;
 		jointDef.bodyB = fixedBody;
 		jointDef.enableMotor = true;
-		jointDef.maxMotorTorque = 10f;
+		jointDef.maxMotorTorque = 15f;
 		jointDef.motorSpeed = 5f;
 
 
@@ -126,6 +138,7 @@ public class ServerPlayer extends Entity {
 		Vector2 position = wheelBody.getPosition();
 
 		PlayerPacket playerPacket = new PlayerPacket();
+		playerPacket.vehicleId = serverVehicle.vehicleId;
 		playerPacket.playerId = playerId;
 		playerPacket.x = position.x;
 		playerPacket.y = position.y;

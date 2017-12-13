@@ -28,8 +28,8 @@ public class ClientWalls {
 	//layers, parts
 	Map<Integer, PartLayerI> partLayers;
 
-	QuadTileDrawer walls;
-	//queue for the walls
+	QuadTileDrawer wallDrawer;
+	//queue for the wallDrawer
 	List<WallPacket> queuedWalls;
 
 	float tileWidth, tileHeight;
@@ -39,12 +39,12 @@ public class ClientWalls {
 	}
 
 	public void initialize(VehicleLayoutPacket vlp) {
-		//this.walls = new DynamicMultiArray<>(10, 10);
-		this.walls = new QuadTileDrawer();
+		//this.wallDrawer = new DynamicMultiArray<>(10, 10);
+		this.wallDrawer = new QuadTileDrawer();
 		queuedWalls = new ArrayList<>();
 		this.partLayers = new TreeMap<>();
-		this.tileWidth = Common.toPixelCoordinates(vlp.partWidth);
-		this.tileHeight = Common.toPixelCoordinates(vlp.partHeight);
+		this.tileWidth = Common.toPixelCoordinates(vlp.wallWidth);
+		this.tileHeight = Common.toPixelCoordinates(vlp.wallHeight);
 
 
 		this.noTile = vlp.noTile;
@@ -67,10 +67,12 @@ public class ClientWalls {
 
 		IntVector2 wallIndex = new IntVector2(wallPacket.x, wallPacket.y);
 
+
 		if (wallPacket.itemId == noTile) {
-			walls.remove(wallIndex);
+			wallDrawer.remove(wallIndex);
 		}else{
-			if (!walls.hasTileset(wallPacket.itemId)){
+			//queue stuff
+			if (!wallDrawer.hasTileset(wallPacket.itemId)){
 
 				queuedWalls.add(wallPacket);
 
@@ -78,7 +80,7 @@ public class ClientWalls {
 
 					@Override
 					public void onGameItemLoaded(TextureAtlas textureAtlas, GameItemPacket gameItem) {
-						walls.addTileset(textureAtlas, gameItem.tilePath, gameItem.itemId);
+						wallDrawer.addTileset(textureAtlas, gameItem.tilePath, gameItem.itemId);
 
 						while (queuedWalls.size() > 0){
 							WallPacket wallPacket1 = queuedWalls.remove(0);
@@ -88,8 +90,9 @@ public class ClientWalls {
 					}
 				});
 
-			}else{
-				walls.set(wallIndex, wallPacket.itemId);
+			}
+			else{//or not
+				wallDrawer.set(wallIndex, wallPacket.itemId);
 			}
 		}
 
@@ -128,20 +131,22 @@ public class ClientWalls {
 		}
 
 	}
-
-
-	public void updateParts(PartOutputPacket[] pops) {
-
-		for (PartOutputPacket pop : pops) {
-
-			PartLayerI partLayer = partLayers.get(pop.layer);
-
-			IntVector2 index = new IntVector2(pop.wallX,pop.wallY);
-
-			partLayer.update(index, pop);
-
-		}
+	public int getWallItemId(IntVector2 index){
+		QuadTileDrawer.QuadTile quadTile = wallDrawer.get(index);
+		if (quadTile == null)
+			return 0;
+		return quadTile.tileId;
 	}
+
+	public void updatePart(PartOutputPacket pop){
+		PartLayerI partLayer = partLayers.get(pop.layer);
+
+		IntVector2 index = new IntVector2(pop.wallX,pop.wallY);
+
+		partLayer.update(index, pop);
+	}
+
+
 
 /*
 
@@ -150,11 +155,11 @@ public class ClientWalls {
 		int x = wallIndex.x;
 		int y = wallIndex.y;
 
-		ClientWall wall = walls.get(wallIndex);
-		ClientWall left = walls.get(new IntVector2(x - 1, y));
-		ClientWall right = walls.get(new IntVector2(x + 1, y));
-		ClientWall up = walls.get(new IntVector2(x, y + 1));
-		ClientWall down = walls.get(new IntVector2(x, y - 1));
+		ClientWall wall = wallDrawer.get(wallIndex);
+		ClientWall left = wallDrawer.get(new IntVector2(x - 1, y));
+		ClientWall right = wallDrawer.get(new IntVector2(x + 1, y));
+		ClientWall up = wallDrawer.get(new IntVector2(x, y + 1));
+		ClientWall down = wallDrawer.get(new IntVector2(x, y - 1));
 
 		if (wall != null) {
 			wall.left = left;
@@ -197,8 +202,8 @@ public class ClientWalls {
 			layer0.render(batch,posX,posY,tileWidth,tileHeight,angle);
 		}
 
-		//render walls
-		walls.render(batch, posX, posY, tileWidth, tileHeight, angle);
+		//render wallDrawer
+		wallDrawer.render(batch, posX, posY, tileWidth, tileHeight, angle);
 
 
 		//render the other parts

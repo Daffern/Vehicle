@@ -11,7 +11,6 @@ import no.daffern.vehicle.server.vehicle.Wall;
 import no.daffern.vehicle.server.vehicle.parts.network.NetworkHandler;
 import no.daffern.vehicle.server.vehicle.parts.network.PartEdge;
 import no.daffern.vehicle.server.vehicle.parts.network.PartNode;
-import no.daffern.vehicle.utils.Tools;
 
 import java.util.Vector;
 
@@ -46,11 +45,6 @@ public class PartAxle extends PartEdge {
 					case GameItemTypes.PART_TYPE_ENGINE:
 
 						PartEngine pe = (PartEngine) part;
-
-						if (pe.getJoint() == null)
-							Tools.log(this, "Joint is null");
-						if (pe.getBody() == null)
-							Tools.log(this, "Body is null");
 
 						if (nodeJoints.size() > 0) {
 
@@ -90,6 +84,26 @@ public class PartAxle extends PartEdge {
 						nodeJoints.add(pw.getJoint());
 
 						break;
+/*
+					case GameItemTypes.PART_TYPE_DRILL:
+
+						PartDrill pd = (PartDrill) part;
+
+						if (nodeJoints.size() > 0) {
+
+							GearJointDef gearJointDef = new GearJointDef();
+							gearJointDef.joint1 = nodeJoints.lastElement();
+							gearJointDef.joint2 = pd.getJoint();
+							gearJointDef.bodyA = nodeBodies.lastElement();
+							gearJointDef.bodyB = pd.getBody();
+							gearJointDef.ratio = -1f;
+
+							GearJoint gearJoint = (GearJoint) world.createJoint(gearJointDef);
+							joints.add(gearJoint);
+						}
+
+						nodeBodies.add(pd.getBody());
+						nodeJoints.add(pd.getJoint());*/
 				}
 			}
 
@@ -123,7 +137,7 @@ public class PartAxle extends PartEdge {
 
 	}
 
-	//called if this part is in the range of another part, return true if the other part should be placed
+	//called if this part is in the range of another part, return true if the other part can be placed
 	@Override
 	public boolean checkCollision(Part otherPart) {
 		return otherPart.getType() == getType();
@@ -142,16 +156,6 @@ public class PartAxle extends PartEdge {
 	@Override
 	public Vector2 getPosition() {
 		return null;
-	}
-
-	@Override
-	public boolean interact1() {
-		return false;
-	}
-
-	@Override
-	public boolean interact2() {
-		return false;
 	}
 
 

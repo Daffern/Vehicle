@@ -18,115 +18,104 @@ import no.daffern.vehicle.utils.PriorityInputHandler;
 public class StartMenu {
 
 
-    Stage stage;
+	Stage stage;
 	VisWindow window;
 
-    private static float pad = 2f;
-    private static float height = 30f;
+	private static float pad = 2f;
+	private static float height = 30f;
 
-    public StartMenu() {
+	public StartMenu() {
 
-        stage = new Stage( new ScreenViewport());
-
-
-	    VisUI.load(VisUI.SkinScale.X2);
+		stage = new Stage(new ScreenViewport());
 
 
+		VisUI.load(VisUI.SkinScale.X2);
 
 
-        window = new VisWindow("Menu", true);
+		window = new VisWindow("Menu", true);
 
 		stage.addActor(window);
 
 
-        //stage.setDebugAll(true);
+		//stage.setDebugAll(true);
 
 
+	}
+
+	public Stage getStage() {
+		return stage;
+	}
 
 
+	public void load(final StartMenuListener menuListener) {
 
-    }
+		VisTextButton clientButton = new VisTextButton("Client");
+		VisTextButton serverButton = new VisTextButton("Server");
+		VisTextButton quickstartButton = new VisTextButton("Debug");
 
-    public Stage getStage() {
-        return stage;
-    }
+		clientButton.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				if (button == Input.Buttons.LEFT) {
+					if (menuListener != null)
+						menuListener.onClientClicked();
+				}
+			}
+		});
 
+		serverButton.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				if (button == Input.Buttons.LEFT) {
+					if (menuListener != null)
+						menuListener.onServerClicked();
+				}
+			}
 
-    public void load(final StartMenuListener menuListener) {
+		});
+		quickstartButton.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				if (button == Input.Buttons.LEFT) {
+					if (menuListener != null)
+						menuListener.onQuickstartClicked();
+				}
+			}
 
-        VisTextButton clientButton = new VisTextButton("Client");
-        VisTextButton serverButton = new VisTextButton("Server");
-        VisTextButton quickstartButton = new VisTextButton("Debug");
+		});
 
-        clientButton.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (button == Input.Buttons.LEFT) {
-                    if (menuListener != null)
-                        menuListener.onClientClicked();
-                    return true;
-                }
-                return false;
-            }
-        });
+		VisTable table = new VisTable();
+		table.add(clientButton);
+		table.add(serverButton);
 
-        serverButton.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (button == Input.Buttons.LEFT) {
-                    if (menuListener != null)
-                        menuListener.onServerClicked();
+		window.add(table);
+		window.row();
+		window.add(quickstartButton);
+		window.pack();
+		window.centerWindow();
 
-                    return true;
-                }
-                return false;
-            }
+		PriorityInputHandler.getInstance().addInputProcessor(stage, 0);
 
-        });
-        quickstartButton.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (button == Input.Buttons.LEFT) {
-                    if (menuListener != null)
-                        menuListener.onQuickstartClicked();
+	}
 
-                    return true;
-                }
-                return false;
-            }
-
-        });
-
-        VisTable table = new VisTable();
-        table.add(clientButton);
-        table.add(serverButton);
-
-        window.add(table);
-	    window.row();
-	    window.add(quickstartButton);
-	    window.pack();
-	    window.centerWindow();
-
-        PriorityInputHandler.getInstance().addInputProcessor(stage,0);
-
-    }
-
-    public void unload() {
-        PriorityInputHandler.getInstance().removeInputProcessor(0);
-        stage.clear();
-        VisUI.dispose();
-    }
+	public void unload() {
+		PriorityInputHandler.getInstance().removeInputProcessor(0);
+		stage.clear();
+		VisUI.dispose();
+	}
 
 
-    public void render(float delta) {
-        stage.act(delta);
-        stage.draw();
-    }
+	public void render(float delta) {
+		stage.act(delta);
+		stage.draw();
+	}
 
-    public interface StartMenuListener {
-        void onClientClicked();
-        void onServerClicked();
-        void onQuickstartClicked();
-    }
+	public interface StartMenuListener {
+		void onClientClicked();
+
+		void onServerClicked();
+
+		void onQuickstartClicked();
+	}
 
 }

@@ -9,7 +9,6 @@ import com.esotericsoftware.kryonet.Listener;
 import no.daffern.vehicle.client.handlers.*;
 import no.daffern.vehicle.client.handlers.controller.ControllerAndroid;
 import no.daffern.vehicle.client.handlers.controller.ControllerDesktop;
-import no.daffern.vehicle.client.player.ClientInventory;
 import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.common.Packets;
 import no.daffern.vehicle.common.SystemSystem;
@@ -167,6 +166,8 @@ public class ClientMain extends Thread {
         C.mapHandler.render(batch,delta);
         C.vehicleHandler.render(batch,delta);
         C.playerHandler.render(batch,delta);
+
+        C.controller.render(batch,delta);
 
         C.cameraHandler.useUICamera(batch);
 

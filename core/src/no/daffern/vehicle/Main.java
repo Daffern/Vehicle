@@ -9,7 +9,6 @@ import no.daffern.vehicle.common.Common;
 import no.daffern.vehicle.menu.StartMenu;
 import no.daffern.vehicle.server.ServerMain;
 import no.daffern.vehicle.utils.PriorityInputHandler;
-import no.daffern.vehicle.utils.TexturePackerHelper;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -26,10 +25,8 @@ public class Main implements ApplicationListener {
 	@Override
 	public void create() {
 
-
-		TexturePackerHelper.ensureAtlasUpdated("images","packed/pack");
-		TexturePackerHelper.updateAtlas("images","packed/pack");
-
+		//TexturePackerHelper.ensureAtlasUpdated("images","packed/pack");
+		//TexturePackerHelper.updateAtlas("images","packed/pack");
 
 		startMenu = new StartMenu();
 		startMenu.load(new StartMenu.StartMenuListener() {

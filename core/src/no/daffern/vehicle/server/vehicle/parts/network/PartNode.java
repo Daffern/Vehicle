@@ -10,5 +10,4 @@ public abstract class PartNode extends Part {
 		super(itemId, type, dynamic, width, height);
 	}
 
-
 }

@@ -71,7 +71,7 @@ public class TexturePackerHelper {
 			return false;
 		}
 		else {
-			Tools.log(TexturePackerHelper.class, "images changed since last, writing new file...");
+			Tools.log(TexturePackerHelper.class, "images changed, writing new file...");
 			imageList.writeString(currentString,false);
 			return true;
 		}
@@ -83,15 +83,12 @@ public class TexturePackerHelper {
 		files.add(root);
 		int index = 0;
 
-
 		while (index < files.size()) {
 
 			FileHandle current = files.get(index);
 
-
 			FileHandle[] array = current.list();
 			files.addAll(Arrays.asList(array));
-
 
 			index++;
 

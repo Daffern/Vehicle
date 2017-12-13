@@ -3,8 +3,8 @@ package no.daffern.vehicle.server.vehicle.parts;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import no.daffern.vehicle.common.GameItemStates;
 import no.daffern.vehicle.container.IntVector2;
-import no.daffern.vehicle.network.packets.PartOutputPacket;
 import no.daffern.vehicle.server.handlers.Entity;
 import no.daffern.vehicle.server.vehicle.Wall;
 import no.daffern.vehicle.server.vehicle.Walls;
@@ -69,7 +69,7 @@ public abstract class Part extends Entity{
     public abstract Vector2 getPosition();
 	//used for battery level, on/off states. See @link PartOutputPacket
 	public byte getState(){
-		return PartOutputPacket.STATE_NONE;
+		return GameItemStates.NONE;
 	}
 
     public abstract boolean isActive();
@@ -81,6 +81,10 @@ public abstract class Part extends Entity{
         return dynamic;
     }
 
-    public abstract boolean interact1();
-    public abstract boolean interact2();
+    public boolean interact1(){
+        return false;
+    }
+    public boolean interact2(){
+        return false;
+    }
 }

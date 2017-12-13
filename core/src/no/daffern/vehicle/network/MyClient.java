@@ -124,9 +124,6 @@ public class MyClient extends Client implements SystemInterface {
 		}
 	}
 
-
-
-
     @Override
     public void preStep() {
 

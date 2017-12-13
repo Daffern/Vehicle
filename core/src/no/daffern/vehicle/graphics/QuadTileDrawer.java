@@ -17,6 +17,7 @@ import java.util.Map;
  */
 public class QuadTileDrawer {
 
+	//TODO
 	//adjacents
 	private static final int NORTH = 0b00000001;
 	private static final int NORTHEAST = 0b00000010;
@@ -68,6 +69,14 @@ public class QuadTileDrawer {
 		quadTiles.put(index, new QuadTile(id));
 
 		resolve(index.x, index.y);
+	}
+
+	public QuadTile get(IntVector2 index){
+		return quadTiles.get(index);
+	}
+
+	public QuadTile get(int x, int y) {
+		return quadTiles.get(new IntVector2(x, y));
 	}
 
 	public void remove(IntVector2 index) {
@@ -211,9 +220,7 @@ public class QuadTileDrawer {
 	}
 
 
-	private QuadTile get(int x, int y) {
-		return quadTiles.get(new IntVector2(x, y));
-	}
+
 
 	public void render(Batch batch, float posX, float posY, float quadWidth, float quadHeight, float angle) {
 
@@ -262,8 +269,8 @@ public class QuadTileDrawer {
 
 	}
 
-	private class QuadTile {
-		int tileId;
+	public class QuadTile {
+		public int tileId;
 		TextureRegion northWest;
 		TextureRegion northEast;
 		TextureRegion southWest;

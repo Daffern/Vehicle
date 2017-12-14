@@ -32,7 +32,7 @@ public class ContinuousWorldGenerator implements WorldGeneratorI {
 
     int numVertices = 0;
 
-    int chunkSize = 16;//number of segments per chunk. MUST BE A POWER OF 2 FOR MIDPOINT DISPLACEMENT GENERATOR
+    int chunkSize = 16;//number of segments per chunk. MUST BE A POWER OF 2 FOR MIDPOINT DISPLACEMENT
     float segmentLength = 0.5f;
 
     float currentMaxX, currentMinX;
@@ -90,8 +90,19 @@ public class ContinuousWorldGenerator implements WorldGeneratorI {
     }
 
     @Override
+    public void clipFixture(Fixture fixture, float[] clip) {
+        Tools.log(this,"Clipping not implemented");
+    }
+
+    @Override
+    public void tryClipFixture(float[] clip) {
+        Tools.log(this,"Clipping not implemented");
+    }
+
+    @Override
     public String getDebugString() {
-        return "";
+
+        return "NumChunks: " + chunks.size();
     }
 
     public void update() {

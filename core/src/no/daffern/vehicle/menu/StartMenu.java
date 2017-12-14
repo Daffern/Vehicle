@@ -86,7 +86,7 @@ public class StartMenu {
 
 		VisTable table = new VisTable();
 		table.add(clientButton);
-		table.add(serverButton);
+		//table.add(serverButton);
 
 		window.add(table);
 		window.row();
@@ -104,6 +104,10 @@ public class StartMenu {
 		VisUI.dispose();
 	}
 
+	public void resize(float width, float height){
+		stage.getViewport().setWorldSize(width,height);
+		stage.getViewport().apply();
+	}
 
 	public void render(float delta) {
 		stage.act(delta);

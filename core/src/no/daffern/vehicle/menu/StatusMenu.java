@@ -2,6 +2,7 @@ package no.daffern.vehicle.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.FloatCounter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,10 +24,10 @@ public class StatusMenu {
 
 	private FloatCounter clientCounter;
 
-    public StatusMenu() {
+    public StatusMenu(Batch batch) {
 
         ScreenViewport screenViewport = new ScreenViewport();
-        stage = new Stage(screenViewport);
+        stage = new Stage(screenViewport, batch);
 
         if (!VisUI.isLoaded())
             VisUI.load();
@@ -37,12 +38,12 @@ public class StatusMenu {
 
     public void load(){
         updatesLabel = new Label("", skin);
-        updatesLabel.setPosition(0, 30);
+        updatesLabel.setPosition(0, stage.getHeight()-30);
         updatesLabel.setColor(Color.RED);
         stage.addActor(updatesLabel);
 
         worldLabel = new Label("",skin);
-	    worldLabel.setPosition(0,60);
+	    worldLabel.setPosition(0,stage.getHeight()-60);
 	    worldLabel.setColor(Color.RED);
 	    stage.addActor(worldLabel);
     }
@@ -52,7 +53,7 @@ public class StatusMenu {
 
 
 
-    public void render(float delta){
+    public void render(Batch batch, float delta){
     	float fps = Gdx.graphics.getFramesPerSecond();
     	float delay = C.myClient.getReturnTripTime();
 
@@ -74,7 +75,7 @@ public class StatusMenu {
         worldLabel.setText(worldText);
 
         stage.act(delta);
-        stage.draw();
+        stage.getRoot().draw(batch,1f);
 
     }
 

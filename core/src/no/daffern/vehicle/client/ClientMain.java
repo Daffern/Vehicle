@@ -39,8 +39,6 @@ public class ClientMain extends Thread {
 
         initialize();
 
-        start();//start thread
-
         try {
 	        C.myClient.start();
 	        C.myClient.connect(100000, ip, tcpPort, udpPort);
@@ -48,12 +46,37 @@ public class ClientMain extends Thread {
             e.printStackTrace();
         }
 
-        statusMenu = new StatusMenu();
+        statusMenu = new StatusMenu(batch);
         statusMenu.load();
 
 
     }
 
+    public ClientMain() {
+
+        initialize();
+
+        clientMenu = new ClientMenu();
+        clientMenu.loadClientMenu(new ClientMenu.ClientMenuListener() {
+            @Override
+            public void onJoinClicked(String address, int tcpPort, int udpPort) {
+
+                try {
+	                C.myClient.start();
+	                C.myClient.connect(100000, address, tcpPort, udpPort);
+
+                    clientMenu.appendConsole("connected to server");
+                    clientMenu.unload();
+
+                } catch (IOException e) {
+                    clientMenu.appendConsole("failed to connect");
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
     private void initialize() {
 
         batch = new PolygonSpriteBatch();
@@ -85,34 +108,7 @@ public class ClientMain extends Thread {
             }
         });
 
-    }
-
-    public ClientMain() {
-
-        initialize();
-
-        start();
-
-        clientMenu = new ClientMenu();
-        clientMenu.loadClientMenu(new ClientMenu.ClientMenuListener() {
-            @Override
-            public void onJoinClicked(String address, int tcpPort, int udpPort) {
-
-                try {
-	                C.myClient.start();
-	                C.myClient.connect(10000, address, tcpPort, udpPort);
-                } catch (IOException e) {
-                    clientMenu.appendConsole("failed to connect");
-                    e.printStackTrace();
-                } finally {
-                    clientMenu.appendConsole("connected to server");
-                    clientMenu.unload();
-
-                }
-
-            }
-        });
-
+        //start();//start thread
     }
 
     @Override
@@ -138,20 +134,25 @@ public class ClientMain extends Thread {
 
                 //Tools.log(this, C.cameraHandler.gameCamera.position.toString());
 
-                systemSystem.preStep();
-                C.mapHandler.worldStep();
-                systemSystem.postStep();
+                //step();
 
 
                 accumulator -= Common.TIME_STEP;
             }
 
-            if (clientMenu != null)
-                clientMenu.step(delta);
+
         }
     }
 
+    void step(){
+	    systemSystem.preStep();
+	    C.mapHandler.worldStep();
+	    systemSystem.postStep();
+    }
+
     public void render(float delta) {
+
+    	step();
 
         C.myClient.dispatchQueues();
 
@@ -173,24 +174,24 @@ public class ClientMain extends Thread {
 
         C.clientInventory.render(batch,delta);
 
+        if (statusMenu != null)
+            statusMenu.render(batch, delta);
 
-        batch.end();
+	    batch.end();
 
-        if (clientMenu != null)
-            clientMenu.render();
+	    if (clientMenu != null)
+		    clientMenu.render(delta);
 
-        if (statusMenu != null) {
-
-            statusMenu.render(delta);
-        }
-
-       // C.mapHandler.debugRender();
+	    // C.mapHandler.debugRender();
 
     }
 
     public void resize(int width, int height) {
 
         C.cameraHandler.updateScreenSize(width,height);
+
+        if (clientMenu != null)
+        	clientMenu.resize(width,height);
     }
 
 

@@ -11,6 +11,7 @@ import no.daffern.vehicle.container.IntVector2;
 import no.daffern.vehicle.network.packets.*;
 import no.daffern.vehicle.server.S;
 import no.daffern.vehicle.server.vehicle.parts.Part;
+import no.daffern.vehicle.server.vehicle.parts.PartWheel;
 import no.daffern.vehicle.utils.Tools;
 
 import java.util.ArrayList;
@@ -59,23 +60,27 @@ public class ServerVehicle {
 		walls = new Walls(world, vehicleBody, vehicleWidth, vehicleHeight);
 
 
+		//walls
 		int wallId = S.itemHandler.getItemsOfType(GameItemTypes.WALL_TYPE_SQUARE).get(0).itemId;
 
 		walls.setWall(new WallSquare(wallId, 0, 0), true);
 		walls.setWall(new WallSquare(wallId, 1, 0), true);
 		walls.setWall(new WallSquare(wallId, 2, 0), true);
 
+		walls.setWall(new WallSquare(wallId, 0, 1), true);
+		walls.setWall(new WallSquare(wallId, 1, 1), true);
+		walls.setWall(new WallSquare(wallId, 2, 1), true);
 
-		//vehicleShapeBuilder = new VehicleShapeBuilder(world);
-		//vehicleBody = vehicleShapeBuilder.createNewBody(x, y, walls);
+		walls.setWall(new WallSquare(wallId, 0, 2), true);
+		walls.setWall(new WallSquare(wallId, 1, 2), true);
+		walls.setWall(new WallSquare(wallId, 2, 2), true);
 
-
+		//wheels
 		int wheelId = S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_WHEEL).get(0).itemId;
+        addPart(new IntVector2(0, 0), new PartWheel(wheelId));
+        addPart(new IntVector2(2, 0), new PartWheel(wheelId));
 
-/*
-        addPart(new IntVector2(9, 0), new PartWheel(wheelId));
-        addPart(new IntVector2(4, 0), new PartWheel(wheelId));
-        addPart(new IntVector2(0, 0), new PartWheel(wheelId));*/
+
 
 		sendVehicleLayout();
 	}
@@ -161,7 +166,7 @@ public class ServerVehicle {
 				Wall wall = walls.get(x, y);
 
 				if (wall == null)
-					return;
+					continue;
 
 
 				WallPacket wallPacket = new WallPacket();

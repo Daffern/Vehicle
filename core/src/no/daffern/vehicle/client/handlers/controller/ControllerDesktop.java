@@ -4,7 +4,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import no.daffern.vehicle.client.C;
-import no.daffern.vehicle.client.vehicle.ClientVehicle;
 import no.daffern.vehicle.network.packets.PlayerClickPacket;
 import no.daffern.vehicle.utils.AbstractInputProcessor;
 import no.daffern.vehicle.utils.PriorityInputHandler;
@@ -74,8 +73,7 @@ public class ControllerDesktop extends Controller {
 
 			Vector2 worldPos = Tools.mouseToWorldCoordinates(C.cameraHandler.gameCamera, screenX, screenY);
 
-			ClientVehicle vehicle = C.vehicleHandler.getVehicle(inventory.currentPlayer.vehicleId);
-
+			//ClientVehicle vehicle = C.vehicleHandler.getVehicle(inventory.currentPlayer.vehicleId);
 			//templateDrawer.startDraw(vehicle,worldPos.x, worldPos.y, inventory.getSelected().getTextureRegion());
 
 			return false;

@@ -95,8 +95,8 @@ public class ServerMain extends Thread {
 		initServer(tcpPort, udpPort);
 
 		//S.worldHandler.loadWorld("test.tmx");
-		S.worldHandler.loadDestructibleWorld();
-
+		//S.worldHandler.loadDestructibleWorld();
+		S.worldHandler.loadContinuousWorld();
 
 		start();//start thread
 	}
@@ -139,9 +139,7 @@ public class ServerMain extends Thread {
 			}
 
 
-			//fix my timestep
 			long NANOTIMESTEP = (long) Math.ceil((double) Common.TIME_STEP * 1000000000.0);
-
 
 			long currentTime = System.nanoTime();
 			long deltaTime = currentTime - oldTime;
@@ -152,11 +150,12 @@ public class ServerMain extends Thread {
 			accumulator += frameTime;
 
 
+
 			while (accumulator >= NANOTIMESTEP) {
 
 				tickCounter++;
 
-				synchronized (renderLock) {
+				//synchronized (renderLock) {
 
 					S.myServer.dispatchQueues();
 
@@ -170,7 +169,7 @@ public class ServerMain extends Thread {
 					S.playerHandler.postStep();
 					S.vehicleHandler.postStep();
 
-				}
+				//}
 
 
 				accumulator -= NANOTIMESTEP;

@@ -76,7 +76,7 @@ public class ServerInventory {
 
 				float[] clip = Box2dUtils.approxCircle(x,y,1,6);
 
-				S.worldHandler.getWorldGenerator().tryClipChunkFixture(clip);
+				S.worldHandler.getWorldGenerator().tryClipFixture(clip);
 
 				break;
 			}

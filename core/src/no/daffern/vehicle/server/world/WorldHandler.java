@@ -149,9 +149,10 @@ public class WorldHandler {
 		world.step(0, 0, 0);
 
 	}
-	public DestructibleWorldGenerator getWorldGenerator(){
-		return (DestructibleWorldGenerator)worldGenerator;
+	public WorldGeneratorI getWorldGenerator(){
+		return worldGenerator;
 	}
+
 
 	public void translateWorldToPlayers() {
 

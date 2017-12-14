@@ -30,15 +30,12 @@ public class ServerPlayerHandler implements ServerHandler {
         myServer.addListener(new Listener() {
             public void connected(Connection connection) {
 
-
-                ServerVehicle serverVehicle;
+	            ServerVehicle serverVehicle;
                 if (S.vehicleHandler.vehicles.size() == 0) {
                     serverVehicle = S.vehicleHandler.spawnNewVehicle();
                 } else {
                     serverVehicle = S.vehicleHandler.vehicles.entrySet().iterator().next().getValue();
-                    serverVehicle.sendVehicleLayout();
                 }
-
 
                 int playerId = connection.getID();
 
@@ -53,13 +50,12 @@ public class ServerPlayerHandler implements ServerHandler {
                 giveControlPacket.playerPacket = playerPacket;
                 giveControlPacket.vehicleId = serverVehicle.vehicleId;
 
-                S.myServer.sendToTCP(playerId, giveControlPacket);
-                S.myServer.sendToAllTCP(playerPacket);
+                myServer.sendToTCP(playerId, giveControlPacket);
 
-                //TODO #######REMOVE IMPORTANT#########
+                //TODO REMOVE
                 player.inventory.addItem(S.itemHandler.getItemByName("vehicle/1/center"), 1, true);
                 player.inventory.addItem(S.itemHandler.getItemByName("tools/eraser"), 1, true);
-                player.inventory.addItem(S.itemHandler.getItemByName("tools/shovel"), 1, true);
+                //player.inventory.addItem(S.itemHandler.getItemByName("tools/shovel"), 1, true);
                 //player.inventory.addItem(S.itemHandler.getItemByName("vehicle/triangle_wall.png"), 1, false);
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_WHEEL).get(0), 1, true);
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_AXLE).get(0), 1, true);
@@ -67,10 +63,11 @@ public class ServerPlayerHandler implements ServerHandler {
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_BATTERY).get(0), 1, true);
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_WIRE).get(0), 1, true);
                 player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_SOLAR).get(0), 1, true);
-                player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_DRILL).get(0), 1, true);
+                //player.inventory.addItem(S.itemHandler.getItemsOfType(GameItemTypes.PART_TYPE_DRILL).get(0), 1, true);
 
 
-
+				sendPlayers();
+				S.vehicleHandler.sendVehicleLayouts();
             }
 
             public void received(Connection connection, Object object) {
@@ -88,6 +85,12 @@ public class ServerPlayerHandler implements ServerHandler {
         });
     }
 
+    public void sendPlayers(){
+    	for(Map.Entry<Integer, ServerPlayer> entry : players.entrySet()){
+    		PlayerPacket playerPacket = entry.getValue().getPlayerInfo();
+    		myServer.sendToAllTCP(playerPacket);
+	    }
+    }
 
     @Override
     public void preStep() {

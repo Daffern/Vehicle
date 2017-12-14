@@ -46,7 +46,7 @@ public class WallSquare extends Wall {
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = shape;
             fixtureDef.density = 0.5f;
-            fixtureDef.friction = 0.5f;
+            fixtureDef.friction = 0.7f;
             fixtureDef.restitution = 0.5f;
             fixtureDef.filter.categoryBits = CollisionCategories.vehicleInside;
             fixtureDef.filter.maskBits = CollisionCategories.player;

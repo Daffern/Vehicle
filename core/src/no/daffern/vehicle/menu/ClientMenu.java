@@ -28,14 +28,13 @@ public class ClientMenu {
 
     public ClientMenu() {
         ScreenViewport screenViewport = new ScreenViewport();
-        screenViewport.setUnitsPerPixel(0.5f);
+        //screenViewport.setUnitsPerPixel(0.5f);
         stage = new Stage(screenViewport);
 
         if (!VisUI.isLoaded())
             VisUI.load();
         skin = VisUI.getSkin();
 
-        //stage.setDebugAll(true);
 
         window = new Window("Client Menu", skin);
         window.setMovable(true);
@@ -69,7 +68,7 @@ public class ClientMenu {
             }
         });
 
-        label = new Label("ClientHandler output:", skin);
+        label = new Label("", skin);
         label.setWrap(true);
         ScrollPane scrollPane = new ScrollPane(label);
 
@@ -92,7 +91,6 @@ public class ClientMenu {
         window.add(scrollPane).size(200, height * 2);
 
         window.pack();
-        window.setDebug(true);
         window.setMovable(true);
 
         PriorityInputHandler.getInstance().addInputProcessor(stage, 0);
@@ -108,12 +106,13 @@ public class ClientMenu {
         label.setText(consoleString);
     }
 
-    public void step(float delta){
-        stage.act(Math.min(delta, 1 / 30f));
-
-    }
-    public void render(){
+    public void render(float delta){
+    	stage.act(delta);
         stage.draw();
+    }
+    public void resize(float width, float height){
+	    stage.getViewport().setWorldSize(width,height);
+	    stage.getViewport().apply();
     }
 
     public interface ClientMenuListener{

@@ -120,12 +120,14 @@ public class BasicPartLayer implements PartLayerI {
 		}
 
 		public void render(Batch batch, float x, float y, float angle) {
-			if (region != null)
-				batch.draw(region,
-						x, y,
-						width / 2, height / 2,
-						width, height,
-						1, 1, this.angle + angle);
+			if (region == null)
+				return;
+
+			batch.draw(region,
+					x, y,
+					width / 2, height / 2,
+					width, height,
+					1, 1, this.angle + angle);
 
 			//render state
 			switch (state) {

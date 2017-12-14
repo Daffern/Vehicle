@@ -28,7 +28,12 @@ public class PriorityInputHandler implements InputProcessor {
 	    Collections.sort(inputProcessors);
     }
     public void removeInputProcessor(int priority) {
-        inputProcessors.remove(priority);
+    	for (int i = 0 ; i < inputProcessors.size() ; i++){
+		    if (inputProcessors.get(i).priority == priority){
+		    	inputProcessors.remove(i);
+		    	break;
+		    }
+	    }
     }
 
 

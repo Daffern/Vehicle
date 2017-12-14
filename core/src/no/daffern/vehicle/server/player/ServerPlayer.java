@@ -26,7 +26,7 @@ public class ServerPlayer extends Entity {
 
 	PlayerInputPacket playerInputPacket = new PlayerInputPacket();
 
-	float horizontalSpeed = 5f;
+	float horizontalSpeed = 4f;
 
 	private World world;
 	public Body wheelBody;
@@ -91,8 +91,8 @@ public class ServerPlayer extends Entity {
 
 /*
         CircleShape shape = new CircleShape();
-        shape.setRadius(radius);*/
-
+        shape.setRadius(radius);
+*/
 
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(radius, radius);
@@ -123,7 +123,7 @@ public class ServerPlayer extends Entity {
 		jointDef.bodyA = wheelBody;
 		jointDef.bodyB = fixedBody;
 		jointDef.enableMotor = true;
-		jointDef.maxMotorTorque = 15f;
+		jointDef.maxMotorTorque = 10f;
 		jointDef.motorSpeed = 5f;
 
 

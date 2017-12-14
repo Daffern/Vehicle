@@ -98,7 +98,7 @@ public class PartDrill extends PartNode {
 					}
 
 					for (Fixture fixture : uniqueFixtures){
-						S.worldHandler.getWorldGenerator().clipChunkFixture(fixture, clip);
+						S.worldHandler.getWorldGenerator().clipFixture(fixture, clip);
 					}
 
 					checks = 0;

@@ -6,7 +6,7 @@ package no.daffern.vehicle.common;
 public class Common {
 
 
-    public final static boolean debugRender = true;
+    public final static boolean debugRender = false;
 
     public final static float WORLD_GRAVITY = -7f;
 
@@ -23,8 +23,8 @@ public class Common {
     public final static float unitsToPixels = 64f;
     public final static float pixelToUnits = 1f/unitsToPixels;
 
-    public final static int defaultTcpPort = 1337;
-    public final static int defaultUdpPort = 1337;
+    public final static int defaultTcpPort = 1001;
+    public final static int defaultUdpPort = 1002;
 
 
 	public final static float cameraZoom = 0.8f;

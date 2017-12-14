@@ -172,7 +172,7 @@ public class DestructibleWorldGenerator implements WorldGeneratorI, ContactListe
 	}
 
 
-	public void clipChunkFixture(Fixture fixture, float[] vertices){
+	public void clipFixture(Fixture fixture, float[] vertices){
 
 
 		if (fixture.getUserData() == null || ((UserData)fixture.getUserData()).type != UserData.UserDataType.DESTRUCTIBLE)
@@ -185,12 +185,13 @@ public class DestructibleWorldGenerator implements WorldGeneratorI, ContactListe
 		sendChunk(chunk);
 	}
 
+
 	/**
 	 * try to clip chunks with provided vertices
 	 * @param vertices in world coordinates
 	 */
 
-	public void tryClipChunkFixture(final float[] vertices) {
+	public void tryClipFixture(final float[] vertices) {
 
 		Box2dUtils.AABB aabb = Box2dUtils.findAABB(vertices);
 
